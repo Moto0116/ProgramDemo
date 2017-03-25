@@ -1,0 +1,104 @@
+﻿/**
+ * @file   FbxFileManager.cpp
+ * @brief  FbxFileManagerクラスの実装
+ * @author morimoto
+ */
+
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
+#include "FbxFileManager.h"
+
+#include "Debugger\Debugger.h"
+#include "FbxLoader\FbxLoader.h"
+
+
+namespace Lib
+{
+	//----------------------------------------------------------------------------------------------------
+	// Static Private Variables
+	//----------------------------------------------------------------------------------------------------
+	const int FbxFileManager::m_InvalidIndex = 0;
+
+
+	//----------------------------------------------------------------------------------------------------
+	// Constructor	Destructor
+	//----------------------------------------------------------------------------------------------------
+	FbxFileManager::FbxFileManager() :
+		m_pFbxLoader(NULL)
+	{
+		m_pFbxModel.push_back(NULL);	// 読み込みに失敗した際に参照する値としてNULLを追加
+	}
+
+	FbxFileManager::~FbxFileManager()
+	{
+	}
+
+
+	//----------------------------------------------------------------------------------------------------
+	// Public Functions
+	//----------------------------------------------------------------------------------------------------
+	bool FbxFileManager::Initialize(GraphicsDevice* _pGraphicsDevice)
+	{
+		if (m_pFbxLoader != NULL)
+		{
+			OutputErrorLog("FbxFileManagerクラスはすでに生成されています");
+			return false;
+		}
+
+		m_pGraphicsDevice = _pGraphicsDevice;
+		m_pFbxLoader = new FbxLoader(m_pGraphicsDevice);
+
+		return m_pFbxLoader->Init();
+	}
+
+	void FbxFileManager::Finalize()
+	{
+		if (m_pFbxLoader == NULL)
+		{
+			OutputErrorLog("FbxFileManagerクラスは生成されていません");
+			return;
+		}
+
+		m_pFbxLoader->Release();
+		delete m_pFbxLoader;
+		m_pFbxLoader = NULL;
+	}
+
+	bool FbxFileManager::LoadFbxModel(LPCTSTR _pFileName, int* _pIndex)
+	{
+		FbxModel* pModel = new FbxModel(m_pGraphicsDevice);
+		if (!m_pFbxLoader->LoadFbxModel(pModel, _pFileName))
+		{
+			OutputErrorLog("Fbxモデルの読み込みに失敗しました\n");
+			*_pIndex = m_InvalidIndex;
+			delete pModel;
+
+			return false;
+		}
+
+		if (!pModel->Initialize())
+		{
+			pModel->Finalize();
+			delete pModel;
+
+			return false;
+		}
+
+
+		*_pIndex = m_pFbxModel.size();
+		m_pFbxModel.push_back(pModel);
+
+		return true;
+	}
+
+	void FbxFileManager::ReleaseFbxModel(int _index)
+	{
+		if (m_pFbxModel[_index] != NULL)
+		{
+			m_pFbxModel[_index]->Finalize();
+			delete m_pFbxModel[_index];
+			m_pFbxModel[_index] = NULL;
+		}
+	}
+}

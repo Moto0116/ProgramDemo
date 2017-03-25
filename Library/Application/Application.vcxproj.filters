@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{c7c417bd-c48d-4aa5-b0a8-5a9eb3e1df88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application">
+      <UniqueIdentifier>{9f4125af-a917-4522-8a45-69d56e1480af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene">
+      <UniqueIdentifier>{be6e5c1f-6e5c-4966-90de-70e35212674d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene">
+      <UniqueIdentifier>{42dac0f4-4d82-410d-84b2-777640ce23fd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main\Main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\TestObject.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Application.cpp">
+      <Filter>Main\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\GameScene.cpp">
+      <Filter>Main\Application\Scene\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Object3DBase\Object3DBase.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\House.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Main\TestObject.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Application.h">
+      <Filter>Main\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\GameScene.h">
+      <Filter>Main\Application\Scene\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Object3DBase\Object3DBase.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\House.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resource\Effect\Ground.fx" />
+    <FxCompile Include="Resource\Effect\House.fx" />
+    <FxCompile Include="Resource\Effect\DefaultEffect.fx" />
+    <FxCompile Include="Resource\Effect\DepthShadow.fx" />
+  </ItemGroup>
+</Project>

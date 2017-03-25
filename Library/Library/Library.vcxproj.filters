@@ -1,0 +1,338 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{d7256d88-aa4c-4a10-b09e-5362c3563857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\SceneManager">
+      <UniqueIdentifier>{8366f98c-865e-42e5-a1ef-15162ef4daac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\SceneManager\SceneBase">
+      <UniqueIdentifier>{960be49e-19e9-451d-839d-14198bbce9cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\ObjectBase">
+      <UniqueIdentifier>{a8c01cac-6670-4cce-aa13-2a27c5a7b1c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\GameDataManager">
+      <UniqueIdentifier>{d894baee-f9e1-491e-ab87-c584f78e4055}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Debugger">
+      <UniqueIdentifier>{50473d05-7ffb-4d91-ad0f-2bcb5bbc4e55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\TaskManager">
+      <UniqueIdentifier>{7bed2e1f-7c9b-4a08-b862-9afedd661e5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\TaskManager\TaskBase">
+      <UniqueIdentifier>{f5d9a318-1899-4f8b-9633-2d009665b96a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\TaskManager\TaskBase\UpdateTask">
+      <UniqueIdentifier>{03d4ab48-b86d-4315-844e-5dabba32adc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\TaskManager\TaskBase\DrawTask">
+      <UniqueIdentifier>{316b6cdd-c6cd-436e-8166-5188087266f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\InputDeviceManager">
+      <UniqueIdentifier>{6f099fcd-1dd7-4e84-8d7d-c31698145c98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX9Manager">
+      <UniqueIdentifier>{acfdd94c-f2a8-4f8c-ac63-473a863d244c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager">
+      <UniqueIdentifier>{8f7dedb3-0b78-4a5b-857b-c03f392059af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\EventManagerBase">
+      <UniqueIdentifier>{99776e76-b5bc-45a4-9e2a-365d05cd1c2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\EventManagerBase\EventListenerBase">
+      <UniqueIdentifier>{e65f01cc-3869-4bce-8287-f549dc0049b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\EventManagerBase\EventBase">
+      <UniqueIdentifier>{7ec68a45-7e99-4618-9ab6-d5c870954323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\SingletonBase">
+      <UniqueIdentifier>{1c5dee1c-d05f-4bd1-a99f-f274fed46c65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\Window">
+      <UniqueIdentifier>{83846426-f17e-4f27-95d6-ae8719bee726}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\InputDeviceManager\GamePad">
+      <UniqueIdentifier>{29c5aaec-701a-45a8-be2a-4f8690c7299b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\InputDeviceManager\KeyDevice">
+      <UniqueIdentifier>{1bc54687-b35c-4d8a-a838-22b7dc04c498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\InputDeviceManager\MouseDevice">
+      <UniqueIdentifier>{4ebe9fcb-7255-49f0-8cf6-6c49d12d89cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\ShaderManager">
+      <UniqueIdentifier>{281eb541-d106-4a42-b5e0-edce55c54ec3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\TextureManager">
+      <UniqueIdentifier>{833edbb2-022a-4100-876b-39be51fad27b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\TextureManager\Texture">
+      <UniqueIdentifier>{d89f6ae9-cb71-4873-9b0f-1769c5ae4225}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\Vertex2D">
+      <UniqueIdentifier>{fa6d724f-6dcd-4525-9dff-dc35df6fbffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\AnimationManager">
+      <UniqueIdentifier>{e175bc8c-74c8-48f7-ab96-2d9ce9dca1ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\AnimationManager\Animation">
+      <UniqueIdentifier>{85d15e3a-193c-4159-a858-6f51b0e82dcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\SoundManager">
+      <UniqueIdentifier>{17418674-108e-41fd-b6d0-7e2d561041d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\SoundManager\Sound">
+      <UniqueIdentifier>{01fece27-bcc3-476a-9483-17fe92d7a7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\Define">
+      <UniqueIdentifier>{048bba30-4807-4261-964b-007596e89332}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\SoundManager\ISound">
+      <UniqueIdentifier>{396220ba-4965-48d4-bc6d-1ecfeecccd8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\TextureManager\ITexture">
+      <UniqueIdentifier>{60235438-1840-4366-aea9-6f211edcb560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\SoundDevice">
+      <UniqueIdentifier>{97b9760a-b2ab-4270-b45c-409f5a5dee12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\Vertex2D\Effect">
+      <UniqueIdentifier>{3ec8af42-8586-4d1e-bb74-9404211f8870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\DX11Manager\GraphicsDevice">
+      <UniqueIdentifier>{08d463fb-61e1-430e-80ad-8d94e1ab52a3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Library\Debugger\Debugger.cpp">
+      <Filter>Library\Debugger</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\ObjectBase\ObjectBase.cpp">
+      <Filter>Library\ObjectBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\SceneManager\SceneBase\SceneBase.cpp">
+      <Filter>Library\SceneManager\SceneBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\SceneManager\SceneManager.cpp">
+      <Filter>Library\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\TaskManager\TaskManager.cpp">
+      <Filter>Library\TaskManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\TaskManager\TaskBase\DrawTask\DrawTask.cpp">
+      <Filter>Library\TaskManager\TaskBase\DrawTask</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\TaskManager\TaskBase\TaskBase.cpp">
+      <Filter>Library\TaskManager\TaskBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\TaskManager\TaskBase\UpdateTask\UpdateTask.cpp">
+      <Filter>Library\TaskManager\TaskBase\UpdateTask</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\InputDeviceManager\InputDeviceManager.cpp">
+      <Filter>Library\InputDeviceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\GameDataManager\GameDataManager.cpp">
+      <Filter>Library\GameDataManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\SingletonBase\SingletonBase.cpp">
+      <Filter>Library\SingletonBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\Window\Window.cpp">
+      <Filter>Library\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\InputDeviceManager\GamePad\GamePad.cpp">
+      <Filter>Library\InputDeviceManager\GamePad</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\InputDeviceManager\KeyDevice\KeyDevice.cpp">
+      <Filter>Library\InputDeviceManager\KeyDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\InputDeviceManager\MouseDevice\MouseDevice.cpp">
+      <Filter>Library\InputDeviceManager\MouseDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\ShaderManager\ShaderManager.cpp">
+      <Filter>Library\DX11Manager\ShaderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\TextureManager\Texture\Texture.cpp">
+      <Filter>Library\DX11Manager\TextureManager\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\TextureManager\TextureManager.cpp">
+      <Filter>Library\DX11Manager\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\Vertex2D\Vertex2D.cpp">
+      <Filter>Library\DX11Manager\Vertex2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\AnimationManager\AnimationManager.cpp">
+      <Filter>Library\DX11Manager\AnimationManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\AnimationManager\Animation\Animation.cpp">
+      <Filter>Library\DX11Manager\AnimationManager\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\SoundManager\SoundManager.cpp">
+      <Filter>Library\DX11Manager\SoundManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\SoundManager\Sound\Sound.cpp">
+      <Filter>Library\DX11Manager\SoundManager\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\SoundManager\ISound\ISound.cpp">
+      <Filter>Library\DX11Manager\SoundManager\ISound</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\SoundDevice\SoundDevice.cpp">
+      <Filter>Library\DX11Manager\SoundDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\GraphicsDevice\GraphicsDevice.cpp">
+      <Filter>Library\DX11Manager\GraphicsDevice</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\EventManager\EventBase\EventBase.cpp">
+      <Filter>Library\EventManagerBase\EventBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\EventManager\EventListenerBase\EventListenerBase.cpp">
+      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\EventManager\EventManager.cpp">
+      <Filter>Library\EventManagerBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\VertexManager\VertexManager.cpp" />
+    <ClCompile Include="Library\DirectX11\VertexManager\Vertex\Vertex.cpp" />
+    <ClCompile Include="Library\DirectX11\VertexManager\IVertex\IVertex.cpp" />
+    <ClCompile Include="Library\DirectX11\TextureManager\ITexture\ITexture.cpp">
+      <Filter>Library\DX11Manager\TextureManager\ITexture</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\DirectX11\Font\Font.cpp" />
+    <ClCompile Include="Library\DirectX11\AnimationManager\IAnimation\IAnimation.cpp" />
+    <ClCompile Include="Library\DirectX11\FbxFileManager\FbxFileManager.cpp" />
+    <ClCompile Include="Library\DirectX11\FbxFileManager\FbxModel\FbxModel.cpp" />
+    <ClCompile Include="Library\DirectX11\FbxFileManager\FbxLoader\FbxLoader.cpp" />
+    <ClCompile Include="Library\DirectX11\Camera\Camera.cpp" />
+    <ClCompile Include="Library\DirectX11\Light\Light.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Library\Debugger\Debugger.h">
+      <Filter>Library\Debugger</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\ObjectBase\ObjectBase.h">
+      <Filter>Library\ObjectBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\SceneManager\SceneBase\SceneBase.h">
+      <Filter>Library\SceneManager\SceneBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\SceneManager\SceneManager.h">
+      <Filter>Library\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\TaskManager\TaskManager.h">
+      <Filter>Library\TaskManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\TaskManager\TaskBase\DrawTask\DrawTask.h">
+      <Filter>Library\TaskManager\TaskBase\DrawTask</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\TaskManager\TaskBase\TaskBase.h">
+      <Filter>Library\TaskManager\TaskBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\TaskManager\TaskBase\UpdateTask\UpdateTask.h">
+      <Filter>Library\TaskManager\TaskBase\UpdateTask</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\InputDeviceManager\InputDeviceManager.h">
+      <Filter>Library\InputDeviceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\GameDataManager\GameDataManager.h">
+      <Filter>Library\GameDataManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\SingletonBase\SingletonBase.h">
+      <Filter>Library\SingletonBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\SingletonBase\SingletonBase_private.h">
+      <Filter>Library\SingletonBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\TaskManager\TaskManager_private.h">
+      <Filter>Library\TaskManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Window\Window.h">
+      <Filter>Library\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\InputDeviceManager\GamePad\GamePad.h">
+      <Filter>Library\InputDeviceManager\GamePad</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\InputDeviceManager\KeyDevice\KeyDevice.h">
+      <Filter>Library\InputDeviceManager\KeyDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\InputDeviceManager\MouseDevice\MouseDevice.h">
+      <Filter>Library\InputDeviceManager\MouseDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\ShaderManager\ShaderManager.h">
+      <Filter>Library\DX11Manager\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\TextureManager\Texture\Texture.h">
+      <Filter>Library\DX11Manager\TextureManager\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\TextureManager\TextureManager.h">
+      <Filter>Library\DX11Manager\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\AnimationManager\AnimationManager.h">
+      <Filter>Library\DX11Manager\AnimationManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\AnimationManager\Animation\Animation.h">
+      <Filter>Library\DX11Manager\AnimationManager\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\SoundManager\SoundManager.h">
+      <Filter>Library\DX11Manager\SoundManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\TaskManager\TaskBase\TaskBase_private.h">
+      <Filter>Library\TaskManager\TaskBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\SoundManager\Sound\Sound.h">
+      <Filter>Library\DX11Manager\SoundManager\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\Define\Define.h">
+      <Filter>Library\DX11Manager\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\SoundManager\ISound\ISound.h">
+      <Filter>Library\DX11Manager\SoundManager\ISound</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\SoundDevice\SoundDevice.h">
+      <Filter>Library\DX11Manager\SoundDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\Vertex2D\Vertex2D.h">
+      <Filter>Library\DX11Manager\Vertex2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\GraphicsDevice\GraphicsDevice.h">
+      <Filter>Library\DX11Manager\GraphicsDevice</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\EventManager\EventBase\EventBase.h">
+      <Filter>Library\EventManagerBase\EventBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\EventManager\EventListenerBase\EventListenerBase.h">
+      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\EventManager\EventManager.h">
+      <Filter>Library\EventManagerBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\EventManager\EventManager_private.h" />
+    <ClInclude Include="Library\DirectX11\VertexManager\VertexManager.h" />
+    <ClInclude Include="Library\DirectX11\VertexManager\Vertex\Vertex.h" />
+    <ClInclude Include="Library\DirectX11\VertexManager\IVertex\IVertex.h" />
+    <ClInclude Include="Library\DirectX11\TextureManager\ITexture\ITexture.h">
+      <Filter>Library\DX11Manager\TextureManager\ITexture</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\DirectX11\Font\Font.h" />
+    <ClInclude Include="Library\GameDataManager\GameDataManager_private.h" />
+    <ClInclude Include="Library\DirectX11\AnimationManager\IAnimation\IAnimation.h" />
+    <ClInclude Include="Library\DirectX11\FbxFileManager\FbxFileManager.h" />
+    <ClInclude Include="Library\DirectX11\FbxFileManager\FbxModel\FbxModel.h" />
+    <ClInclude Include="Library\DirectX11\FbxFileManager\FbxLoader\FbxLoader.h" />
+    <ClInclude Include="Library\DirectX11\Camera\Camera.h" />
+    <ClInclude Include="Library\DirectX11\Light\Light.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Library\DirectX11\Vertex2D\Effect\Vertex2D.fx">
+      <Filter>Library\DX11Manager\Vertex2D\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Library\DirectX11\Font\Effect\Font.fx" />
+  </ItemGroup>
+</Project>
