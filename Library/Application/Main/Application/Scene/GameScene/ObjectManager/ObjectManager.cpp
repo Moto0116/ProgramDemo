@@ -11,7 +11,10 @@ ObjectManager::ObjectManager()
 	m_pObjects.push_back(new Ground());
 	m_pObjects.push_back(new MainCamera());
 	m_pObjects.push_back(new MainLight());
-	m_pObjects.push_back(new House());
+	m_pObjects.push_back(new House(D3DXVECTOR3(0, 0, 0)));
+	m_pObjects.push_back(new House(D3DXVECTOR3(40, 0, 0)));
+	m_pObjects.push_back(new House(D3DXVECTOR3(0, 0, 40)));
+	m_pObjects.push_back(new House(D3DXVECTOR3(40, 0, 40)));
 }
 
 ObjectManager::~ObjectManager()

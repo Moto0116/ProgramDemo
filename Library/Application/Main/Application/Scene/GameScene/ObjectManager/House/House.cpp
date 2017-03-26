@@ -6,9 +6,16 @@
 #include "DirectX11\ShaderManager\ShaderManager.h"
 
 
-House::House()
+//----------------------------------------------------------------------
+// Private Static Variables
+//----------------------------------------------------------------------
+D3DXVECTOR3 House::m_DefaultScale = D3DXVECTOR3(50, 50, 50);
+
+
+House::House(D3DXVECTOR3 _Pos)
 {
-	m_Pos.x += 10.0f;
+	m_Pos = _Pos;
+	m_Scale = m_DefaultScale;
 }
 
 House::~House()

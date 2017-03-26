@@ -15,11 +15,11 @@
 
 
 const float MainCamera::m_NearPoint = 1.f;
-const float MainCamera::m_FarPoint = 200.f;
+const float MainCamera::m_FarPoint = 700;
 const float MainCamera::m_ViewAngle = 50.f;
 const float MainCamera::m_MaxAngle = 70.f;
 const float MainCamera::m_MinAngle = 10.f;
-const float MainCamera::m_MaxLength = 40.f;
+const float MainCamera::m_MaxLength = 200.f;
 const float MainCamera::m_MinLength = 2.5f;
 const float MainCamera::m_MoveSpeedWeight = 0.015f;
 const float MainCamera::m_ZoomSpeedWeight = 0.1f;

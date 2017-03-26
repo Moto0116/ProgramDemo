@@ -47,6 +47,8 @@ public:
 	virtual void DepthDraw();
 
 private:
+	static D3DXVECTOR3 m_DefaultScale;
+
 	Lib::DrawTask*		m_pDrawTask;
 	Lib::UpdateTask*	m_pUpdateTask;
 	DepthDrawTask*		m_pDepthDrawTask;

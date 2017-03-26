@@ -3,10 +3,10 @@
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 
-const D3DXVECTOR3 MainLight::m_DefaultLightPos = D3DXVECTOR3(100, 30, 0);
-const D3DXVECTOR3 MainLight::m_DefaultLightDirPos = D3DXVECTOR3(1, 0, 0);
+const D3DXVECTOR3 MainLight::m_DefaultLightPos = D3DXVECTOR3(120, 100, 140);
+const D3DXVECTOR3 MainLight::m_DefaultLightDirPos = D3DXVECTOR3(40, 0, 40);
 const float MainLight::m_NearPoint = 1.f;
-const float MainLight::m_FarPoint = 200.f;
+const float MainLight::m_FarPoint = 700.f;
 const float MainLight::m_ViewAngle = 50.f;
 const float MainLight::m_ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
@@ -65,16 +65,12 @@ void MainLight::Finalize()
 	ReleaseConstantBuffer();
 
 	delete m_pLight;
-	m_pLight = NULL;
 
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
 
 	delete m_pUpdateTask;
 	delete m_pDrawTask;
-
-	m_pUpdateTask = NULL;
-	m_pDrawTask = NULL;
 }
 
 void MainLight::Update()
@@ -82,7 +78,6 @@ void MainLight::Update()
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->ClearRenderTargetView(m_pRenderTarget, m_ClearColor);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderTarget, m_pDepthStencilView);
-
 
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(2, 1, &m_pConstantBuffer);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(2, 1, &m_pConstantBuffer);

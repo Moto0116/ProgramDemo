@@ -11,6 +11,7 @@
 
 #include "..\AnimationManager\Animation\Animation.h"
 #include "..\TextureManager\Texture\Texture.h"
+#include "..\..\Debugger\Debugger.h"
 
 
 namespace Lib
@@ -50,6 +51,7 @@ namespace Lib
 	{
 		if (m_pGraphicsDevice != NULL)
 		{
+			OutputErrorLog("このオブジェクトは既に初期化されています");
 			return false;
 		}
 
@@ -104,6 +106,7 @@ namespace Lib
 	{
 		if (m_pVertexBuffer != NULL)
 		{
+			OutputErrorLog("頂点バッファはすでに生成されています");
 			return false;
 		}
 
@@ -137,6 +140,7 @@ namespace Lib
 
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&BufferDesc, &InitVertexData, &m_pVertexBuffer)))
 		{
+			OutputErrorLog("頂点バッファの生成に失敗しました");
 			return false;
 		}
 
@@ -297,6 +301,8 @@ namespace Lib
 			&pShaderErrors,
 			NULL)))
 		{
+			OutputErrorLog("ピクセルシェーダーの読み込みに失敗しました");
+
 			if (pShaderErrors != NULL) pShaderErrors->Release();
 			return false;
 		}
@@ -309,6 +315,8 @@ namespace Lib
 			NULL,
 			&m_pVertexShader)))
 		{
+			OutputErrorLog("頂点シェーダーの生成に失敗しました");
+
 			m_pVertexCompiledShader->Release();
 			m_pVertexCompiledShader = NULL;
 			return false;
@@ -333,6 +341,7 @@ namespace Lib
 			m_pVertexCompiledShader->GetBufferSize(),
 			&m_pVertexLayout)))
 		{
+			OutputErrorLog("入力レイアウトの生成に失敗しました");
 			return false;
 		}
 
@@ -355,6 +364,8 @@ namespace Lib
 			&pShaderErrors,
 			NULL)))
 		{
+			OutputErrorLog("ピクセルシェーダーの読み込みに失敗しました");
+
 			if (pShaderErrors != NULL) pShaderErrors->Release();
 			return false;
 		}
@@ -367,6 +378,8 @@ namespace Lib
 			NULL,
 			&m_pPixelShader)))
 		{
+			OutputErrorLog("ピクセルシェーダーの生成に失敗しました");
+
 			m_pPixelCompiledShader->Release();
 			m_pPixelCompiledShader = NULL;
 			return false;
@@ -391,6 +404,7 @@ namespace Lib
 		BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBlendState(&BlendDesc, &m_pBlendState)))
 		{
+			OutputErrorLog("ブレンドステートの生成に失敗しました");
 			return false;
 		}
 
@@ -402,6 +416,7 @@ namespace Lib
 		SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateSamplerState(&SamplerDesc, &m_pSamplerState)))
 		{
+			OutputErrorLog("サンプラステートの生成に失敗しました");
 			return false;
 		}
 
@@ -415,6 +430,7 @@ namespace Lib
 		ConstantBufferDesc.StructureByteStride = 0;
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
 		{
+			OutputErrorLog("定数バッファの生成に失敗しました");
 			return false;
 		}
 

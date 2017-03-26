@@ -84,20 +84,20 @@ namespace Lib
 		m_pModel = _pModel;
 		if (!m_pFbxImporter->Initialize(_pFileName, -1, m_pFbxIOSettings))
 		{
-			OutputDebugString(TEXT("FbxImporterのInitializeに失敗しました\n"));
+			OutputDebugString("FbxImporterのInitializeに失敗しました\n");
 			return false;
 		}
 
 		if (!m_pFbxImporter->Import(m_pFbxScene))
 		{
-			OutputDebugString(TEXT("FbxImporterのImportに失敗しました\n"));
+			OutputDebugString("FbxImporterのImportに失敗しました\n");
 			return false;
 		}
 
 		FbxGeometryConverter GeometryConverter(m_pFbxManager);
 		if (!GeometryConverter.Triangulate(m_pFbxScene, true))
 		{
-			OutputDebugString(TEXT("三角形化に失敗しました\n"));
+			OutputDebugString("三角形化に失敗しました\n");
 			return false;
 		}
 
@@ -140,13 +140,13 @@ namespace Lib
 
 		if (!LoadMeshVertexData(pFbxMesh, &MeshData))
 		{
-			OutputDebugString(TEXT("頂点情報の読み込みに失敗しました\n"));
+			OutputDebugString("頂点情報の読み込みに失敗しました\n");
 			return false;
 		}
 
 		if (!LoadMeshNormalData(pFbxMesh, &MeshData))
 		{
-			OutputDebugString(TEXT("法線情報の読み込みに失敗しました\n"));
+			OutputDebugString("法線情報の読み込みに失敗しました\n");
 			return false;
 		}
 
@@ -231,7 +231,7 @@ namespace Lib
 		{
 			if (NormalIndex >= 1)
 			{
-				OutputDebugString(TEXT("法線セットが複数あります(対応していません)\n一番最初の法線セットを適応させます\n"));
+				OutputDebugString("法線セットが複数あります(対応していません)\n一番最初の法線セットを適応させます\n");
 				break;
 			}
 
@@ -259,8 +259,6 @@ namespace Lib
 				default:
 					/// 不明なモードは空データで対応
 
-					MessageBox(NULL, TEXT("リファレンスモード不明です\n空データを作成して対応します"), TEXT("エラー"), MB_ICONSTOP);
-
 					pNormalData[NormalIndex].pNormalVec = new D3DXVECTOR3[_pMeshData->pVertexData->PolygonVertexNum];
 					for (int i = 0; i < _pMeshData->pVertexData->PolygonVertexNum; i++)
 					{
@@ -272,7 +270,6 @@ namespace Lib
 				}
 				break;
 			case FbxGeometryElement::eByControlPoint:
-				OutputDebugString(TEXT("\n\nマッピングモードeByControlPointに対応していません\n空データを作成して対応します\n\n"));
 
 				switch (ReferenceMode)
 				{
@@ -300,7 +297,6 @@ namespace Lib
 
 				break;
 			default:
-				MessageBox(NULL, TEXT("マッピングモードが不明です\n空データを作成して対応します"), TEXT("エラー"), MB_ICONSTOP);
 
 				pNormalData[NormalIndex].pNormalVec = new D3DXVECTOR3[_pMeshData->pVertexData->PolygonVertexNum];
 				for (int i = 0; i < _pMeshData->pVertexData->PolygonVertexNum; i++)
@@ -371,7 +367,6 @@ namespace Lib
 				break;
 				default:
 
-					MessageBox(NULL, TEXT("MappingModeが対応していません"), TEXT("エラー"), MB_OK);
 					return false;
 
 					break;
@@ -380,7 +375,6 @@ namespace Lib
 				break;
 			default:
 
-				MessageBox(NULL, TEXT("ReferenceModeが対応していません"), TEXT("エラー"), MB_OK);
 				return false;
 
 				break;
@@ -460,7 +454,6 @@ namespace Lib
 			}
 			else
 			{
-				MessageBox(NULL, TEXT("Material Lambert以外には対応していません"), TEXT("エラー"), MB_OK);
 
 				return false;
 			}
@@ -500,7 +493,7 @@ namespace Lib
 					&pResourceView,
 					NULL)))
 				{
-					MessageBox(NULL, TEXT("テクスチャの読み込みに失敗しました\n"), TEXT("エラー"), MB_OK);
+					OutputErrorLog("テクスチャの読み込みに失敗しました");
 					return false;
 				}
 
@@ -619,7 +612,7 @@ namespace Lib
 		m_pFbxManager = fbxsdk::FbxManager::Create();
 		if (m_pFbxManager == NULL)
 		{
-			OutputDebugString(TEXT("FbxManagerクラスの生成に失敗\n"));
+			OutputDebugString("FbxManagerクラスの生成に失敗\n");
 			return false;
 		}
 
@@ -631,7 +624,7 @@ namespace Lib
 		m_pFbxScene = fbxsdk::FbxScene::Create(m_pFbxManager, "");
 		if (m_pFbxScene == NULL)
 		{
-			OutputDebugString(TEXT("FbxSceneクラスの生成に失敗\n"));
+			OutputDebugString("FbxSceneクラスの生成に失敗\n");
 			return false;
 		}
 
@@ -643,7 +636,7 @@ namespace Lib
 		m_pFbxImporter = fbxsdk::FbxImporter::Create(m_pFbxManager, "");
 		if (m_pFbxImporter == NULL)
 		{
-			OutputDebugString(TEXT("FbxImporterクラスの生成に失敗\n"));
+			OutputDebugString("FbxImporterクラスの生成に失敗\n");
 			return false;
 		}
 
@@ -655,7 +648,7 @@ namespace Lib
 		m_pFbxIOSettings = fbxsdk::FbxIOSettings::Create(m_pFbxManager, IOSROOT);
 		if (m_pFbxIOSettings == NULL)
 		{
-			OutputDebugString(TEXT("FbxIOSettingsクラスの生成に失敗\n"));
+			OutputDebugString("FbxIOSettingsクラスの生成に失敗\n");
 			return false;
 		}
 		m_pFbxManager->SetIOSettings(m_pFbxIOSettings);

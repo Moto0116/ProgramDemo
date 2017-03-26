@@ -41,5 +41,5 @@ VS_OUTPUT VS(VS_INPUT In)
 
 float PS(VS_OUTPUT In) : SV_TARGET
 {
-	return In.Pos.z / In.Pos.w;
+	return In.Pos.z;
 }

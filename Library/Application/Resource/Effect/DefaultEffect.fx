@@ -48,16 +48,16 @@ struct VS_OUTPUT
 VS_OUTPUT VS(VS_INPUT In)
 {
 	VS_OUTPUT Out;
-	Out.Pos = mul(float4(In.Pos, 1.0f), g_World);
-	Out.Pos = mul(Out.Pos, g_View);
-	Out.Pos = mul(Out.Pos, g_Proj);
+	float4x4 Mat = mul(g_World, g_View);
+	Mat = mul(Mat, g_Proj);
+	Out.Pos = mul(float4(In.Pos, 1.0f), Mat);
 	Out.Normal = float4(In.Normal, 1.0f);
 	Out.UV = In.UV;
 
 	// ライトビュープロジェクション
-	float4x4 Mat = mul(g_World, g_LightView);
-	Mat = mul(Mat, g_LightProj);
-	Out.LightUV = mul(float4(In.Pos, 1.0f), Mat);
+	float4x4 LightMat = mul(g_World, g_LightView);
+	LightMat = mul(LightMat, g_LightProj);
+	Out.LightUV = mul(float4(In.Pos, 1.0f), LightMat);
 
 	// 法線とライトからカラー値を計算
 	float3 InvLightDir = -normalize(g_LightDir.xyz);
@@ -72,14 +72,17 @@ float4 PS(VS_OUTPUT In) : SV_TARGET
 	float4 ShadowColor = In.Color;
 	float ZValue = In.LightUV.z / In.LightUV.w;
 
-	float2 TransTexCoord;
-	TransTexCoord.x = (In.LightUV.x / In.LightUV.w + 1.0f) * 0.5f;
-	TransTexCoord.y = (1.0f - In.LightUV.y / In.LightUV.w) * 0.5f;
-	float SM_Z = g_DepthTexture.Sample(g_Sampler, TransTexCoord).r;
+	float2 Texel;
+	Texel.x = (In.LightUV.x / In.LightUV.w) * 0.5f + 0.5f;
+	Texel.y = (In.LightUV.y / In.LightUV.w) * -0.5f + 0.5f;
+	float SM_Z = g_DepthTexture.Sample(g_Sampler, Texel).r;
 
-	if (ZValue > SM_Z + 0.005f)
+	if (Texel.x <= 0.01 || Texel.x >= 0.99 || Texel.y <= 0.01 || Texel.y >= 0.99)
 	{
-		ShadowColor.rgb = In.Color.rgb * 0.5f;
+	}
+	else if (ZValue > (SM_Z +0.00002f))
+	{
+		ShadowColor.rgb = In.Color.rgb * 0.4f;
 	}
 
 	return g_Texture.Sample(g_Sampler, In.UV) * ShadowColor;
