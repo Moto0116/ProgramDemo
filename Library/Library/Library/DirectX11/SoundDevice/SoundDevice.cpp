@@ -9,6 +9,8 @@
 //----------------------------------------------------------------------
 #include "SoundDevice.h"
 
+#include "Debugger\Debugger.h"
+
 
 namespace Lib
 {
@@ -34,6 +36,7 @@ namespace Lib
 	{
 		if (m_pDSound8 != NULL)
 		{
+			OutputErrorLog("SuondDeviceオブジェクトは既に初期化されています");
 			return false;
 		}
 
@@ -46,11 +49,7 @@ namespace Lib
 
 	void SoundDevice::Finalize()
 	{
-		if (m_pDSound8 != NULL)
-		{
-			m_pDSound8->Release();
-			m_pDSound8 = NULL;
-		}
+		SafeRelease(m_pDSound8);
 	}
 }
 

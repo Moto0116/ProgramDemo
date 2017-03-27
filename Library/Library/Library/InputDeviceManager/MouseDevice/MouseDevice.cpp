@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------
 #include "MouseDevice.h"
 
+#include "..\..\Define\Define.h"
 #include "..\..\Debugger\Debugger.h"
 
 
@@ -35,21 +36,25 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool MouseDevice::Initialize(LPDIRECTINPUT8 _pDInput8, HWND _hWnd)
 	{
-		MyAssert(_pDInput8 != NULL, "DirectInputオブジェクトがありません");
-
+		if (_pDInput8 == NULL)
+		{
+			OutputErrorLog("DirectInputオブジェクトがありません");
+			return false;
+		}
 
 		m_pDInput8 = _pDInput8;
 		m_hWnd = _hWnd;
 
 		if (FAILED(m_pDInput8->CreateDevice(GUID_SysMouse, &m_pDInputDevice8, NULL)))
 		{
+			OutputErrorLog("DirectInputデバイスの生成に失敗しましたん");
 			return false;
 		}
 
 		if (FAILED(m_pDInputDevice8->SetDataFormat(&c_dfDIMouse)))
 		{
-			m_pDInputDevice8->Release();
-			m_pDInputDevice8 = NULL;
+			OutputErrorLog("DirectInputデバイスのフォーマット失敗しましたん");
+			SafeRelease(m_pDInputDevice8);
 			return false;
 		}
 
@@ -61,15 +66,15 @@ namespace Lib
 		DiProp.dwData = 1000;
 		if (FAILED(m_pDInputDevice8->SetProperty(DIPROP_BUFFERSIZE, &DiProp.diph)))
 		{
-			m_pDInputDevice8->Release();
-			m_pDInputDevice8 = NULL;
+			OutputErrorLog("DirectInputデバイスのプロパティ設定に失敗しましたん");
+			SafeRelease(m_pDInputDevice8);
 			return false;
 		}
 
 		if (FAILED(m_pDInputDevice8->SetCooperativeLevel(m_hWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
 		{
-			m_pDInputDevice8->Release();
-			m_pDInputDevice8 = NULL;
+			OutputErrorLog("DirectInput協調レベルの設定に失敗しましたん");
+			SafeRelease(m_pDInputDevice8);
 			return false;
 		}
 
@@ -80,11 +85,7 @@ namespace Lib
 
 	void MouseDevice::Finalize()
 	{
-		if (m_pDInputDevice8 != NULL)
-		{
-			m_pDInputDevice8->Release();
-			m_pDInputDevice8 = NULL;
-		}
+		SafeRelease(m_pDInputDevice8);
 	}
 
 	void MouseDevice::Update()

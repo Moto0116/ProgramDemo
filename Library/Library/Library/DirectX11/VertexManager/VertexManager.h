@@ -48,8 +48,8 @@ namespace Lib
 		void Finalize();
 
 	private:
-		std::vector<IVertex*>	m_pVertexs;
-		GraphicsDevice*			m_pGraphicDevice;
+		GraphicsDevice*			m_pGraphicDevice;	//!< グラフィックデバイス.
+		std::vector<IVertex*>	m_pVertexs;			//!< 頂点オブジェクトを格納するコンテナ.
 
 	};
 }

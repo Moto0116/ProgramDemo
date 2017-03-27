@@ -108,13 +108,10 @@ namespace Lib
 		 * 描画するテクスチャをセットする
 		 * @param[in] _pTexture テクスチャオブジェクト
 		 */
-		void SetTexture(ITexture* _pTexture);
-
-		/**
-		 * 描画するテクスチャをセットする
-		 * @param[in] _pTexture テクスチャオブジェクト
-		 */
-		void SetTexture(ID3D11ShaderResourceView* _pTexture);///@todo テスト用
+		inline void SetTexture(ITexture* _pTexture)
+		{
+			m_pTexture = _pTexture;
+		}
 
 		/**
 		 * 描画時のアニメーションをセットする
@@ -129,7 +126,7 @@ namespace Lib
 	private:
 		enum 
 		{ 
-			VERTEX_NUM = 4 //!< 頂点数
+			VERTEX_NUM = 4 //!< 頂点数.
 		};
 
 		/**
@@ -137,9 +134,9 @@ namespace Lib
 		 */
 		struct VERTEX
 		{
-			D3DXVECTOR3		Pos;	//!< 頂点座標
-			D3DXVECTOR2		UV;		//!< テクスチャ座標
-			D3DXCOLOR		Color;	//!< 頂点カラー値
+			D3DXVECTOR3		Pos;	//!< 頂点座標.
+			D3DXVECTOR2		UV;		//!< テクスチャ座標.
+			D3DXCOLOR		Color;	//!< 頂点カラー値.
 		};
 
 		/**
@@ -147,8 +144,8 @@ namespace Lib
 		 */
 		struct CONSTANT_BUFFER
 		{
-			D3DXMATRIX  MatWorld;	//!< ワールド変換行列
-			D3DXVECTOR4 WindowSize;	//!< ウィンドウの縦横サイズ
+			D3DXMATRIX  MatWorld;	//!< ワールド変換行列.
+			D3DXVECTOR4 WindowSize;	//!< ウィンドウの縦横サイズ.
 		};
 
 
@@ -197,23 +194,21 @@ namespace Lib
 		void ReleaseState();
 
 
-		GraphicsDevice*				m_pGraphicsDevice;
-		ID3D11VertexShader*			m_pVertexShader;
-		ID3DBlob*					m_pVertexCompiledShader;
-		ID3D11InputLayout*			m_pVertexLayout;
-		ID3D11PixelShader*			m_pPixelShader;
-		ID3DBlob*					m_pPixelCompiledShader;
-		ID3D11BlendState*			m_pBlendState;
-		ID3D11SamplerState*			m_pSamplerState;
-		ID3D11Buffer*				m_pVertexBuffer;
-		ID3D11Buffer*				m_pConstantBuffer;
-		ITexture*					m_pTexture;
-		IAnimation*					m_pAnimation;
-		VERTEX						m_pVertexData[VERTEX_NUM];
-		float						m_WindowWidth;
-		float						m_WindowHeight;
-
-		ID3D11ShaderResourceView*	m_pTextureResource;
+		GraphicsDevice*				m_pGraphicsDevice;			//!< グラフィックデバイス.
+		ID3D11VertexShader*			m_pVertexShader;			//!< 頂点シェーダー.
+		ID3DBlob*					m_pVertexCompiledShader;	//!< 頂点シェーダーのコンパイル情報.
+		ID3D11InputLayout*			m_pVertexLayout;			//!< 頂点入力レイアウト.
+		ID3D11PixelShader*			m_pPixelShader;				//!< ピクセルシェーダー.
+		ID3DBlob*					m_pPixelCompiledShader;		//!< ピクセルシェーダーのコンパイル情報.
+		ID3D11BlendState*			m_pBlendState;				//!< ブレンドステート.
+		ID3D11SamplerState*			m_pSamplerState;			//!< サンプラステート.
+		ID3D11Buffer*				m_pVertexBuffer;			//!< 頂点バッファ.
+		ID3D11Buffer*				m_pConstantBuffer;			//!< 定数バッファ.
+		ITexture*					m_pTexture;					//!< テクスチャインターフェース.
+		IAnimation*					m_pAnimation;				//!< アニメーションインターフェース.
+		VERTEX						m_pVertexData[VERTEX_NUM];	//!< 頂点情報構造体.
+		float						m_WindowWidth;				//!< ウィンドウの幅.
+		float						m_WindowHeight;				//!< ウィンドウの高さ.
 
 	};
 }

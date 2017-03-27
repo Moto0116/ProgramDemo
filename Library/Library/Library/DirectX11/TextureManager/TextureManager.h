@@ -27,7 +27,6 @@ namespace Lib
 	public:
 		friend SingletonBase<TextureManager>;
 
-
 		/**
 		 * 初期化処理
 		 * @param[in] _pGraphicsDevice グラフィックデバイス
@@ -59,7 +58,7 @@ namespace Lib
 		 * @param[in] _index 取得するテクスチャのインデックス
 		 * @return 格納先のテクスチャ
 		 */
-		ITexture* GetTexture(int _index);
+		ITexture* GetTexture(int _index) const;
 
 		/**
 		 * テクスチャを格納しているバッファを解放する
@@ -67,7 +66,7 @@ namespace Lib
 		void ClearBuffer();
 
 	private:
-		static const int m_InvalidIndex;
+		static const int m_InvalidIndex;	//!< TextureManagerクラスがとるインデックスエラー値.
 
 		/**
 		 * コンストラクタ
@@ -79,8 +78,8 @@ namespace Lib
 		 */
 		virtual ~TextureManager();
 
-		std::vector<ITexture*>	m_pTextures;
-		GraphicsDevice*			m_pGraphicsDevice;
+		GraphicsDevice*			m_pGraphicsDevice;	//!< グラフィックデバイス.
+		std::vector<ITexture*>	m_pTextures;		//!< テクスチャを格納するコンテナ.
 
 		DISALLOW_COPY_AND_ASSIGN(TextureManager);
 

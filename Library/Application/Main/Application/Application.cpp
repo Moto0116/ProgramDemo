@@ -82,11 +82,10 @@ void Application::Run()
 bool Application::CreateMainWindow()
 {
 	m_pMainWindow = new Lib::Window();
-	if (!m_pMainWindow->Initialize(TEXT("Battle"), m_WindowWidth, m_WindowHeight, m_WindowStyle))
+	if (!m_pMainWindow->Initialize(TEXT("ProgramDemo"), m_WindowWidth, m_WindowHeight, m_WindowStyle))
 	{
 		OutputErrorLog("メインウィンドウ生成に失敗しました");
-
-		delete m_pMainWindow;
+		SafeDelete(m_pMainWindow);
 		return false;
 	}
 
@@ -99,7 +98,6 @@ bool Application::CreateDX11Manager()
 	if (!SINGLETON_INSTANCE(Lib::GraphicsDevice)->Initialize(m_pMainWindow->GetWindowHandle()))
 	{
 		OutputErrorLog("グラフィックデバイス生成に失敗しました");
-
 		SINGLETON_DELETE(Lib::GraphicsDevice);
 		return false;
 	}
@@ -113,7 +111,6 @@ bool Application::CreateInputDevice()
 	if (!SINGLETON_INSTANCE(Lib::InputDeviceManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowHandle()))
 	{
 		OutputErrorLog("入力デバイス管理クラス生成に失敗しました");
-
 		SINGLETON_DELETE(Lib::InputDeviceManager);
 		return false;
 	}
@@ -121,7 +118,6 @@ bool Application::CreateInputDevice()
 	if (!SINGLETON_INSTANCE(Lib::InputDeviceManager)->CreateDevice(Lib::InputDeviceManager::KEYDEVICE_TYPE))
 	{
 		OutputErrorLog("キーデバイス生成に失敗しました");
-
 		SINGLETON_DELETE(Lib::InputDeviceManager);
 		return false;
 	}
@@ -129,7 +125,6 @@ bool Application::CreateInputDevice()
 	if (!SINGLETON_INSTANCE(Lib::InputDeviceManager)->CreateDevice(Lib::InputDeviceManager::MOUSEDEVICE_TYPE))
 	{
 		OutputErrorLog("マウスデバイス生成に失敗しました");
-
 		SINGLETON_DELETE(Lib::InputDeviceManager);
 		return false;
 	}
@@ -142,27 +137,21 @@ bool Application::CreateSceneManager()
 	m_pSceneManager = new Lib::SceneManager();
 	if(!m_pSceneManager->Initialize())
 	{
-		delete m_pSceneManager;
-		m_pSceneManager = NULL;
-
+		SafeDelete(m_pSceneManager);
 		return false;
 	}
 
-	m_pGameScene = new GameScene();
+	m_pGameScene = new GameScene(GAME_SCENE_ID);
 	if (!m_pGameScene->Initialize())
 	{
 		m_pSceneManager->Finalize();
-		delete m_pSceneManager;
-		m_pSceneManager = NULL;
-
-		delete m_pGameScene;
-		m_pGameScene = NULL;
-
+		SafeDelete(m_pSceneManager);
+		SafeDelete(m_pGameScene);
 		return false;
 	}
 
-	m_pSceneManager->AddScene(m_pGameScene, GAME_SCENE_ID);
-	m_pSceneManager->SetEntryScene(GAME_SCENE_ID);
+	m_pSceneManager->AddScene(m_pGameScene);
+	m_pSceneManager->SetEntryScene(m_pGameScene);
 
 	return true;
 }
@@ -172,8 +161,7 @@ void Application::ReleaseMainWindow()
 	if (m_pMainWindow != NULL)
 	{
 		m_pMainWindow->Finalize();
-		delete m_pMainWindow;
-		m_pMainWindow = NULL;
+		SafeDelete(m_pMainWindow);
 	}
 }
 
@@ -202,15 +190,13 @@ void Application::ReleaseSceneManager()
 {
 	if (m_pSceneManager != NULL)
 	{
-		m_pSceneManager->DeleteScene(GAME_SCENE_ID);
+		m_pSceneManager->DeleteScene(m_pGameScene);
 
 		m_pGameScene->Finalize();
-		delete m_pGameScene;
-		m_pGameScene = NULL;
+		SafeDelete(m_pGameScene);
 
 		m_pSceneManager->Finalize();
-		delete m_pSceneManager;
-		m_pSceneManager = NULL;
+		SafeDelete(m_pSceneManager);
 	}
 }
 

@@ -31,7 +31,6 @@ namespace Lib
 		 */
 		~Light();
 
-	
 		/**
 		 * ライト座標の設定
 		 * @param[in] _pPos 設定する座標
@@ -54,7 +53,7 @@ namespace Lib
 		 * ライト座標の取得
 		 * @return ライト座標
 		 */
-		inline D3DXVECTOR3 GetPos()
+		inline D3DXVECTOR3 GetPos() const
 		{
 			return m_Pos;
 		}
@@ -63,14 +62,14 @@ namespace Lib
 		 * ライトの向きの取得
 		 * @return ライトの向き
 		 */
-		inline D3DXVECTOR3 GetDirectionPos()
+		inline D3DXVECTOR3 GetDirectionPos() const
 		{
 			return m_DirectionPos;
 		}
 
 	private:
-		D3DXVECTOR3 m_Pos;
-		D3DXVECTOR3 m_DirectionPos;
+		D3DXVECTOR3 m_Pos;			//!< ライトの座標.
+		D3DXVECTOR3 m_DirectionPos;	//!< ライトが向いている座標.
 
 	};
 }

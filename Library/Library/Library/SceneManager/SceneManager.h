@@ -51,43 +51,27 @@ namespace Lib
 		/**
 		 * シーンの追加
 		 * @param[in] _pScene 登録するシーンオブジェクト
-		 * @param[in] _sceneId シーンオブジェクトのID(IDはユニークで0以上の整数である必要がある)
 		 * @return シーンの追加に成功したらtrue 失敗したらfalse
 		 */
-		bool AddScene(SceneBase* _pScene, int _sceneId);
+		bool AddScene(SceneBase* _pScene);
 
 		/**
 		 * シーンの削除
+		 * @param[in] _pScene 削除するシーンオブジェクト
 		 */
-		void DeleteScene(int _sceneId);
+		void DeleteScene(SceneBase* _pScene);
 
 		/**
 		 * エントリシーンを設定する
-		 * @param[in] _sceneId エントリシーンのID
+		 * @param[in] _pScene エントリシーンオブジェクト
 		 */
-		void SetEntryScene(int _sceneId);
+		void SetEntryScene(SceneBase* _pScene);
 
 	private:
-		/**
-		 * シーンのデータ構造体
-		 */
-		struct SCENE_DATA
-		{
-			SCENE_DATA(SceneBase* _pScene, int _sceneId) :
-				pScene(_pScene),
-				SceneID(_sceneId)
-			{
-			}
+		static const int m_EmptySceneID;	//!< 空シーンのID.
 
-			SceneBase* pScene;
-			int SceneID;
-		};
-
-
-		static const int m_EmptySceneID;	//!< 空シーンのID
-
-		std::vector<SCENE_DATA*>	m_pSceneData;
-		SceneBase*					m_pCurrentScene;	//!< 現在のシーン
+		std::vector<SceneBase*>	m_pSceneData;	//!< シーンを格納しているコンテナ.
+		SceneBase*				m_pCurrentScene;//!< 現在のシーン.
 
 	};
 }

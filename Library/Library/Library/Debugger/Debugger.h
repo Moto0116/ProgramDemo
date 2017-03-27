@@ -73,7 +73,7 @@ if(!_expression)													\
 	Lib::Debugger::OutputDebugLog(									\
 	"\nMyAssert: %s\nErrorLog: %s\nFileName: %s\nLine: %d\n\n",		\
 	#_expression,													\
-	_str,															\
+	TEXT(_str),														\
 	__FILE__,														\
 	__LINE__);														\
 	DebugBreak();													\
@@ -82,7 +82,7 @@ if(!_expression)													\
 #define OutputErrorLog(_str)													\
 	Lib::Debugger::OutputDebugLog("\n\n---------------Error---------------");	\
 	Lib::Debugger::OutputDebugLog("\nErrorLog: %s\nFileName: %s\nLine: %d\n\n",	\
-	_str,																		\
+	TEXT(_str),																	\
 	__FILE__,																	\
 	__LINE__);
 

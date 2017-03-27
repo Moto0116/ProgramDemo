@@ -3,7 +3,8 @@
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 
-const D3DXVECTOR3 MainLight::m_DefaultLightPos = D3DXVECTOR3(120, 100, 140);
+
+const D3DXVECTOR3 MainLight::m_DefaultLightPos = D3DXVECTOR3(120, 90, 140);
 const D3DXVECTOR3 MainLight::m_DefaultLightDirPos = D3DXVECTOR3(40, 0, 40);
 const float MainLight::m_NearPoint = 1.f;
 const float MainLight::m_FarPoint = 700.f;
@@ -24,10 +25,6 @@ MainLight::~MainLight()
 
 bool MainLight::Initialize()
 {
-	m_pVertex2D = new Lib::Vertex2D();
-	m_pVertex2D->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice));
-	m_pVertex2D->CreateVertexBuffer(&D3DXVECTOR2(300, 300));
-
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 
@@ -86,10 +83,6 @@ void MainLight::Update()
 void MainLight::Draw()
 {
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(2, 1, &m_pShaderResourceView);
-
-	m_pVertex2D->WriteConstantBuffer(&D3DXVECTOR2(200, 200));
-	m_pVertex2D->SetTexture(m_pShaderResourceView);
-	m_pVertex2D->Draw();
 }
 
 bool MainLight::CreateConstantBuffer()

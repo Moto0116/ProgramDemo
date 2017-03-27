@@ -38,6 +38,19 @@ namespace Lib
 	}
 
 	template <typename Listener, typename Event>
+	void EventManager<Listener, Event>::RemoveEventListener(Listener* _pEventListener)
+	{
+		for (auto itr = m_pEventListener.begin(); itr != m_pEventListener.end(); itr++)
+		{
+			if ((*itr)->GetID() == _pEventListener->GetID())
+			{
+				m_pEventListener->erase(itr);
+				break;
+			}
+		}
+	}
+
+	template <typename Listener, typename Event>
 	void EventManager<Listener, Event>::SendEventMessage(Event* _pEvent)
 	{
 		for (auto itr = m_pEventListener.begin(); itr != m_pEventListener.end(); itr++)

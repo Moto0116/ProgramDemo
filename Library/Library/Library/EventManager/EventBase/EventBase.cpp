@@ -23,7 +23,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	EventBase::EventBase()
 	{
-		m_EventBaseCount++;	// オーバーフローは考慮しない
+		m_EventBaseCount++;	// オーバーフローは考慮しない.
 		m_EventID = m_EventBaseCount;
 	}
 

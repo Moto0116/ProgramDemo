@@ -22,8 +22,9 @@ class GameScene : public Lib::SceneBase
 public:
 	/**
 	 * コンストラクタ
+	 * @param[in] _sceneId シーンのID
 	 */
-	GameScene();
+	GameScene(int _sceneId);
 
 	/**
 	 * デストラクタ

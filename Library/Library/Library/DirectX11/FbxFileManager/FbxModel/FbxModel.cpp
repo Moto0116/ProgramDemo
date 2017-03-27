@@ -44,28 +44,28 @@ namespace Lib
 	{
 		if (m_MeshData.size() == 0)
 		{
-			OutputErrorLog("メッシュデータがありません\n");
+			OutputErrorLog("メッシュデータがありません");
 			return false;
 		}
 
-		if (!InitIndexBuffer())
+		if (!CreateIndexBuffer())
 		{
-			OutputErrorLog("インデックスバッファの初期化に失敗しました\n");
+			OutputErrorLog("インデックスバッファの初期化に失敗しました");
 			return false;
 		}
 
-		if (!InitVertexBuffer())
+		if (!CreateVertexBuffer())
 		{
-			OutputErrorLog("頂点バッファの初期化に失敗しました\n");
+			OutputErrorLog("頂点バッファの初期化に失敗しました");
 
 			ReleaseIndexBuffer();
 
 			return false;
 		}
 
-		if (!InitSamplerState())
+		if (!CreateSamplerState())
 		{
-			OutputErrorLog("サンプラステートの初期化に失敗しました\n");
+			OutputErrorLog("サンプラステートの初期化に失敗しました");
 
 			ReleaseVertexBuffer();
 			ReleaseIndexBuffer();
@@ -73,16 +73,16 @@ namespace Lib
 			return false;
 		}
 
-		if (!InitConstantBuffer())
+		if (!CreateConstantBuffer())
 		{
-			OutputErrorLog("定数バッファの初期化に失敗しました\n");
+			OutputErrorLog("定数バッファの初期化に失敗しました");
 
 			ReleaseSamplerState();
 			ReleaseVertexBuffer();
 			ReleaseIndexBuffer();
 		}
 
-		WriteConstantBuffer();	///@todo 現状は複数メッシュの対応はしない
+		WriteConstantBuffer();	///@todo 現状は複数メッシュの対応はしない.
 
 		return true;
 	}
@@ -96,49 +96,34 @@ namespace Lib
 
 		for (unsigned int i = 0; i < m_MeshData.size(); i++)
 		{
-			delete[] m_MeshData[i].pMaterialData->pTextureName;
-			m_MeshData[i].pMaterialData->pTextureName = NULL;
-
-			delete[] m_MeshData[i].pMaterialData->pTextureUVSetName;
-			m_MeshData[i].pMaterialData->pTextureUVSetName = NULL;
+			// マテリアル関連の破棄.
+			SafeDelete(m_MeshData[i].pMaterialData->pTextureName);
+			SafeDelete(m_MeshData[i].pMaterialData->pTextureUVSetName);
 
 			for (int n = 0; n < m_MeshData[i].pMaterialData->TextureCount; n++)
 			{
-				m_MeshData[i].pMaterialData->pTextureView[n]->Release();
+				SafeRelease(m_MeshData[i].pMaterialData->pTextureView[n]);
 			}
+			SafeDelete(m_MeshData[i].pMaterialData->pTextureView);
+			SafeDelete(m_MeshData[i].pMaterialData);
 
-			delete[] m_MeshData[i].pMaterialData->pTextureView;
-			m_MeshData[i].pMaterialData->pTextureView = NULL;
-
-			delete[] m_MeshData[i].pMaterialData;
-			m_MeshData[i].pMaterialData = NULL;
-
+			// テクスチャ関連の破棄.
 			for (int n = 0; n < m_MeshData[i].pTextureData->TextureUVCount; n++)
 			{
-				delete[] m_MeshData[i].pTextureData->pTextureUVData[n].pTextureUV;
-				m_MeshData[i].pTextureData->pTextureUVData[n].pTextureUV = NULL;
+				SafeDelete(m_MeshData[i].pTextureData->pTextureUVData[n].pTextureUV);
 			}
 
-			delete[] m_MeshData[i].pTextureData->pTextureUVData;
-			m_MeshData[i].pTextureData->pTextureUVData = NULL;
+			SafeDelete(m_MeshData[i].pTextureData->pTextureUVData);
+			SafeDelete(m_MeshData[i].pTextureData);
 
-			delete m_MeshData[i].pTextureData;
-			m_MeshData[i].pTextureData = NULL;
+			// 法線関連の破棄.
+			SafeDelete(m_MeshData[i].pNormalData->pNormalVec);
+			SafeDelete(m_MeshData[i].pNormalData);
 
-			delete[] m_MeshData[i].pNormalData->pNormalVec;
-			m_MeshData[i].pNormalData->pNormalVec = NULL;
-
-			delete m_MeshData[i].pNormalData;
-			m_MeshData[i].pNormalData = NULL;
-
-			delete[] m_MeshData[i].pVertexData->pVertex;
-			m_MeshData[i].pVertexData->pVertex = NULL;
-
-			delete[] m_MeshData[i].pVertexData->pIndexAry;
-			m_MeshData[i].pVertexData->pIndexAry = NULL;
-
-			delete m_MeshData[i].pVertexData;
-			m_MeshData[i].pVertexData = NULL;
+			// 頂点関連の破棄.
+			SafeDelete(m_MeshData[i].pVertexData->pVertex);
+			SafeDelete(m_MeshData[i].pVertexData->pIndexAry);
+			SafeDelete(m_MeshData[i].pVertexData);
 		}
 	}
 
@@ -168,17 +153,17 @@ namespace Lib
 
 	void FbxModel::AnimationDraw()
 	{
-		/// @todo アニメーション情報の取得がまだなので未実装
+		/// @todo アニメーション情報の取得がまだなので未実装.
 	}
 
 	void FbxModel::SetAnimationFrame(int _setFrame)
 	{
-		/// @todo アニメーション情報の取得がまだなので未実装
+		/// @todo アニメーション情報の取得がまだなので未実装.
 	}
 
 	int FbxModel::GetAnimationFrame()
 	{
-		/// @todo アニメーション情報の取得がまだなので未実装(とりあえず0だけ返す)
+		/// @todo アニメーション情報の取得がまだなので未実装(とりあえず0だけ返す).
 		return 0;
 	}
 
@@ -186,14 +171,15 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	// Private Functions
 	//----------------------------------------------------------------------------------------------------
-	bool FbxModel::InitIndexBuffer()
+	bool FbxModel::CreateIndexBuffer()
 	{
 		m_ppIndexBuffer = new ID3D11Buffer*[m_MeshData.size()];
 
 		for (unsigned int MeshIndex = 0; MeshIndex < m_MeshData.size(); MeshIndex++)
 		{
-			int PolygonVertexNum = m_MeshData[MeshIndex].pVertexData->PolygonVertexNum;	// メッシュの総頂点数
+			int PolygonVertexNum = m_MeshData[MeshIndex].pVertexData->PolygonVertexNum;	// メッシュの総頂点数.
 
+			// インデックスバッファの設定.
 			D3D11_BUFFER_DESC BufferDesc;
 			ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
 			BufferDesc.ByteWidth = sizeof(int) * PolygonVertexNum;
@@ -203,21 +189,27 @@ namespace Lib
 			BufferDesc.MiscFlags = 0;
 			BufferDesc.StructureByteStride = 0;
 
+			// インデックスバッファに格納するデータの設定.
 			D3D11_SUBRESOURCE_DATA ResourceData;
 			ZeroMemory(&ResourceData, sizeof(ResourceData));
 			ResourceData.pSysMem = m_MeshData[MeshIndex].pVertexData->pIndexAry;
 			ResourceData.SysMemPitch = 0;
 			ResourceData.SysMemSlicePitch = 0;
 
-			if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&BufferDesc, &ResourceData, &m_ppIndexBuffer[MeshIndex])))
+			// インデックスバッファの生成.
+			if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(
+				&BufferDesc, 
+				&ResourceData, 
+				&m_ppIndexBuffer[MeshIndex])))
 			{
-				OutputErrorLog(TEXT("インデックスバッファの作成に失敗しました\n"));
+				OutputErrorLog("インデックスバッファの作成に失敗しました");
+
 				for (unsigned int i = 0; i < MeshIndex; i++)
 				{
-					m_ppIndexBuffer[i]->Release();
+					SafeRelease(m_ppIndexBuffer[i]);
 				}
-				delete[] m_ppIndexBuffer;
-				m_ppIndexBuffer = NULL;
+				SafeDeleteArray(m_ppIndexBuffer);
+
 				return false;
 			}
 		}
@@ -225,22 +217,24 @@ namespace Lib
 		return true;
 	}
 
-	bool FbxModel::InitVertexBuffer()
+	bool FbxModel::CreateVertexBuffer()
 	{
 		m_ppVertexBuffer = new ID3D11Buffer*[m_MeshData.size()];
 		m_ppVertexData = new FBXMODEL_VERTEX*[m_MeshData.size()];
 
 		for (unsigned int MeshIndex = 0; MeshIndex < m_MeshData.size(); MeshIndex++)
 		{
-			int ControlPositionNum = m_MeshData[MeshIndex].pVertexData->ControlPositionNum;	// メッシュのインデックスバッファが指す総頂点数
-			D3DXVECTOR3* pVertex = m_MeshData[MeshIndex].pVertexData->pVertex;				// メッシュが持つ頂点座標の配列
-			D3DXVECTOR3* pNormal = m_MeshData[MeshIndex].pNormalData->pNormalVec;			// メッシュが持つ法線ベクトルの配列
+			MESH_DATA MeshData = m_MeshData[MeshIndex]; // 現在のメッシュデータ.
 
-			/// @todo テクスチャ座標は今のところ最初のだけ適用
-			D3DXVECTOR2* pUVVertex = m_MeshData[MeshIndex].pTextureData->pTextureUVData[0].pTextureUV;	// メッシュが持つテクスチャ座標の配列
+			int ControlPositionNum = MeshData.pVertexData->ControlPositionNum;				// メッシュのインデックスバッファが指す総頂点数.
+			D3DXVECTOR3* pVertex = MeshData.pVertexData->pVertex;							// メッシュが持つ頂点座標の配列.
+			D3DXVECTOR3* pNormal = MeshData.pNormalData->pNormalVec;						// メッシュが持つ法線ベクトルの配列.
+			///@todo 現状 複数テクスチャは考慮しない.
+			D3DXVECTOR2* pUVVertex = MeshData.pTextureData->pTextureUVData[0].pTextureUV;	// メッシュが持つテクスチャ座標の配列.
 
+
+			// メッシュに格納されているデータを設定.
 			m_ppVertexData[MeshIndex] = new FBXMODEL_VERTEX[ControlPositionNum];
-
 			for (int i = 0; i < ControlPositionNum; i++)
 			{
 				m_ppVertexData[MeshIndex][i].Pos = pVertex[i];
@@ -248,6 +242,8 @@ namespace Lib
 				m_ppVertexData[MeshIndex][i].Texel = pUVVertex[i];
 			}
 
+
+			// 頂点バッファの設定.
 			D3D11_BUFFER_DESC BufferDesc;
 			ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
 			BufferDesc.ByteWidth = sizeof(FBXMODEL_VERTEX) * ControlPositionNum;
@@ -256,32 +252,37 @@ namespace Lib
 			BufferDesc.CPUAccessFlags = 0;
 			BufferDesc.MiscFlags = 0;
 
+			// 頂点バッファに格納するデータの設定.
 			D3D11_SUBRESOURCE_DATA ResourceData;
 			ZeroMemory(&ResourceData, sizeof(ResourceData));
 			ResourceData.pSysMem = m_ppVertexData[MeshIndex];
 			ResourceData.SysMemPitch = 0;
 			ResourceData.SysMemSlicePitch = 0;
 
-			if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&BufferDesc, &ResourceData, &m_ppVertexBuffer[MeshIndex])))
+			// 頂点バッファの生成.
+			if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(
+				&BufferDesc, 
+				&ResourceData, 
+				&m_ppVertexBuffer[MeshIndex])))
 			{
-				OutputErrorLog("頂点バッファの作成に失敗しました\n");
+				OutputErrorLog("頂点バッファの作成に失敗しました");
+
 				for (unsigned int i = 0; i < MeshIndex; i++)
 				{
-					m_ppVertexBuffer[i]->Release();
+					SafeRelease(m_ppVertexBuffer[i]);
 				}
-				delete[] m_ppVertexBuffer;
-				m_ppVertexBuffer = NULL;
+				SafeDeleteArray(m_ppVertexBuffer);
 
 				return false;
 			}
 		}
-
 		return true;
 	}
 
-	bool FbxModel::InitSamplerState()
+	bool FbxModel::CreateSamplerState()
 	{
-		D3D11_SAMPLER_DESC SamplerDesc;
+		// サンプラの設定.
+		D3D11_SAMPLER_DESC SamplerDesc;	
 		ZeroMemory(&SamplerDesc, sizeof(SamplerDesc));
 		SamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -297,7 +298,11 @@ namespace Lib
 		SamplerDesc.MinLOD = 0;
 		SamplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateSamplerState(&SamplerDesc, &m_pSamplerState)))
+
+		// サンプラの生成.
+		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateSamplerState(
+			&SamplerDesc, 
+			&m_pSamplerState)))
 		{
 			OutputErrorLog("サンプラステートの生成に失敗");
 			return false;
@@ -306,8 +311,9 @@ namespace Lib
 		return true;
 	}
 
-	bool FbxModel::InitConstantBuffer()
+	bool FbxModel::CreateConstantBuffer()
 	{
+		// 定数バッファの設定.
 		D3D11_BUFFER_DESC ConstantBufferDesc;
 		ConstantBufferDesc.ByteWidth = sizeof(MATERIAL_CONSTANT_BUFFER);
 		ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -316,6 +322,7 @@ namespace Lib
 		ConstantBufferDesc.MiscFlags = 0;
 		ConstantBufferDesc.StructureByteStride = 0;
 
+		// 定数バッファの生成.
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(
 			&ConstantBufferDesc, 
 			NULL, 
@@ -334,53 +341,41 @@ namespace Lib
 		{
 			for (unsigned int i = 0; i < m_MeshData.size(); i++)
 			{
-				m_ppIndexBuffer[i]->Release();
+				SafeRelease(m_ppIndexBuffer[i]);
 			}
-			delete[] m_ppIndexBuffer;
-			m_ppIndexBuffer = NULL;
+			SafeDeleteArray(m_ppIndexBuffer);
 		}
 	}
 
 	void FbxModel::ReleaseVertexBuffer()
 	{
-		if (m_ppVertexBuffer != NULL)
+		if (m_ppVertexData != NULL)
 		{
 			for (unsigned int i = 0; i < m_MeshData.size(); i++)
 			{
-				delete m_ppVertexData[i];
-				m_ppVertexData[i] = NULL;
+				SafeDelete(m_ppVertexData[i]);
 			}
-			delete[] m_ppVertexData;
-			m_ppVertexData = NULL;
+			SafeDeleteArray(m_ppVertexData);
 		}
 
 		if (m_ppVertexBuffer != NULL)
 		{
 			for (unsigned int i = 0; i < m_MeshData.size(); i++)
 			{
-				m_ppVertexBuffer[i]->Release();
-				delete[] m_ppVertexBuffer;
-				m_ppVertexBuffer = NULL;
+				SafeRelease(m_ppVertexBuffer[i]);
 			}
+			SafeDeleteArray(m_ppVertexBuffer);
 		}
 	}
 
 	void FbxModel::ReleaseSamplerState()
 	{
-		if (m_pSamplerState != NULL)
-		{
-			m_pSamplerState->Release();
-			m_pSamplerState = NULL;
-		}
+		SafeRelease(m_pSamplerState);
 	}
 
 	void FbxModel::ReleaseConstantBuffer()
 	{
-		if (m_pMaterialConstantBuffer != NULL)
-		{
-			m_pMaterialConstantBuffer->Release();
-			m_pMaterialConstantBuffer = NULL;
-		}
+		SafeRelease(m_pMaterialConstantBuffer);
 	}
 
 	void FbxModel::WriteConstantBuffer(int _meshNum)
@@ -393,6 +388,7 @@ namespace Lib
 			0,
 			&SubResourceData)))
 		{
+			// マテリアルデータを定数バッファに詰める.
 			MATERIAL_CONSTANT_BUFFER ConstantBuffer;
 			ConstantBuffer.Diffuse = static_cast<D3DXVECTOR4>(m_MeshData[_meshNum].pMaterialData->pMaterial.Diffuse);
 			ConstantBuffer.Ambient = static_cast<D3DXVECTOR4>(m_MeshData[_meshNum].pMaterialData->pMaterial.Ambient);

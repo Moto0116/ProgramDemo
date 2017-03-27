@@ -57,7 +57,7 @@ namespace Lib
 	
 	
 	protected:
-		static Type* m_pInstance;	//!< シングルトンインスタンス
+		static Type* m_pInstance;	//!< シングルトンインスタンス.
 	
 		/**
 		 * コンストラクタ
@@ -79,8 +79,19 @@ namespace Lib
 #include "SingletonBase_private.h"
 
 
+/**
+ * シングルトンオブジェクトの生成マクロ
+ */
 #define SINGLETON_CREATE(Type) Lib::SingletonBase<Type>::Create()
+
+/**
+ * シングルトンオブジェクトの取得マクロ
+ */
 #define SINGLETON_INSTANCE(Type) Lib::SingletonBase<Type>::GetInstance()
+
+/**
+ * シングルトンオブジェクトの破棄マクロ
+ */
 #define SINGLETON_DELETE(Type) Lib::SingletonBase<Type>::Delete()
 
 

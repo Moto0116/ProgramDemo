@@ -21,7 +21,8 @@
 
 
 
-GameScene::GameScene()
+GameScene::GameScene(int _sceneId) : 
+	SceneBase(_sceneId)
 {
 }
 

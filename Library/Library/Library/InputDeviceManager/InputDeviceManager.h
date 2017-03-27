@@ -9,6 +9,9 @@
 //----------------------------------------------------------------------
 // Define
 //----------------------------------------------------------------------
+/**
+ * DirectInputのバージョン指定
+ */
 #define DIRECTINPUT_VERSION 0x0800
 
 
@@ -38,10 +41,10 @@ namespace Lib
 		 */
 		enum INPUTDEVICE_TYPE
 		{
-			GAMEPAD_TYPE,		//!< コントローラー
-			KEYDEVICE_TYPE,		//!< キーボード
-			MOUSEDEVICE_TYPE,	//!< マウス
-			DEVICE_TYPE_MAX		//!< デバイス最大数
+			GAMEPAD_TYPE,		//!< コントローラー.
+			KEYDEVICE_TYPE,		//!< キーボード.
+			MOUSEDEVICE_TYPE,	//!< マウス.
+			DEVICE_TYPE_MAX		//!< デバイス最大数.
 		};
 
 		/**
@@ -142,11 +145,11 @@ namespace Lib
 		void ReleaseMouseDevice();
 
 
-		GamePad*		m_pGamePad;
-		KeyDevice*		m_pKeyDevice;
-		MouseDevice*	m_pMouseDevice;
-		LPDIRECTINPUT8	m_pDInput8;
-		HWND			m_hWnd;
+		GamePad*		m_pGamePad;		//!< ゲームパッドオブジェクト.
+		KeyDevice*		m_pKeyDevice;	//!< キーデバイスオブジェクト.
+		MouseDevice*	m_pMouseDevice;	//!< マウスデバイスオブジェクト.
+		LPDIRECTINPUT8	m_pDInput8;		//!< DirectInput8オブジェクト.
+		HWND			m_hWnd;			//!< 対応するウィンドウハンドル.
 
 	};
 }

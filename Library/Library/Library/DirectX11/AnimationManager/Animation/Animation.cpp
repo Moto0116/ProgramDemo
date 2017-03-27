@@ -13,8 +13,6 @@
 #include "..\..\..\Debugger\Debugger.h"
 
 
-///@todo 修正予定
-
 namespace Lib
 {
 	//----------------------------------------------------------------------
@@ -53,6 +51,7 @@ namespace Lib
 
 	void Animation::SetAnimationPattern(Animation::ANIMATION_PATTERN _animationPattern)
 	{
+		// 設定されたパターンの関数ポインタをセット.
 		switch (_animationPattern)
 		{
 		case ONE_ANIMATION:
@@ -68,7 +67,7 @@ namespace Lib
 			m_pAnimationFunc = &Animation::ReverseLoopAnimationControl;
 			break;
 		default:
-			OutputErrorLog("AnimationPatternに無効な値が設定されました\n無視します\n\n");
+			OutputErrorLog("AnimationPatternに無効な値が設定されました\n無視します");
 			return;
 			break;
 		}
@@ -89,7 +88,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	void Animation::Load(LPCTSTR _pAnimationPath)
 	{
-		///@todo 読み込みに失敗した場合は現在のフレームをNULLに設定するように修正する
+		///@todo 読み込みに失敗した場合は現在のフレームをNULLに設定するように修正する.
 
 		FILE* pAnimationFile = NULL;
 		std::vector<float> AnimationData;
@@ -100,20 +99,20 @@ namespace Lib
 
 		fopen_s(&pAnimationFile, _pAnimationPath, "r");
 
-		// サイズ取得
+		// ファイルサイズの取得.
 		fseek(pAnimationFile, 0, SEEK_END);
 		FileSize = ftell(pAnimationFile) + 1;
 		fseek(pAnimationFile, 0, SEEK_SET);
 
-		// ファイルのデータを格納するバッファ
+		// ファイルのデータを格納するバッファ.
 		pBuffer = new char[FileSize];
 		ZeroMemory(pBuffer, FileSize);
 
-		// ファイルの読み込み
+		// ファイルの読み込み.
 		fread(pBuffer, FileSize, 1, pAnimationFile);
 		pBuffer[FileSize - 1] = '\0';
 
-		// ファイル内のデータを見つけて取得
+		// ファイル内のデータを見つけて取得.
 		pBuffer = strstr(pBuffer, "{");
 		strcpy_s(pBuffer, FileSize, strtok_s(pBuffer, "{}", &pContext));
 		pDataStr = strtok_s(pBuffer, "{},\n", &pContext);
@@ -122,7 +121,7 @@ namespace Lib
 		{
 			if (pDataStr == NULL)
 			{
-				break;
+				break;	// データ全てを取り出すまでループ
 			}
 			else
 			{
@@ -135,7 +134,7 @@ namespace Lib
 		fclose(pAnimationFile);
 
 
-		// 取り出したデータを追加する
+		// 取り出したデータを追加する.
 		for (unsigned int i = 0; i < AnimationData.size() / 5; i++)
 		{
 			m_pFrame.push_back(new ANIMATION_FRAME);

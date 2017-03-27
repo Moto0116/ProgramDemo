@@ -114,13 +114,13 @@ namespace Lib
 		 * デバイスの初期化関数
 		 * @return 初期化に成功したらtrue 失敗したらfalse
 		 */
-		bool InitDevice();
+		bool CreateDevice();
 
 		/** 
 		 * ディスプレイ系の初期化関数
 		 * @return 初期化に成功したらtrue 失敗したらfalse
 		 */
-		bool InitDisplay();
+		bool CreateDisplay();
 
 		/**
 		 * デバイスの解放関数
@@ -133,24 +133,21 @@ namespace Lib
 		void ReleaseDisplay();
 
 
-		static float			m_ClearColor[4];
-		ID3D11Device*			m_pDevice;
-		ID3D11DeviceContext*	m_pDeviceContext;
-		IDXGIDevice1*			m_pDXGI;
-		IDXGIAdapter*			m_pAdapter;
-		IDXGIFactory*			m_pDXGIFactory;
-		DXGI_SWAP_CHAIN_DESC	m_DXGISwapChainDesc;
-		IDXGISwapChain*			m_pDXGISwapChain;
-		ID3D11Texture2D*		m_pBackBuffer;
-		ID3D11RenderTargetView* m_pRenderTargetView;
-		ID3D11Texture2D*		m_pDepthStencilBuffer;
-		D3D11_TEXTURE2D_DESC	m_DepthDesc;
-		ID3D11DepthStencilView* m_pDepthStencilView;
-		D3D11_VIEWPORT			m_ViewPort;
-		D3D11_RASTERIZER_DESC	m_RasterizerDesc;
-		ID3D11RasterizerState*  m_pRasterizerState;
-		HWND					m_hWnd;
-		RECT					m_WindowRect;
+		static float			m_ClearColor[4];		//!< バックバッファをクリアするときのカラー値.
+		ID3D11Device*			m_pDevice;				//!< DirectX11デバイス.
+		ID3D11DeviceContext*	m_pDeviceContext;		//!< DirectX11デバイスコンテキスト.
+		IDXGIDevice1*			m_pDXGI;				//!< DirectX11グラフィックインターフェース.
+		IDXGIAdapter*			m_pAdapter;				//!< DXGIのアダプタ.
+		IDXGIFactory*			m_pDXGIFactory;			//!< DXGIのファクトリ.
+		IDXGISwapChain*			m_pDXGISwapChain;		//!< スワップチェイン.
+		ID3D11Texture2D*		m_pBackBuffer;			//!< バックバッファ.
+		ID3D11RenderTargetView* m_pRenderTargetView;	//!< バックバッファのレンダーターゲットビュー.
+		ID3D11Texture2D*		m_pDepthStencilBuffer;	//!< 深度ステンシルバッファ.
+		ID3D11DepthStencilView* m_pDepthStencilView;	//!< 深度ステンシルビュー.
+		D3D11_VIEWPORT			m_ViewPort;				//!< ビューポート.
+		ID3D11RasterizerState*  m_pRasterizerState;		//!< ラスタライザステート.
+		HWND					m_hWnd;					//!< 対応するウィンドウハンドル.
+		RECT					m_WindowRect;			//!< ウィンドウの矩形情報.
 
 	};
 }

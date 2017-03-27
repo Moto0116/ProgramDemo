@@ -39,10 +39,13 @@ public:
 
 
 private:
+	/**
+	 * シーンのID列挙子
+	 */
 	enum SCENE_ID
 	{
-		TITLE_SCENE_ID,
-		GAME_SCENE_ID
+		TITLE_SCENE_ID,	//!< タイトルシーンID
+		GAME_SCENE_ID	//!< ゲームシーンID
 	};
 
 	static const int m_WindowWidth;

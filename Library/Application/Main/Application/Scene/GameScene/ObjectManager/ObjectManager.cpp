@@ -11,10 +11,16 @@ ObjectManager::ObjectManager()
 	m_pObjects.push_back(new Ground());
 	m_pObjects.push_back(new MainCamera());
 	m_pObjects.push_back(new MainLight());
-	m_pObjects.push_back(new House(D3DXVECTOR3(0, 0, 0)));
-	m_pObjects.push_back(new House(D3DXVECTOR3(40, 0, 0)));
-	m_pObjects.push_back(new House(D3DXVECTOR3(0, 0, 40)));
-	m_pObjects.push_back(new House(D3DXVECTOR3(40, 0, 40)));
+	m_pObjects.push_back(new House(D3DXVECTOR3(20, 0, 25), 0));
+	m_pObjects.push_back(new House(D3DXVECTOR3(40, 0, 25), 0));
+	m_pObjects.push_back(new House(D3DXVECTOR3(60, 0, 25), 0));
+	m_pObjects.push_back(new House(D3DXVECTOR3(20, 0, 75), 180));
+	m_pObjects.push_back(new House(D3DXVECTOR3(40, 0, 75), 180));
+	m_pObjects.push_back(new House(D3DXVECTOR3(60, 0, 75), 180));
+	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 80), -90));
+	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 60), -90));
+	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 40), -90));
+	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 20), -90));
 }
 
 ObjectManager::~ObjectManager()

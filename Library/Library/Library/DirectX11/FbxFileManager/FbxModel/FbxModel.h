@@ -170,24 +170,24 @@ namespace Lib
 		 * インデックスバッファを初期化する
 		 * @return 初期化に成功したらtrue
 		 */
-		bool InitIndexBuffer();
+		bool CreateIndexBuffer();
 
 		/**
 		 * 頂点バッファを初期化する
 		 * @return 初期化に成功したらtrue
 		 */
-		bool InitVertexBuffer();
+		bool CreateVertexBuffer();
 
 		/**
 		 * サンプラステートを初期化する
 		 * @return 初期化に成功したらtrue
 		 */
-		bool InitSamplerState();
+		bool CreateSamplerState();
 
 		/**
 		 * 定数バッファを初期化する
 		 */
-		bool InitConstantBuffer();
+		bool CreateConstantBuffer();
 
 		/**
 		 * インデックスバッファの解放

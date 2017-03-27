@@ -20,6 +20,7 @@ namespace Lib
 {
 	/**
 	 * ゲームデータ管理クラス
+	 * @tparam Data 管理するデータ型
 	 */
 	template <typename Data>
 	class GameDataManager : public SingletonBase<GameDataManager<Data>>
@@ -85,8 +86,8 @@ namespace Lib
 		*/
 		virtual ~GameDataManager();
 
-		FILE*							m_pSaveDataFile;
-		std::map<std::string, Data>		m_Datas;
+		FILE*							m_pSaveDataFile;	//!< セーブデータファイル.
+		std::map<std::string, Data>		m_Datas;			//!< データを管理しているコンテナ.
 
 	};
 }

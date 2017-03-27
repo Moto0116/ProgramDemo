@@ -38,12 +38,12 @@ namespace Lib
 		/**
 		 * FbxLoaderを初期化する
 		 */
-		bool Init();
+		bool Initialize();
 
 		/**
 		 * FbxLoaderを解放する
 		 */
-		void Release();
+		void Finalize();
 
 		/**
 		 * Fbxモデルを読み込む

@@ -27,7 +27,7 @@ namespace Lib
 	FbxFileManager::FbxFileManager() :
 		m_pFbxLoader(NULL)
 	{
-		m_pFbxModel.push_back(NULL);	// 読み込みに失敗した際に参照する値としてNULLを追加
+		m_pFbxModel.push_back(NULL);	// 読み込みに失敗した際に参照する値としてNULLを追加.
 	}
 
 	FbxFileManager::~FbxFileManager()
@@ -49,20 +49,16 @@ namespace Lib
 		m_pGraphicsDevice = _pGraphicsDevice;
 		m_pFbxLoader = new FbxLoader(m_pGraphicsDevice);
 
-		return m_pFbxLoader->Init();
+		return m_pFbxLoader->Initialize();
 	}
 
 	void FbxFileManager::Finalize()
 	{
-		if (m_pFbxLoader == NULL)
+		if (m_pFbxLoader != NULL)
 		{
-			OutputErrorLog("FbxFileManagerクラスは生成されていません");
-			return;
+			m_pFbxLoader->Finalize();
+			SafeDelete(m_pFbxLoader);
 		}
-
-		m_pFbxLoader->Release();
-		delete m_pFbxLoader;
-		m_pFbxLoader = NULL;
 	}
 
 	bool FbxFileManager::LoadFbxModel(LPCTSTR _pFileName, int* _pIndex)
@@ -70,21 +66,23 @@ namespace Lib
 		FbxModel* pModel = new FbxModel(m_pGraphicsDevice);
 		if (!m_pFbxLoader->LoadFbxModel(pModel, _pFileName))
 		{
-			OutputErrorLog("Fbxモデルの読み込みに失敗しました\n");
+			OutputErrorLog("Fbxモデルの読み込みに失敗しました");
+
 			*_pIndex = m_InvalidIndex;
-			delete pModel;
+			SafeDelete(pModel);
 
 			return false;
 		}
 
 		if (!pModel->Initialize())
 		{
+			OutputErrorLog("Fbxモデルの初期化に失敗しました");
+
 			pModel->Finalize();
-			delete pModel;
+			SafeDelete(pModel);
 
 			return false;
 		}
-
 
 		*_pIndex = m_pFbxModel.size();
 		m_pFbxModel.push_back(pModel);
@@ -97,8 +95,7 @@ namespace Lib
 		if (m_pFbxModel[_index] != NULL)
 		{
 			m_pFbxModel[_index]->Finalize();
-			delete m_pFbxModel[_index];
-			m_pFbxModel[_index] = NULL;
+			SafeDelete(m_pFbxModel[_index]);
 		}
 	}
 }

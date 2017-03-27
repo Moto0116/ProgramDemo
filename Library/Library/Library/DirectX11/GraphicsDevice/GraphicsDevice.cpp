@@ -9,6 +9,8 @@
 //----------------------------------------------------------------------
 #include "GraphicsDevice.h"
 
+#include "Debugger\Debugger.h"
+
 
 namespace Lib
 {
@@ -50,19 +52,21 @@ namespace Lib
 	{
 		if (m_pDevice != NULL)
 		{
+			OutputErrorLog("グラフィックデバイスオブジェクトは既に初期化されています");
 			return false;
 		}
 
 		m_hWnd = _hWnd;
 		GetWindowRect(m_hWnd, &m_WindowRect);
 
-		if (!InitDevice())
+		if (!CreateDevice())
 		{
 			return false;
 		}
 
-		if (!InitDisplay())
+		if (!CreateDisplay())
 		{
+			ReleaseDevice();
 			return false;
 		}
 
@@ -103,7 +107,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Private Functions
 	//----------------------------------------------------------------------
-	bool GraphicsDevice::InitDevice()
+	bool GraphicsDevice::CreateDevice()
 	{
 		if (FAILED(D3D11CreateDevice(
 			NULL,
@@ -117,126 +121,126 @@ namespace Lib
 			NULL,
 			&m_pDeviceContext)))
 		{
+			OutputErrorLog("DirectX11デバイスの生成に失敗しました");
 			return false;
 		}
 
 		return true;
 	}
 
-	bool GraphicsDevice::InitDisplay()
+	bool GraphicsDevice::CreateDisplay()
 	{
+		// グラフィックインターフェースの取得.
 		if (FAILED(m_pDevice->QueryInterface(__uuidof(IDXGIDevice1), reinterpret_cast<void**>(&m_pDXGI))))
 		{
+			OutputErrorLog("グラフィックインターフェースの取得に失敗しました");
 			return false;
 		}
 
+		// グラフィックインターフェースアダプタの取得.
 		if (FAILED(m_pDXGI->GetAdapter(&m_pAdapter)))
 		{
-			m_pDXGI->Release();
+			OutputErrorLog("グラフィックインターフェースアダプタの取得に失敗しました");
+			ReleaseDisplay();
 			return false;
 		}
 
+		// グラフィックインターフェースファクトリの取得.
 		if (FAILED(m_pAdapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&m_pDXGIFactory))))
 		{
-			m_pAdapter->Release();
-			m_pDXGI->Release();
+			OutputErrorLog("グラフィックインターフェースファクトリの取得に失敗しました");
+			ReleaseDisplay();
 			return false;
 		}
 
+		// DXGIにウィンドウメッセージキューの監視を設定.
 		if (FAILED(m_pDXGIFactory->MakeWindowAssociation(m_hWnd, 0)))
 		{
-			m_pDXGIFactory->Release();
-			m_pAdapter->Release();
-			m_pDXGI->Release();
+			OutputErrorLog("ウィンドウメッセージキュー監視設定に失敗しました");
+			ReleaseDisplay();
 			return false;
 		}
 
 
-		m_DXGISwapChainDesc.BufferDesc.Width = m_WindowRect.right - m_WindowRect.left;
-		m_DXGISwapChainDesc.BufferDesc.Height = m_WindowRect.bottom - m_WindowRect.top;
-		m_DXGISwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-		m_DXGISwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-		m_DXGISwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		m_DXGISwapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-		m_DXGISwapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-		m_DXGISwapChainDesc.SampleDesc.Count = 1;
-		m_DXGISwapChainDesc.SampleDesc.Quality = 0;
-		m_DXGISwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		m_DXGISwapChainDesc.BufferCount = 1;
-		m_DXGISwapChainDesc.OutputWindow = m_hWnd;
-		m_DXGISwapChainDesc.Windowed = TRUE;
-		m_DXGISwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-		m_DXGISwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		// スワップチェインの設定.
+		DXGI_SWAP_CHAIN_DESC SwapChainDesc;
+		SwapChainDesc.BufferDesc.Width = m_WindowRect.right - m_WindowRect.left;
+		SwapChainDesc.BufferDesc.Height = m_WindowRect.bottom - m_WindowRect.top;
+		SwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+		SwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+		SwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		SwapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+		SwapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		SwapChainDesc.SampleDesc.Count = 1;
+		SwapChainDesc.SampleDesc.Quality = 0;
+		SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		SwapChainDesc.BufferCount = 1;
+		SwapChainDesc.OutputWindow = m_hWnd;
+		SwapChainDesc.Windowed = TRUE;
+		SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		SwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-		if (FAILED(m_pDXGIFactory->CreateSwapChain(m_pDevice, &m_DXGISwapChainDesc, &m_pDXGISwapChain)))
+		// スワップチェインの生成.
+		if (FAILED(m_pDXGIFactory->CreateSwapChain(m_pDevice, &SwapChainDesc, &m_pDXGISwapChain)))
 		{
-			m_pDXGIFactory->Release();
-			m_pAdapter->Release();
-			m_pDXGI->Release();
+			OutputErrorLog("スワップチェインの作成に失敗しました");
+			ReleaseDisplay();
 			return false;
 		}
 
+		// バックバッファの取得.
 		if (FAILED(m_pDXGISwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&m_pBackBuffer))))
 		{
-			m_pDXGISwapChain->Release();
-			m_pDXGIFactory->Release();
-			m_pAdapter->Release();
-			m_pDXGI->Release();
+			OutputErrorLog("バックバッファの取得に失敗しました");
+			ReleaseDisplay();
 			return false;
 		}
 
-		m_pDXGISwapChain->SetFullscreenState(false, NULL);
+		m_pDXGISwapChain->SetFullscreenState(false, NULL); // フルスクリーンモードを切る.
 
 
+		// レンダーターゲットビューの作成に失敗しました.
 		if (FAILED(m_pDevice->CreateRenderTargetView(m_pBackBuffer, NULL, &m_pRenderTargetView)))
 		{
-			m_pBackBuffer->Release();
-			m_pDXGISwapChain->Release();
-			m_pDXGIFactory->Release();
-			m_pAdapter->Release();
-			m_pDXGI->Release();
+			OutputErrorLog("レンダーターゲットビューの作成に失敗しました");
+			ReleaseDisplay();
 			return false;
 		}
 
+		// 深度ステンシルバッファの設定.
+		D3D11_TEXTURE2D_DESC DepthDesc;
+		DepthDesc.Width = m_WindowRect.right - m_WindowRect.left;
+		DepthDesc.Height = m_WindowRect.bottom - m_WindowRect.top;
+		DepthDesc.MipLevels = 1;
+		DepthDesc.ArraySize = 1;
+		DepthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		DepthDesc.SampleDesc.Count = 1;
+		DepthDesc.SampleDesc.Quality = 0;
+		DepthDesc.Usage = D3D11_USAGE_DEFAULT;
+		DepthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		DepthDesc.CPUAccessFlags = 0;
+		DepthDesc.MiscFlags = 0;
 
-		m_DepthDesc.Width = m_WindowRect.right - m_WindowRect.left;
-		m_DepthDesc.Height = m_WindowRect.bottom - m_WindowRect.top;
-		m_DepthDesc.MipLevels = 1;
-		m_DepthDesc.ArraySize = 1;
-		m_DepthDesc.Format = DXGI_FORMAT_D32_FLOAT;
-		m_DepthDesc.SampleDesc.Count = 1;
-		m_DepthDesc.SampleDesc.Quality = 0;
-		m_DepthDesc.Usage = D3D11_USAGE_DEFAULT;
-		m_DepthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		m_DepthDesc.CPUAccessFlags = 0;
-		m_DepthDesc.MiscFlags = 0;
-
-		if (FAILED(m_pDevice->CreateTexture2D(&m_DepthDesc, NULL, &m_pDepthStencilBuffer)))
+		// 深度ステンシルバッファの生成.
+		if (FAILED(m_pDevice->CreateTexture2D(&DepthDesc, NULL, &m_pDepthStencilBuffer)))
 		{
-			m_pRenderTargetView->Release();
-			m_pBackBuffer->Release();
-			m_pDXGISwapChain->Release();
-			m_pDXGIFactory->Release();
-			m_pAdapter->Release();
-			m_pDXGI->Release();
+			OutputErrorLog("深度ステンシルバッファの作成に失敗しました");
+			ReleaseDisplay();
 			return false;
 		}
 
+		// 深度ステンシルビューの作成.
 		if (FAILED(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer, NULL, &m_pDepthStencilView)))
 		{
-			m_pDepthStencilBuffer->Release();
-			m_pRenderTargetView->Release();
-			m_pBackBuffer->Release();
-			m_pDXGISwapChain->Release();
-			m_pDXGIFactory->Release();
-			m_pAdapter->Release();
-			m_pDXGI->Release();
+			OutputErrorLog("深度ステンシルビューの作成に失敗しました");
+			ReleaseDisplay();
 			return false;
 		}
 
-		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView); // 描画先に設定.
 
 
+		// ビューポートの設定.
 		m_ViewPort.TopLeftX = 0;
 		m_ViewPort.TopLeftY = 0;
 		m_ViewPort.Width = static_cast<float>(m_WindowRect.right - m_WindowRect.left);
@@ -245,107 +249,50 @@ namespace Lib
 		m_ViewPort.MaxDepth = 1.0f;
 		m_pDeviceContext->RSSetViewports(1, &m_ViewPort);
 
-		m_RasterizerDesc.FillMode = D3D11_FILL_SOLID;
-		m_RasterizerDesc.CullMode = D3D11_CULL_BACK;
-		m_RasterizerDesc.FrontCounterClockwise = FALSE;
-		m_RasterizerDesc.DepthBias = 0;
-		m_RasterizerDesc.DepthBiasClamp = 0.0f;
-		m_RasterizerDesc.SlopeScaledDepthBias = 0.0f;
-		m_RasterizerDesc.DepthClipEnable = FALSE;
-		m_RasterizerDesc.ScissorEnable = FALSE;
-		m_RasterizerDesc.MultisampleEnable = FALSE;
-		m_RasterizerDesc.AntialiasedLineEnable = FALSE;
 
-		if (FAILED(m_pDevice->CreateRasterizerState(&m_RasterizerDesc, &m_pRasterizerState)))
+		// ラスタライザステートの設定.
+		D3D11_RASTERIZER_DESC RasterizerDesc;
+		RasterizerDesc.FillMode = D3D11_FILL_SOLID;
+		RasterizerDesc.CullMode = D3D11_CULL_BACK;
+		RasterizerDesc.FrontCounterClockwise = FALSE;
+		RasterizerDesc.DepthBias = 0;
+		RasterizerDesc.DepthBiasClamp = 0.0f;
+		RasterizerDesc.SlopeScaledDepthBias = 0.0f;
+		RasterizerDesc.DepthClipEnable = FALSE;
+		RasterizerDesc.ScissorEnable = FALSE;
+		RasterizerDesc.MultisampleEnable = FALSE;
+		RasterizerDesc.AntialiasedLineEnable = FALSE;
+
+		// ラスタライザステートの生成.
+		if (FAILED(m_pDevice->CreateRasterizerState(&RasterizerDesc, &m_pRasterizerState)))
 		{
-			m_pDepthStencilView->Release();
-			m_pDepthStencilBuffer->Release();
-			m_pRenderTargetView->Release();
-			m_pBackBuffer->Release();
-			m_pDXGISwapChain->Release();
-			m_pDXGIFactory->Release();
-			m_pAdapter->Release();
-			m_pDXGI->Release();
+			OutputErrorLog("ラスタライザステートの作成に失敗しました");
+			ReleaseDisplay();
 			return false;
 		}
 
-		m_pDeviceContext->RSSetState(m_pRasterizerState);
+		m_pDeviceContext->RSSetState(m_pRasterizerState);	// ラスタライザステートをセット.
 
 		return true;
 	}
 
 	void GraphicsDevice::ReleaseDevice()
 	{
-		if (m_pDeviceContext != NULL)
-		{
-			m_pDeviceContext->Release();
-			m_pDeviceContext = NULL;
-		}
-
-		if (m_pDevice != NULL)
-		{
-			m_pDevice->Release();
-			m_pDevice = NULL;
-		}
+		SafeRelease(m_pDeviceContext);
+		SafeRelease(m_pDevice);
 	}
 
 	void GraphicsDevice::ReleaseDisplay()
 	{
-		if (m_pRasterizerState != NULL)
-		{
-			m_pRasterizerState->Release();
-			m_pRasterizerState = NULL;
-		}
-
-		if (m_pDepthStencilView != NULL)
-		{
-			m_pDepthStencilView->Release();
-			m_pDepthStencilView = NULL;
-		}
-
-		if (m_pDepthStencilBuffer != NULL)
-		{
-			m_pDepthStencilBuffer->Release();
-			m_pDepthStencilBuffer = NULL;
-		}
-
-		if (m_pRenderTargetView != NULL)
-		{
-			m_pRenderTargetView->Release();
-			m_pRenderTargetView = NULL;
-		}
-
-		if (m_pBackBuffer != NULL)
-		{
-			m_pBackBuffer->Release();
-			m_pBackBuffer = NULL;
-		}
-
-		if (m_pDXGISwapChain != NULL)
-		{
-			m_pDXGISwapChain->SetFullscreenState(false, NULL);	// フルスクリーンの場合はウィンドウモードに変更する
-
-			m_pDXGISwapChain->Release();
-			m_pDXGISwapChain = NULL;
-		}
-
-		if (m_pDXGIFactory != NULL)
-		{
-			m_pDXGIFactory->Release();
-			m_pDXGIFactory = NULL;
-		}
-
-		if (m_pAdapter != NULL)
-		{
-			m_pAdapter->Release();
-			m_pAdapter = NULL;
-		}
-
-		if (m_pDXGI != NULL)
-		{
-			m_pDXGI->Release();
-			m_pDXGI = NULL;
-		}
+		SafeRelease(m_pRasterizerState);
+		SafeRelease(m_pDepthStencilView);
+		SafeRelease(m_pDepthStencilBuffer);
+		SafeRelease(m_pRenderTargetView);
+		SafeRelease(m_pBackBuffer);
+		SafeRelease(m_pDXGISwapChain);
+		SafeRelease(m_pDXGIFactory);
+		SafeRelease(m_pAdapter);
+		SafeRelease(m_pDXGI);
 	}
 }
 

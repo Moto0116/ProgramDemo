@@ -12,10 +12,11 @@
 D3DXVECTOR3 House::m_DefaultScale = D3DXVECTOR3(50, 50, 50);
 
 
-House::House(D3DXVECTOR3 _Pos)
+House::House(D3DXVECTOR3 _Pos, float _rotate)
 {
 	m_Pos = _Pos;
 	m_Scale = m_DefaultScale;
+	m_Rotate.y = static_cast<float>(D3DXToRadian(_rotate));
 }
 
 House::~House()

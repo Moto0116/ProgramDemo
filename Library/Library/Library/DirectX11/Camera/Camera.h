@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
+#include <D3DX11.h>
 #include <D3DX10.h>
 
 
@@ -46,7 +47,7 @@ namespace Lib
 		 * ビュー座標変換用行列の取得
 		 * @return ビュー座標変換用行列
 		 */
-		inline D3DXMATRIX GetViewMatrix()
+		inline D3DXMATRIX GetViewMatrix() const
 		{
 			return m_MatView;
 		}
@@ -55,18 +56,19 @@ namespace Lib
 		 * プロジェクション座標変換用行列の取得
 		 * @return プロジェクション座標変換用行列
 		 */
-		inline D3DXMATRIX GetProjectionMatrix()
+		inline D3DXMATRIX GetProjectionMatrix() const
 		{
 			return m_MatProj;
 		}
 
 	private:
-		D3DXMATRIX	m_MatView;
-		D3DXMATRIX	m_MatProj;
-		float		m_WindowWidth;
-		float		m_WindowHeight;
-		float		m_NearZ;
-		float		m_FarZ;
+		D3DXMATRIX	m_MatView;		//!< カメラビュー行列.
+		D3DXMATRIX	m_MatProj;		//!< カメラプロジェクション行列.
+		float		m_WindowWidth;	//!< ウィンドウの幅.
+		float		m_WindowHeight;	//!< ウィンドウの高さ.
+		float		m_NearZ;		//!< カメラの最近点.
+		float		m_FarZ;			//!< カメラの最遠点.
+		float		m_Aspect;		//!< ウィンドウのアスペクト.
 
 	};
 }

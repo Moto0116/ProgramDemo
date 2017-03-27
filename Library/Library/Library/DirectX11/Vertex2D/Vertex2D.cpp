@@ -27,7 +27,6 @@ namespace Lib
 		m_pPixelShader(NULL),
 		m_pPixelCompiledShader(NULL),
 		m_pBlendState(NULL),
-		m_pTextureResource(NULL),
 		m_pSamplerState(NULL),
 		m_pVertexBuffer(NULL),
 		m_pConstantBuffer(NULL),
@@ -125,6 +124,7 @@ namespace Lib
 			m_pVertexData[i].Color = VertexData[i].Color;
 		}
 
+		// 頂点バッファの設定.
 		D3D11_BUFFER_DESC BufferDesc;
 		ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
 		BufferDesc.ByteWidth = sizeof(VERTEX) * VERTEX_NUM;
@@ -134,11 +134,12 @@ namespace Lib
 		BufferDesc.MiscFlags = 0;
 		BufferDesc.StructureByteStride = 0;
 
-		D3D11_SUBRESOURCE_DATA InitVertexData;
-		ZeroMemory(&InitVertexData, sizeof(D3D11_SUBRESOURCE_DATA));
-		InitVertexData.pSysMem = m_pVertexData;
+		// 頂点バッファに格納するデータの設定.
+		D3D11_SUBRESOURCE_DATA ResourceData;
+		ZeroMemory(&ResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+		ResourceData.pSysMem = m_pVertexData;
 
-		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&BufferDesc, &InitVertexData, &m_pVertexBuffer)))
+		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&BufferDesc, &ResourceData, &m_pVertexBuffer)))
 		{
 			OutputErrorLog("頂点バッファの生成に失敗しました");
 			return false;
@@ -149,11 +150,7 @@ namespace Lib
 
 	void Vertex2D::ReleaseVertexBuffer()
 	{
-		if (m_pVertexBuffer != NULL)
-		{
-			m_pVertexBuffer->Release();
-			m_pVertexBuffer = NULL;
-		}
+		SafeRelease(m_pVertexBuffer);
 	}
 
 	bool Vertex2D::WriteVertexBuffer()
@@ -217,9 +214,9 @@ namespace Lib
 		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatTranslate);
 
 		D3D11_MAPPED_SUBRESOURCE MappedResource;
-		CONSTANT_BUFFER ConstantBuffer;
 		if (SUCCEEDED(m_pGraphicsDevice->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource)))
 		{
+			CONSTANT_BUFFER ConstantBuffer;
 			ConstantBuffer.MatWorld = MatWorld;
 			D3DXMatrixTranspose(&ConstantBuffer.MatWorld, &ConstantBuffer.MatWorld);
 
@@ -241,6 +238,7 @@ namespace Lib
 
 	void Vertex2D::Draw()
 	{
+		// アニメーションインターフェースがあればアニメーションを行う.
 		if (m_pAnimation != NULL)
 		{
 			Animation::ANIMATION_FRAME* pFrame = dynamic_cast<Animation*>(m_pAnimation)->GetCurrentFrame();
@@ -257,10 +255,12 @@ namespace Lib
 		m_pGraphicsDevice->GetDeviceContext()->IASetInputLayout(m_pVertexLayout);
 		m_pGraphicsDevice->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-		if (m_pTextureResource != NULL)
+		// テクスチャインターフェースがあれば、テクスチャを貼り付ける.
+		if (m_pTexture != NULL)
 		{
+			ID3D11ShaderResourceView* pTextureResource = dynamic_cast<Texture*>(m_pTexture)->Get();
 			m_pGraphicsDevice->GetDeviceContext()->PSSetSamplers(0, 1, &m_pSamplerState);
-			m_pGraphicsDevice->GetDeviceContext()->PSSetShaderResources(0, 1, &m_pTextureResource);
+			m_pGraphicsDevice->GetDeviceContext()->PSSetShaderResources(0, 1, &pTextureResource);
 		}
 
 		m_pGraphicsDevice->GetDeviceContext()->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
@@ -272,15 +272,6 @@ namespace Lib
 		m_pGraphicsDevice->GetDeviceContext()->Draw(VERTEX_NUM, 0);
 	}
 
-	void Vertex2D::SetTexture(ITexture* _pTexture)
-	{
-		m_pTextureResource = dynamic_cast<Texture*>(_pTexture)->Get();
-	}
-
-	void Vertex2D::SetTexture(ID3D11ShaderResourceView* _pTexture)
-	{
-		m_pTextureResource = _pTexture;
-	}
 
 	//----------------------------------------------------------------------
 	// Private Functions
@@ -301,13 +292,12 @@ namespace Lib
 			&pShaderErrors,
 			NULL)))
 		{
-			OutputErrorLog("ピクセルシェーダーの読み込みに失敗しました");
-
-			if (pShaderErrors != NULL) pShaderErrors->Release();
+			OutputErrorLog("緒店シェーダーの読み込みに失敗しました");
+			SafeRelease(pShaderErrors);
 			return false;
 		}
 
-		if (pShaderErrors != NULL) pShaderErrors->Release();
+		SafeRelease(pShaderErrors);
 
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateVertexShader(
 			m_pVertexCompiledShader->GetBufferPointer(),
@@ -316,9 +306,7 @@ namespace Lib
 			&m_pVertexShader)))
 		{
 			OutputErrorLog("頂点シェーダーの生成に失敗しました");
-
-			m_pVertexCompiledShader->Release();
-			m_pVertexCompiledShader = NULL;
+			SafeRelease(m_pVertexCompiledShader);
 			return false;
 		}
 
@@ -365,12 +353,11 @@ namespace Lib
 			NULL)))
 		{
 			OutputErrorLog("ピクセルシェーダーの読み込みに失敗しました");
-
-			if (pShaderErrors != NULL) pShaderErrors->Release();
+			SafeRelease(pShaderErrors);
 			return false;
 		}
 
-		if (pShaderErrors != NULL) pShaderErrors->Release();
+		SafeRelease(pShaderErrors);
 
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreatePixelShader(
 			m_pPixelCompiledShader->GetBufferPointer(),
@@ -379,9 +366,7 @@ namespace Lib
 			&m_pPixelShader)))
 		{
 			OutputErrorLog("ピクセルシェーダーの生成に失敗しました");
-
-			m_pPixelCompiledShader->Release();
-			m_pPixelCompiledShader = NULL;
+			SafeRelease(m_pPixelCompiledShader);
 			return false;
 		}
 
@@ -405,6 +390,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBlendState(&BlendDesc, &m_pBlendState)))
 		{
 			OutputErrorLog("ブレンドステートの生成に失敗しました");
+			ReleaseState();
 			return false;
 		}
 
@@ -417,6 +403,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateSamplerState(&SamplerDesc, &m_pSamplerState)))
 		{
 			OutputErrorLog("サンプラステートの生成に失敗しました");
+			ReleaseState();
 			return false;
 		}
 
@@ -431,6 +418,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
 		{
 			OutputErrorLog("定数バッファの生成に失敗しました");
+			ReleaseState();
 			return false;
 		}
 
@@ -439,62 +427,26 @@ namespace Lib
 
 	void Vertex2D::ReleaseVertexShader()
 	{
-		if (m_pVertexShader != NULL)
-		{
-			m_pVertexShader->Release();
-			m_pVertexShader = NULL;
-		}
-
-		if (m_pVertexCompiledShader != NULL)
-		{
-			m_pVertexCompiledShader->Release();
-			m_pVertexCompiledShader = NULL;
-		}
+		SafeRelease(m_pVertexShader);
+		SafeRelease(m_pVertexCompiledShader);
 	}
 
 	void Vertex2D::ReleaseVertexLayout()
 	{
-		if (m_pVertexLayout != NULL)
-		{
-			m_pVertexLayout->Release();
-			m_pVertexLayout = NULL;
-		}
+		SafeRelease(m_pVertexLayout);
 	}
 
 	void Vertex2D::ReleasePixelShader()
 	{
-		if (m_pPixelShader != NULL)
-		{
-			m_pPixelShader->Release();
-			m_pPixelShader = NULL;
-		}
-
-		if (m_pPixelCompiledShader != NULL)
-		{
-			m_pPixelCompiledShader->Release();
-			m_pPixelCompiledShader = NULL;
-		}
+		SafeRelease(m_pPixelShader);
+		SafeRelease(m_pPixelCompiledShader);
 	}
 
 	void Vertex2D::ReleaseState()
 	{
-		if (m_pConstantBuffer != NULL)
-		{
-			m_pConstantBuffer->Release();
-			m_pConstantBuffer = NULL;
-		}
-
-		if (m_pSamplerState != NULL)
-		{
-			m_pSamplerState->Release();
-			m_pSamplerState = NULL;
-		}
-
-		if (m_pBlendState != NULL)
-		{
-			m_pBlendState->Release();
-			m_pBlendState = NULL;
-		}
+		SafeRelease(m_pConstantBuffer);
+		SafeRelease(m_pSamplerState);
+		SafeRelease(m_pBlendState);
 	}
 }
 

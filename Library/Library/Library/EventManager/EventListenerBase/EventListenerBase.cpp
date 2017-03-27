@@ -23,7 +23,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	EventListenerBase::EventListenerBase()
 	{
-		m_EventListenerBaseCount++;	// オーバーフローは考慮しない
+		m_EventListenerBaseCount++;	// オーバーフローは考慮しない.
 		m_EventListenerID = m_EventListenerBaseCount;
 	}
 

@@ -56,7 +56,7 @@ namespace Lib
 		 * @param[in] _index 取得するアニメーションのインデックス
 		 * @return 格納先のアニメーション
 		 */
-		inline IAnimation* GetAnimation(int _index)
+		inline IAnimation* GetAnimation(int _index) const
 		{
 			return m_pAnimation[_index];
 		}
@@ -70,7 +70,7 @@ namespace Lib
 		}
 
 	private:
-		static const int m_InvalidIndex;
+		static const int m_InvalidIndex;	//!< AnimationManagerクラスがとるインデックスのエラー値
 
 		/**
 		 * コンストラクタ
@@ -82,7 +82,7 @@ namespace Lib
 		 */
 		~AnimationManager();
 
-		std::vector<IAnimation*>	m_pAnimation;
+		std::vector<IAnimation*>	m_pAnimation;	//!< アニメーションを格納するコンテナ.
 
 	};
 }

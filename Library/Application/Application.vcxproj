@@ -73,6 +73,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\House.cpp" />
@@ -82,11 +84,14 @@
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.cpp" />
     <ClCompile Include="Main\Main.cpp" />
     <ClCompile Include="Main\Object3DBase\Object3DBase.cpp" />
-    <ClCompile Include="Main\TestObject.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.cpp" />
+    <ClCompile Include="Main\Object2DBase\Object2DBase.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\House.h" />
@@ -95,9 +100,10 @@
     <ClInclude Include="Main\Application\Application.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.h" />
     <ClInclude Include="Main\Object3DBase\Object3DBase.h" />
-    <ClInclude Include="Main\TestObject.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.h" />
+    <ClInclude Include="Main\Object2DBase\Object2DBase.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\Effect\DefaultEffect.fx">

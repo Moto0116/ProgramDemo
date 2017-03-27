@@ -91,47 +91,42 @@ namespace Lib
 
 		if (m_pSound == NULL)
 		{
-			delete[] pWaveData;
 			OutputErrorLog("サウンドの読み込みに失敗しました");
+			SafeDeleteArray(pWaveData);
 			return;
 		}
 
 		LPVOID pData = NULL;
 		DWORD Length = 0;
-		if (DS_OK != m_pSound->Lock(0, 0, &pData, &Length, NULL, NULL, DSBLOCK_ENTIREBUFFER))
+		if (FAILED(m_pSound->Lock(0, 0, &pData, &Length, NULL, NULL, DSBLOCK_ENTIREBUFFER)))
 		{
-			delete[] pWaveData;
-			m_pSound = NULL;
 			OutputErrorLog("サウンドの読み込みに失敗しました");
+			SafeDeleteArray(pWaveData);
 			return;
 		}
 
 		memcpy(pData, pWaveData, Length);
 		m_pSound->Unlock(pData, Length, NULL, 0);
 
-		delete[] pWaveData;
+		SafeDeleteArray(pWaveData);
 	}
 
 	void Sound::Release()
 	{
-		if (m_pSound != NULL)
-		{
-			m_pSound->Release();
-			m_pSound = NULL;
-		}
+		SafeRelease(m_pSound);
 	}
 
 
 	//----------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------
-	bool Sound::WaveLoad(LPSTR _pFilepath, WAVEFORMATEX* _pWaveFormat, char** _pWaveData, DWORD* _pDataSize)
+	bool Sound::WaveLoad(LPSTR _pFilePath, WAVEFORMATEX* _pWaveFormat, char** _pWaveData, DWORD* _pDataSize)
 	{
 		HMMIO hMmio = NULL;
 		MMIOINFO MmioInfo;
 		ZeroMemory(&MmioInfo, sizeof(MMIOINFO));
 		
-		hMmio = mmioOpen(_pFilepath, &MmioInfo, MMIO_READ);
+		hMmio = mmioOpen(_pFilePath, &MmioInfo, MMIO_READ);
 		if (hMmio == NULL)
 		{
 			return false;

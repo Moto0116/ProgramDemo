@@ -28,12 +28,11 @@ namespace Lib
 		 */
 		struct ANIMATION_FRAME
 		{
-			int FrameID;	//!< フレームのID
-
-			float MinTu;	//!< tuの最小値
-			float MinTv;	//!< tvの最小値
-			float MaxTu;	//!< tuの最大値
-			float MaxTv;	//!< tvの最大値
+			int FrameID;	//!< フレームのID.
+			float MinTu;	//!< tuの最小値.
+			float MinTv;	//!< tvの最小値.
+			float MaxTu;	//!< tuの最大値.
+			float MaxTv;	//!< tvの最大値.
 		};
 
 
@@ -70,7 +69,7 @@ namespace Lib
 		 * 現在のフレームを取得する
 		 * @return 現在のアニメーションフレーム
 		 */
-		inline ANIMATION_FRAME* GetCurrentFrame()
+		inline ANIMATION_FRAME* GetCurrentFrame() const
 		{
 			return m_pFrame[m_CurrentFrame];
 		}
@@ -108,14 +107,14 @@ namespace Lib
 		bool ReverseLoopAnimationControl();
 
 
-		static const float				m_AnimationTime;	//!< アニメーションを行う時間
-		std::vector<ANIMATION_FRAME*>	m_pFrame;			//!< アニメーションフレーム
-		int								m_CurrentFrame;		//!< 現在のアニメーションフレーム
-		float							m_AnimationCounter;	//!< アニメーションを行うかを判断するためのカウンタ
-		float							m_AnimationSpeed;	//!< アニメーションを行うスピード
-		ANIMATION_PATTERN				m_AnimationPattern;	//!< アニメーションのパターン
-		bool							m_IsReverse;		//!< 反転しているか
-		bool(Animation::*m_pAnimationFunc)();
+		static const float				m_AnimationTime;	//!< アニメーションを行う時間.
+		std::vector<ANIMATION_FRAME*>	m_pFrame;			//!< アニメーションフレーム.
+		int								m_CurrentFrame;		//!< 現在のアニメーションフレーム.
+		float							m_AnimationCounter;	//!< アニメーションを行うかを判断するためのカウンタ.
+		float							m_AnimationSpeed;	//!< アニメーションを行うスピード.
+		ANIMATION_PATTERN				m_AnimationPattern;	//!< アニメーションのパターン.
+		bool							m_IsReverse;		//!< 反転しているか.
+		bool(Animation::*m_pAnimationFunc)();				//!< アニメーション更新関数ポインタ.
 
 	};
 }

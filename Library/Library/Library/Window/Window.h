@@ -56,17 +56,15 @@ namespace Lib
 		 * ウィンドウハンドルを取得
 		 * @return ウィンドウハンドル
 		 */
-		inline HWND GetWindowHandle()
+		inline HWND GetWindowHandle() const
 		{
 			return m_hWnd;
 		}
 	
-	
 	private:
-		HWND	m_hWnd;			//!< ウィンドウハンドル
-		HWND	m_hWndParent;	//!< 親ウィンドウハンドル
-		MSG		m_WindowMsg;
-
+		HWND	m_hWnd;			//!< ウィンドウハンドル.
+		HWND	m_hWndParent;	//!< 親ウィンドウハンドル.
+		MSG		m_WindowMsg;	//!< ウィンドウメッセージ構造体.
 
 	};
 }

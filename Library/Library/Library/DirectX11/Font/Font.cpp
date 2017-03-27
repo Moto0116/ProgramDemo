@@ -9,6 +9,8 @@
 //----------------------------------------------------------------------
 #include "Font.h"
 
+#include "Debugger\Debugger.h"
+
 
 namespace Lib
 {
@@ -51,6 +53,7 @@ namespace Lib
 	{
 		if (m_pGraphicsDevice != NULL)
 		{
+			OutputErrorLog("フォントオブジェクトは既に初期化されています");
 			return false;
 		}
 
@@ -62,25 +65,25 @@ namespace Lib
 		m_WindowHeight = static_cast<float>(WindowRect.bottom);
 
 
-		if (!InitVertexShader())
+		if (!CreateVertexShader())
 		{
 			return false;
 		}
 
-		if (!InitVertexLayout())
+		if (!CreateVertexLayout())
 		{
 			ReleaseVertexShader();
 			return false;
 		}
 
-		if (!InitPixelShader())
+		if (!CreatePixelShader())
 		{
 			ReleaseVertexLayout();
 			ReleaseVertexShader();
 			return false;
 		}
 
-		if (!InitState())
+		if (!CreateState())
 		{
 			ReleasePixelShader();
 			ReleaseVertexLayout();
@@ -88,7 +91,7 @@ namespace Lib
 			return false;
 		}
 
-		if (!InitResourceView())
+		if (!CreateResourceView())
 		{
 			ReleaseState();
 			ReleasePixelShader();
@@ -120,6 +123,7 @@ namespace Lib
 			D3DXVECTOR3( m_FontSize.x / 2,  m_FontSize.y / 2, 0), D3DXVECTOR2(m_FontTu, 1), *_pColor,
 		};
 
+		// 頂点バッファの設定.
 		D3D11_BUFFER_DESC BufferDesc;
 		ZeroMemory(&BufferDesc, sizeof(BufferDesc));
 		BufferDesc.ByteWidth = sizeof(FontVertex);
@@ -128,14 +132,17 @@ namespace Lib
 		BufferDesc.CPUAccessFlags = 0;
 		BufferDesc.MiscFlags = 0;
 
+		// 頂点バッファに格納するデータの設定.
 		D3D11_SUBRESOURCE_DATA ResourceData;
 		ZeroMemory(&ResourceData, sizeof(ResourceData));
 		ResourceData.pSysMem = reinterpret_cast<void*>(FontVertex);
 		ResourceData.SysMemPitch = 0;
 		ResourceData.SysMemSlicePitch = 0;
 
+		// 頂点バッファの生成.
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&BufferDesc, &ResourceData, &m_pVertexBuffer)))
 		{
+			OutputErrorLog("頂点バッファの生成に成功しました");
 			return false;
 		}
 
@@ -144,11 +151,7 @@ namespace Lib
 
 	void Font::ReleaseVertexBuffer()
 	{
-		if (m_pVertexBuffer != NULL)
-		{
-			m_pVertexBuffer->Release();
-			m_pVertexBuffer = NULL;
-		}
+		SafeRelease(m_pVertexBuffer);
 	}
 
 	void Font::Draw(const D3DXVECTOR2* _pDrawPos, LPCTSTR _pStr)
@@ -180,10 +183,10 @@ namespace Lib
 		D3DXMatrixTranslation(&MatTranslate, _pDrawPos->x, _pDrawPos->y, 0.0f);
 		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatTranslate);
 
-		D3D11_MAPPED_SUBRESOURCE MappedResource;
-		CONSTANT_BUFFER ConstantBuffer;
 		for (int i = 0; i < static_cast<int>(strlen(_pStr)); i++)
 		{
+			D3D11_MAPPED_SUBRESOURCE MappedResource;
+			CONSTANT_BUFFER ConstantBuffer;
 			m_pGraphicsDevice->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
 
 			ConstantBuffer.MatWorld = MatWorld;
@@ -217,8 +220,9 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Private Functions
 	//----------------------------------------------------------------------
-	bool Font::InitVertexShader()
+	bool Font::CreateVertexShader()
 	{
+		// fxファイルの読み込み.
 		ID3DBlob* pShaderErrors = NULL;
 		if (FAILED(D3DX11CompileFromFile(
 			TEXT("Library\\DirectX11\\Font\\Effect\\Font.fx"),
@@ -233,28 +237,29 @@ namespace Lib
 			&pShaderErrors,
 			NULL)))
 		{
-			if (pShaderErrors != NULL) pShaderErrors->Release();
+			SafeRelease(pShaderErrors);
 			return false;
 		}
 
-		if (pShaderErrors != NULL) pShaderErrors->Release();
+		SafeRelease(pShaderErrors);
 
+		// 頂点シェーダーの生成.
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateVertexShader(
 			m_pVertexCompiledShader->GetBufferPointer(),
 			m_pVertexCompiledShader->GetBufferSize(),
 			NULL,
 			&m_pVertexShader)))
 		{
-			m_pVertexCompiledShader->Release();
-			m_pVertexCompiledShader = NULL;
+			SafeRelease(m_pVertexCompiledShader);
 			return false;
 		}
 
 		return true;
 	}
 
-	bool Font::InitVertexLayout()
+	bool Font::CreateVertexLayout()
 	{
+		// 頂点入力レイアウトの設定.
 		D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -262,6 +267,7 @@ namespace Lib
 			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 
+		// 頂点入力レイアウトの生成.
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateInputLayout(
 			InputElementDesc,
 			sizeof(InputElementDesc) / sizeof(InputElementDesc[0]),
@@ -275,8 +281,9 @@ namespace Lib
 		return true;
 	}
 
-	bool Font::InitPixelShader()
+	bool Font::CreatePixelShader()
 	{
+		// fxファイルの読み込み.
 		ID3DBlob* pShaderErrors = NULL;
 		if (FAILED(D3DX11CompileFromFile(
 			TEXT("Library\\DirectX11\\Font\\Effect\\Font.fx"),
@@ -291,28 +298,29 @@ namespace Lib
 			&pShaderErrors,
 			NULL)))
 		{
-			if (pShaderErrors != NULL) pShaderErrors->Release();
+			SafeRelease(pShaderErrors);
 			return false;
 		}
 
-		if (pShaderErrors != NULL) pShaderErrors->Release();
+		SafeRelease(pShaderErrors);
 
+		// ピクセルシェーダーの生成.
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreatePixelShader(
 			m_pPixelCompiledShader->GetBufferPointer(),
 			m_pPixelCompiledShader->GetBufferSize(),
 			NULL,
 			&m_pPixelShader)))
 		{
-			m_pPixelCompiledShader->Release();
-			m_pPixelCompiledShader = NULL;
+			SafeRelease(m_pPixelCompiledShader);
 			return false;
 		}
 
 		return true;
 	}
 
-	bool Font::InitState()
+	bool Font::CreateState()
 	{
+		// ブレンドステートの設定.
 		D3D11_BLEND_DESC BlendDesc;
 		ZeroMemory(&BlendDesc, sizeof(D3D11_BLEND_DESC));
 		BlendDesc.AlphaToCoverageEnable = false;
@@ -325,22 +333,30 @@ namespace Lib
 		BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 		BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		// ブレンドステートの生成.
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBlendState(&BlendDesc, &m_pBlendState)))
 		{
+			ReleaseState();
 			return false;
 		}
 
+		// サンプラステートの設定.
 		D3D11_SAMPLER_DESC SamplerDesc;
 		ZeroMemory(&SamplerDesc, sizeof(D3D11_SAMPLER_DESC));
 		SamplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 		SamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 		SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+
+		// サンプラステートの生成.
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateSamplerState(&SamplerDesc, &m_pSamplerState)))
 		{
+			ReleaseState();
 			return false;
 		}
 
+		// 定数バッファの設定.
 		D3D11_BUFFER_DESC ConstantBufferDesc;
 		ZeroMemory(&ConstantBufferDesc, sizeof(D3D11_BUFFER_DESC));
 		ConstantBufferDesc.ByteWidth = sizeof(CONSTANT_BUFFER);
@@ -349,16 +365,20 @@ namespace Lib
 		ConstantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		ConstantBufferDesc.MiscFlags = 0;
 		ConstantBufferDesc.StructureByteStride = 0;
+
+		// 定数バッファの生成.
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
 		{
+			ReleaseState();
 			return false;
 		}
 
 		return true;
 	}
 
-	bool Font::InitResourceView()
+	bool Font::CreateResourceView()
 	{
+		// テクスチャ読み込みの設定.
 		D3DX11_IMAGE_LOAD_INFO LoadInfo;
 		ZeroMemory(&LoadInfo, sizeof(D3DX11_IMAGE_LOAD_INFO));
 		LoadInfo.Width = D3DX11_DEFAULT;
@@ -375,6 +395,7 @@ namespace Lib
 		LoadInfo.MipFilter = D3DX11_FILTER_POINT;
 		LoadInfo.pSrcInfo = NULL;
 
+		// テクスチャ読み込み.
 		if (FAILED(D3DX11CreateShaderResourceViewFromFile(
 			m_pGraphicsDevice->GetDevice(),
 			TEXT("Library\\DirectX11\\Font\\Texture\\Font.png"),
@@ -383,6 +404,7 @@ namespace Lib
 			&m_pShaderResource,
 			NULL)))
 		{
+			OutputErrorLog("テクスチャの読み込みに失敗しました");
 			return false;
 		}
 
@@ -391,70 +413,30 @@ namespace Lib
 
 	void Font::ReleaseVertexShader()
 	{
-		if (m_pVertexShader != NULL)
-		{
-			m_pVertexShader->Release();
-			m_pVertexShader = NULL;
-		}
-
-		if (m_pVertexCompiledShader != NULL)
-		{
-			m_pVertexCompiledShader->Release();
-			m_pVertexCompiledShader = NULL;
-		}
+		SafeRelease(m_pVertexShader);
+		SafeRelease(m_pVertexCompiledShader);
 	}
 
 	void Font::ReleaseVertexLayout()
 	{
-		if (m_pVertexLayout != NULL)
-		{
-			m_pVertexLayout->Release();
-			m_pVertexLayout = NULL;
-		}
+		SafeRelease(m_pVertexLayout);
 	}
 
 	void Font::ReleasePixelShader()
 	{
-		if (m_pPixelShader != NULL)
-		{
-			m_pPixelShader->Release();
-			m_pPixelShader = NULL;
-		}
-
-		if (m_pPixelCompiledShader != NULL)
-		{
-			m_pPixelCompiledShader->Release();
-			m_pPixelCompiledShader = NULL;
-		}
+		SafeRelease(m_pPixelShader);
+		SafeRelease(m_pPixelCompiledShader);
 	}
 
 	void Font::ReleaseState()
 	{
-		if (m_pConstantBuffer != NULL)
-		{
-			m_pConstantBuffer->Release();
-			m_pConstantBuffer = NULL;
-		}
-
-		if (m_pSamplerState != NULL)
-		{
-			m_pSamplerState->Release();
-			m_pSamplerState = NULL;
-		}
-
-		if (m_pBlendState != NULL)
-		{
-			m_pBlendState->Release();
-			m_pBlendState = NULL;
-		}
+		SafeRelease(m_pConstantBuffer);
+		SafeRelease(m_pSamplerState);
+		SafeRelease(m_pBlendState);
 	}
 
 	void Font::ReleaseResourceView()
 	{
-		if (m_pShaderResource != NULL)
-		{
-			m_pShaderResource->Release();
-			m_pShaderResource = NULL;
-		}
+		SafeRelease(m_pShaderResource);
 	}
 }

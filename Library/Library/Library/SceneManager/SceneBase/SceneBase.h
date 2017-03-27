@@ -20,15 +20,15 @@ namespace Lib
 		 */
 		enum STATE
 		{
-			INIT_STATE,		//!< 初期化状態
-			UPDATE_STATE,	//!< 更新状態
-			FINAL_STATE		//!< 終了状態
+			INIT_STATE,		//!< 初期化状態.
+			UPDATE_STATE,	//!< 更新状態.
+			FINAL_STATE		//!< 終了状態.
 		};
 
 		/**
 		 * コンストラクタ
 		 */
-		SceneBase();
+		SceneBase(int _sceneId);
 
 		/**
 		 * デストラクタ
@@ -59,21 +59,31 @@ namespace Lib
 		{
 			return m_State;
 		}
+		
+		/**
+		 * シーンIDを取得する
+		 * @return シーンID
+		 */
+		inline int GetID() const 
+		{
+			return m_SceneID;
+		}
 
 		/**
 		 * 次のシーンIDを取得する
 		 * @return 次のシーンID
 		 */
-		inline int GetNextSceneID()
+		inline int GetNextSceneID() const
 		{
-			return m_NextSceneId;
+			return m_NextSceneID;
 		}
 
 
 	protected:
-		STATE	m_State;		//!< シーンの状態
-		int		m_NextSceneId;	//!< 次のシーンのID
-
+		STATE	m_State;		//!< シーンの状態.
+		int		m_SceneID;		//!< シーンのID.
+		int		m_NextSceneID;	//!< 次のシーンのID.
+		
 	};
 }
 

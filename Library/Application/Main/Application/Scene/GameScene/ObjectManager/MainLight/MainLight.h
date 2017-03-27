@@ -5,7 +5,6 @@
 #include "ObjectBase\ObjectBase.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
-#include "DirectX11\Vertex2D\Vertex2D.h"
 
 
 class MainLight : public Lib::ObjectBase
@@ -96,8 +95,6 @@ private:
 	ID3D11ShaderResourceView*	m_pShaderResourceView;
 	ID3D11Texture2D*			m_pDepthStencilTexture;
 	ID3D11DepthStencilView*		m_pDepthStencilView;
-
-	Lib::Vertex2D*				m_pVertex2D;
 
 };
 

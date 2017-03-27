@@ -9,6 +9,8 @@
 //----------------------------------------------------------------------
 #include "InputDeviceManager.h"
 
+#include "Debugger\Debugger.h"
+
 
 namespace Lib
 {
@@ -42,6 +44,7 @@ namespace Lib
 			reinterpret_cast<void**>(&m_pDInput8),
 			NULL)))
 		{
+			OutputErrorLog("DirectInput8オブジェクトの生成に失敗しました");
 			return false;
 		}
 
@@ -52,31 +55,21 @@ namespace Lib
 
 	void InputDeviceManager::Finalize()
 	{
-		if (m_pGamePad != NULL)
-		{
-			delete m_pGamePad;
-			m_pGamePad = NULL;
-		}
-
+		SafeDelete(m_pGamePad);
+		
 		if (m_pKeyDevice != NULL)
 		{
 			m_pKeyDevice->Finalize();
-			delete m_pKeyDevice;
-			m_pKeyDevice = NULL;
+			SafeDelete(m_pKeyDevice);
 		}
 
 		if (m_pMouseDevice != NULL)
 		{
 			m_pMouseDevice->Finalize();
-			delete m_pMouseDevice;
-			m_pMouseDevice = NULL;
+			SafeDelete(m_pMouseDevice);
 		}
 
-		if (m_pDInput8 != NULL)
-		{
-			m_pDInput8->Release();
-			m_pDInput8 = NULL;
-		}
+		SafeRelease(m_pDInput8);
 	}
 	
 	bool InputDeviceManager::CreateDevice(INPUTDEVICE_TYPE _deviceType)
@@ -148,6 +141,7 @@ namespace Lib
 	{
 		if (m_pGamePad != NULL)
 		{
+			OutputErrorLog("GamePadオブジェクトは既に生成されています");
 			return false;
 		}
 
@@ -160,14 +154,14 @@ namespace Lib
 	{
 		if (m_pKeyDevice != NULL)
 		{
+			OutputErrorLog("KeyDeviceオブジェクトは既に生成されています");
 			return false;
 		}
 
 		m_pKeyDevice = new KeyDevice();
 		if (!m_pKeyDevice->Initialize(m_pDInput8, m_hWnd))
 		{
-			delete m_pKeyDevice;
-			m_pKeyDevice = NULL;
+			SafeDelete(m_pKeyDevice);
 			return false;
 		}
 
@@ -178,14 +172,14 @@ namespace Lib
 	{
 		if (m_pMouseDevice != NULL)
 		{
+			OutputErrorLog("MouseDeviceオブジェクトは既に生成されています");
 			return false;
 		}
 
 		m_pMouseDevice = new MouseDevice();
 		if (!m_pMouseDevice->Initialize(m_pDInput8, m_hWnd))
 		{
-			delete m_pMouseDevice;
-			m_pMouseDevice = NULL;
+			SafeDelete(m_pMouseDevice);
 			return false;
 		}
 
@@ -193,12 +187,8 @@ namespace Lib
 	}
 
 	void InputDeviceManager::ReleaseGamePad()
-	{
-		if (m_pGamePad != NULL)
-		{
-			delete m_pGamePad;
-			m_pGamePad = NULL;
-		}
+	{ 
+		SafeDelete(m_pGamePad);
 	}
 
 	void InputDeviceManager::ReleaseKeyDevice()
@@ -206,8 +196,7 @@ namespace Lib
 		if (m_pKeyDevice != NULL)
 		{
 			m_pKeyDevice->Finalize();
-			delete m_pKeyDevice;
-			m_pKeyDevice = NULL;
+			SafeDelete(m_pKeyDevice);
 		}
 	}
 
@@ -216,8 +205,7 @@ namespace Lib
 		if (m_pMouseDevice != NULL)
 		{
 			m_pMouseDevice->Finalize();
-			delete m_pMouseDevice;
-			m_pMouseDevice = NULL;
+			SafeDelete(m_pMouseDevice);
 		}
 	}
 }

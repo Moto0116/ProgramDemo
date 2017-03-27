@@ -27,7 +27,7 @@ namespace Lib
 		/**
 		 * 初期化処理
 		 * @param[in] _hWnd GraphicsDeviceが対応するウィンドウのハンドル
-		 * @return 初期化に成功したか
+		 * @return 初期化に成功したらtrue 失敗したらfalse
 		 */
 		bool Initialize(HWND _hWnd);
 
@@ -40,7 +40,7 @@ namespace Lib
 		 * サウンドオブジェクトを取得する
 		 * @return サウンドオブジェクト
 		 */
-		inline IDirectSound8* GetSoundObject()
+		inline IDirectSound8* GetSoundObject() const
 		{
 			return m_pDSound8;
 		}
@@ -56,8 +56,8 @@ namespace Lib
 		 */
 		~SoundDevice();
 
-		IDirectSound8*	m_pDSound8;
-		HWND			m_hWnd;
+		IDirectSound8*	m_pDSound8;	//!< サウンドオブジェクト.
+		HWND			m_hWnd;		//!< 対応するウィンドウハンドル.
 
 	};
 }

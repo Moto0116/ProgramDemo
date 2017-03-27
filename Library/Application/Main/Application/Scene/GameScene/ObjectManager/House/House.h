@@ -13,7 +13,7 @@ public:
 	/**
 	 * コンストラクタ
 	 */
-	House(D3DXVECTOR3 _pos);
+	House(D3DXVECTOR3 _pos, float _rotate);
 
 	/**
 	 * デストラクタ

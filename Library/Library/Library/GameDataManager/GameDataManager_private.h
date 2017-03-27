@@ -32,7 +32,7 @@ namespace Lib
 	{
 		if (m_Datas.find(_pDataName) != m_Datas.end())
 		{
-			return false;	// 既にデータが設定されていたらfalseを返す
+			return false;	// 既にデータが設定されていたらfalseを返す.
 		}
 
 		m_Datas[_pDataName] = _data;
@@ -45,7 +45,7 @@ namespace Lib
 	{
 		if (m_Datas.find(_pDataName) == m_Datas.end())
 		{
-			return false;	// データが設定されていなければfalseを返す
+			return false;	// データが設定されていなければfalseを返す.
 		}
 
 		m_Datas[_pDataName] = _data;
@@ -58,7 +58,7 @@ namespace Lib
 	{
 		if (m_Datas.find(_pDataName) == m_Datas.end())
 		{
-			return false;	// データが設定されていなければfalseを返す
+			return false;	// データが設定されていなければfalseを返す.
 		}
 
 		*_pData = m_Datas[_pDataName];
@@ -72,7 +72,7 @@ namespace Lib
 		auto itr = m_Datas.find(_pDataName);
 		if (itr == m_Datas.end())
 		{
-			return false;	// データが設定されていなければfalseを返す
+			return false;	// データが設定されていなければfalseを返す.
 		}
 
 		m_Datas.erase(itr);
@@ -96,7 +96,6 @@ namespace Lib
 	template <typename Data>
 	bool GameDataManager<Data>::LoadGameData(LPCTSTR _pLoadFilePath)
 	{
-
 		return true;
 	}
 }

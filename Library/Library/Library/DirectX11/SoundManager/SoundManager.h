@@ -19,6 +19,9 @@ namespace Lib
 	class SoundDevice;
 	interface ISound;
 
+	/**
+	 * サウンドを管理するクラス
+	 */
 	class SoundManager : public SingletonBase<SoundManager>
 	{
 	public:
@@ -29,12 +32,12 @@ namespace Lib
 		 */
 		enum SOUND_OPERATION
 		{
-			PLAY,				//!< 再生
-			PLAY_LOOP,			//!< ループ再生
-			STOP,				//!< 停止
-			RESET,				//!< 再生位置をリセットする
-			STOP_RESET,			//!< 再生位置をリセットして停止する
-			SOUND_OPERATION_MAX
+			PLAY,				//!< 再生.
+			PLAY_LOOP,			//!< ループ再生.
+			STOP,				//!< 停止.
+			RESET,				//!< 再生位置をリセットする.
+			STOP_RESET,			//!< 再生位置をリセットして停止する.
+			SOUND_OPERATION_MAX	//!< サウンド操作列挙子の数.
 		};
 
 		/**
@@ -81,7 +84,7 @@ namespace Lib
 		}
 
 	private:
-		static const int m_InvalidIndex;
+		static const int m_InvalidIndex;	//!< SoundManagerクラスがとるインデックスのエラー値.
 
 		/**
 		 * コンストラクタ
@@ -93,8 +96,8 @@ namespace Lib
 		 */
 		~SoundManager();
 
-		std::vector<ISound*>	m_pSounds;
-		SoundDevice*			m_pSoundDevice;
+		std::vector<ISound*>	m_pSounds;		//!< サウンドオブジェクトを管理するコンテナ.
+		SoundDevice*			m_pSoundDevice;	//!< サウンドデバイス.
 
 		DISALLOW_COPY_AND_ASSIGN(SoundManager);
 

@@ -69,10 +69,6 @@ namespace Lib
 
 	void Texture::Release()
 	{
-		if (m_pTexture != NULL)
-		{
-			m_pTexture->Release();
-			m_pTexture = NULL;
-		}
+		SafeRelease(m_pTexture);
 	}
 }

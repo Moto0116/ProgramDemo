@@ -9,6 +9,8 @@
 //----------------------------------------------------------------------
 #include "Window.h"
 
+#include "..\Debugger\Debugger.h"
+
 
 namespace Lib
 {
@@ -93,7 +95,8 @@ namespace Lib
 	
 		if (m_hWnd == NULL)
 		{
-			return false;	// ウィンドウ作成に失敗
+			OutputErrorLog("ウィンドウの作成に失敗しました");
+			return false;
 		}
 	
 		ShowWindow(m_hWnd, SW_SHOW);

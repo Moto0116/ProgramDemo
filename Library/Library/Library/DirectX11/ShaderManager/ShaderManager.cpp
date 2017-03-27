@@ -26,7 +26,7 @@ namespace Lib
 	ShaderManager::ShaderManager() : 
 		m_pGraphicsDevice(NULL)
 	{
-		// 読み込みに失敗した際に参照する値としてNULLを追加
+		// 読み込みに失敗した際に参照する値としてNULLを追加.
 		m_pVertexShader.push_back(NULL);
 		m_pPixelShader.push_back(NULL);
 		m_pCompiledVertexShader.push_back(NULL);
@@ -55,8 +55,11 @@ namespace Lib
 
 	bool ShaderManager::LoadVertexShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		MyAssert(m_pGraphicsDevice != NULL, "GraphicsDeviceがありません");
-
+		if (m_pGraphicsDevice == NULL)
+		{
+			OutputErrorLog("グラフィックデバイスがありません");
+			return false;
+		}
 
 		ID3D11VertexShader* pVertexShader = NULL;
 		ID3DBlob* pShaderErrors = NULL;
@@ -74,12 +77,12 @@ namespace Lib
 			&pShaderErrors,
 			NULL)))
 		{
-			if (pShaderErrors != NULL) pShaderErrors->Release();
+			SafeRelease(pShaderErrors);
 			*_pIndex = m_InvalidIndex;
 			return false;
 		}
 
-		if (pShaderErrors != NULL) pShaderErrors->Release();
+		SafeRelease(pShaderErrors);
 
 
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateVertexShader(
@@ -88,7 +91,7 @@ namespace Lib
 			NULL,
 			&pVertexShader)))
 		{
-			pCompiledShader->Release();
+			SafeRelease(pCompiledShader);
 			*_pIndex = m_InvalidIndex;
 			return false;
 		}
@@ -102,8 +105,11 @@ namespace Lib
 
 	bool ShaderManager::LoadPixelShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		MyAssert(m_pGraphicsDevice != NULL, "DirectX11デバイスがありません");
-
+		if (m_pGraphicsDevice == NULL)
+		{
+			OutputErrorLog("グラフィックデバイスがありません");
+			return false;
+		}
 
 		ID3D11PixelShader* pPixelShader = NULL;
 		ID3DBlob* pShaderErrors = NULL;
@@ -121,12 +127,12 @@ namespace Lib
 			&pShaderErrors,
 			NULL)))
 		{
-			if (pShaderErrors != NULL) pShaderErrors->Release();
+			SafeRelease(pShaderErrors);
 			*_pIndex = m_InvalidIndex;
 			return false;
 		}
 
-		if (pShaderErrors != NULL) pShaderErrors->Release();
+		SafeRelease(pShaderErrors);
 
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreatePixelShader(
 			pCompiledShader->GetBufferPointer(),
@@ -134,7 +140,7 @@ namespace Lib
 			NULL,
 			&pPixelShader)))
 		{
-			pCompiledShader->Release();
+			SafeRelease(pCompiledShader);
 			*_pIndex = m_InvalidIndex;
 			return false;
 		}
@@ -148,65 +154,39 @@ namespace Lib
 
 	void ShaderManager::ReleaseVertexShader(int _index)
 	{
-		if (m_pVertexShader[_index] != NULL)
-		{
-			m_pVertexShader[_index]->Release();
-			m_pVertexShader[_index] = NULL;
-			m_pCompiledVertexShader[_index]->Release();
-			m_pCompiledVertexShader[_index] = NULL;
-		}
+		SafeRelease(m_pVertexShader[_index]);
+		SafeRelease(m_pCompiledVertexShader[_index]);
 	}
 
 	void ShaderManager::ReleaseVertexShader()
 	{
 		for (auto itr = m_pVertexShader.begin(); itr != m_pVertexShader.end(); itr++)
 		{
-			if ((*itr) != NULL)
-			{
-				(*itr)->Release();
-				(*itr) = NULL;
-			}
+			SafeRelease(*itr);
 		}
 
 		for (auto itr = m_pCompiledVertexShader.begin(); itr != m_pCompiledVertexShader.end(); itr++)
 		{
-			if ((*itr) != NULL)
-			{
-				(*itr)->Release();
-				(*itr) = NULL;
-			}
+			SafeRelease(*itr);
 		}
 	}
 
 	void ShaderManager::ReleasePixelShader(int _index)
 	{
-		if (m_pPixelShader[_index] != NULL)
-		{
-			m_pPixelShader[_index]->Release();
-			m_pPixelShader[_index] = NULL;
-			m_pCompiledPixelShader[_index]->Release();
-			m_pCompiledPixelShader[_index] = NULL;
-		}
+		SafeRelease(m_pPixelShader[_index]);
+		SafeRelease(m_pCompiledPixelShader[_index]);
 	}
 
 	void ShaderManager::ReleasePixelShader()
 	{
 		for (auto itr = m_pPixelShader.begin(); itr != m_pPixelShader.end(); itr++)
 		{
-			if ((*itr) != NULL)
-			{
-				(*itr)->Release();
-				(*itr) = NULL;
-			}
+			SafeRelease(*itr);
 		}
 
 		for (auto itr = m_pCompiledPixelShader.begin(); itr != m_pCompiledPixelShader.end(); itr++)
 		{
-			if ((*itr) != NULL)
-			{
-				(*itr)->Release();
-				(*itr) = NULL;
-			}
+			SafeRelease(*itr);
 		}
 	}
 }

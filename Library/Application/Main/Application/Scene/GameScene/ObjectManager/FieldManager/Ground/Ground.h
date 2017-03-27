@@ -55,6 +55,7 @@ private:
 
 	int m_GroundModelIndex;
 	int m_MountainModelIndex;
+	int m_SkyModelIndex;
 	int	m_ShadowVertexShaderIndex;
 	int	m_ShadowPixelShaderIndex;
 

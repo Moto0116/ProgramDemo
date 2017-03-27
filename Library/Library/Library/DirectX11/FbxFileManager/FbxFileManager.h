@@ -78,7 +78,7 @@ namespace Lib
 		}
 
 	private:
-		static const int m_InvalidIndex; //!< FbxFileManagerクラスがとるインデックスのエラー値
+		static const int m_InvalidIndex; //!< FbxFileManagerクラスがとるインデックスのエラー値.
 
 		/**
 		 * FbxFileManagerクラスのコンストラクタ
@@ -91,9 +91,9 @@ namespace Lib
 		~FbxFileManager();
 
 
-		GraphicsDevice*				m_pGraphicsDevice;
-		FbxLoader*					m_pFbxLoader;
-		std::vector<FbxModel*>		m_pFbxModel;
+		GraphicsDevice*				m_pGraphicsDevice;	//!< グラフィックデバイス.
+		FbxLoader*					m_pFbxLoader;		//!< fbx読み込みオブジェクト.
+		std::vector<FbxModel*>		m_pFbxModel;		//!< fbxモデルを管理するコンテナ.
 
 	};
 }

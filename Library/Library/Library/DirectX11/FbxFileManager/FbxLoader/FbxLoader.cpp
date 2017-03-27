@@ -40,7 +40,7 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------------------------------------
-	bool FbxLoader::Init()
+	bool FbxLoader::Initialize()
 	{
 		if (!InitFbxManager())
 		{
@@ -71,7 +71,7 @@ namespace Lib
 		return true;
 	}
 
-	void FbxLoader::Release()
+	void FbxLoader::Finalize()
 	{
 		ReleaseFbxIOSettings();
 		ReleaseFbxImporter();
@@ -84,20 +84,20 @@ namespace Lib
 		m_pModel = _pModel;
 		if (!m_pFbxImporter->Initialize(_pFileName, -1, m_pFbxIOSettings))
 		{
-			OutputDebugString("FbxImporterのInitializeに失敗しました\n");
+			OutputErrorLog("FbxImporterのInitializeに失敗しました");
 			return false;
 		}
 
 		if (!m_pFbxImporter->Import(m_pFbxScene))
 		{
-			OutputDebugString("FbxImporterのImportに失敗しました\n");
+			OutputErrorLog("FbxImporterのImportに失敗しました");
 			return false;
 		}
 
 		FbxGeometryConverter GeometryConverter(m_pFbxManager);
 		if (!GeometryConverter.Triangulate(m_pFbxScene, true))
 		{
-			OutputDebugString("三角形化に失敗しました\n");
+			OutputErrorLog("三角形化に失敗しました");
 			return false;
 		}
 
@@ -140,37 +140,37 @@ namespace Lib
 
 		if (!LoadMeshVertexData(pFbxMesh, &MeshData))
 		{
-			OutputDebugString("頂点情報の読み込みに失敗しました\n");
+			OutputErrorLog("頂点情報の読み込みに失敗しました");
 			return false;
 		}
 
 		if (!LoadMeshNormalData(pFbxMesh, &MeshData))
 		{
-			OutputDebugString("法線情報の読み込みに失敗しました\n");
+			OutputErrorLog("法線情報の読み込みに失敗しました");
 			return false;
 		}
 
 		if (!LoadMeshTextureData(pFbxMesh, &MeshData))
 		{
-			OutputDebugString("テクスチャ情報の読み込みに失敗しました\n");
+			OutputErrorLog("テクスチャ情報の読み込みに失敗しました");
 			return false;
 		}
 
 		if (!LoadMeshMaterialData(pFbxMesh, &MeshData))
 		{
-			OutputDebugString("マテリアル情報の読み込みに失敗しました\n");
+			OutputErrorLog("マテリアル情報の読み込みに失敗しました");
 			return false;
 		}
 
 		if (!LoadMeshAnimationData(pFbxMesh, &MeshData))
 		{
-			OutputDebugString("アニメーション情報の読み込みに失敗しました\n");
+			OutputErrorLog("アニメーション情報の読み込みに失敗しました");
 			return false;
 		}
 
 		if (!MeshDataConvert(&MeshData))
 		{
-			OutputDebugString("モデルデータの変換に失敗しました\n");
+			OutputErrorLog("モデルデータの変換に失敗しました");
 			return false;
 		}
 
@@ -183,19 +183,19 @@ namespace Lib
 	{
 		FbxModel::VERTEX_DATA* pVertex = new FbxModel::VERTEX_DATA;
 
-		// 総ポリゴン数
+		// 総ポリゴン数.
 		int PolygonNum = _pMesh->GetPolygonCount();
 
-		// 全ての頂点数(インデックスの数)
+		// 全ての頂点数(インデックスの数).
 		int PolygonVertexNum = _pMesh->GetPolygonVertexCount();
 
-		// インデックスデータ
+		// インデックスデータ.
 		int* pIndexAry = _pMesh->GetPolygonVertices();
 
-		// インデックスバッファが指す頂点数
+		// インデックスバッファが指す頂点数.
 		int ControlPositionNum = _pMesh->GetControlPointsCount();
 
-		// インデックスバッファが指す頂点
+		// インデックスバッファが指す頂点.
 		fbxsdk::FbxVector4* pFbxVec = _pMesh->GetControlPoints();
 
 
@@ -231,16 +231,13 @@ namespace Lib
 		{
 			if (NormalIndex >= 1)
 			{
-				OutputDebugString("法線セットが複数あります(対応していません)\n一番最初の法線セットを適応させます\n");
+				OutputErrorLog("法線セットが複数あります(対応していません)\n一番最初の法線セットを適応させます");
 				break;
 			}
 
-			fbxsdk::FbxGeometryElementNormal* pNormal = _pMesh->GetElementNormal(NormalIndex);	// 法線セットの取得
-
-			FbxGeometryElement::EMappingMode MappingMode = pNormal->GetMappingMode();			// マッピングモード取得
-
-			FbxGeometryElement::EReferenceMode ReferenceMode = pNormal->GetReferenceMode();		// リファレンスモード取得
-
+			fbxsdk::FbxGeometryElementNormal* pNormal = _pMesh->GetElementNormal(NormalIndex);	// 法線セットの取得.
+			FbxGeometryElement::EMappingMode MappingMode = pNormal->GetMappingMode();			// マッピングモード取得.
+			FbxGeometryElement::EReferenceMode ReferenceMode = pNormal->GetReferenceMode();		// リファレンスモード取得.
 
 			switch (MappingMode)
 			{
@@ -257,7 +254,7 @@ namespace Lib
 					}
 					break;
 				default:
-					/// 不明なモードは空データで対応
+					/// 不明なモードは空データで対応.
 
 					pNormalData[NormalIndex].pNormalVec = new D3DXVECTOR3[_pMeshData->pVertexData->PolygonVertexNum];
 					for (int i = 0; i < _pMeshData->pVertexData->PolygonVertexNum; i++)
@@ -319,7 +316,7 @@ namespace Lib
 		std::vector<fbxsdk::FbxString> UvSetName;
 		int UVSetCount = _pMesh->GetElementUVCount();
 
-		FbxModel::TEXTURE_DATA* pTextureData = new FbxModel::TEXTURE_DATA;	// UVセットの数確保
+		FbxModel::TEXTURE_DATA* pTextureData = new FbxModel::TEXTURE_DATA;	// UVセットの数確保.
 		pTextureData->pTextureUVData = new FbxModel::TEXTURE_UV_DATA[UVSetCount];
 		pTextureData->TextureUVCount = UVSetCount;
 		D3DXVECTOR2** ppTextureUV = new D3DXVECTOR2*[UVSetCount];
@@ -331,9 +328,9 @@ namespace Lib
 
 		for (int i = 0; i < UVSetCount; i++)
 		{
-			fbxsdk::FbxGeometryElementUV* UVSet = _pMesh->GetElementUV(i);					// UVセットの取得
-			FbxGeometryElement::EMappingMode MappingMode = UVSet->GetMappingMode();			// マッピングモードの取得
-			FbxGeometryElement::EReferenceMode ReferenceMode = UVSet->GetReferenceMode();	// リファレンスモード取得
+			fbxsdk::FbxGeometryElementUV* UVSet = _pMesh->GetElementUV(i);					// UVセットの取得.
+			FbxGeometryElement::EMappingMode MappingMode = UVSet->GetMappingMode();			// マッピングモードの取得.
+			FbxGeometryElement::EReferenceMode ReferenceMode = UVSet->GetReferenceMode();	// リファレンスモード取得.
 
 			switch (MappingMode)
 			{
@@ -366,17 +363,13 @@ namespace Lib
 				}
 				break;
 				default:
-
 					return false;
-
 					break;
 				}
 
 				break;
 			default:
-
 				return false;
-
 				break;
 			}
 
@@ -407,17 +400,17 @@ namespace Lib
 
 		for (int i = 0; i < MaterialCount; i++)
 		{
-			fbxsdk::FbxSurfaceMaterial* Material = Node->GetMaterial(i);	// マテリアルの取得
+			fbxsdk::FbxSurfaceMaterial* Material = Node->GetMaterial(i);	// マテリアルの取得.
 
 			if (Material->GetClassId().Is(fbxsdk::FbxSurfaceLambert::ClassId))
 			{
-				fbxsdk::FbxSurfaceLambert* lambert = reinterpret_cast<fbxsdk::FbxSurfaceLambert*>(Material);	// Lambertにダウンキャスト
-
+				// Lambertにダウンキャスト.
+				fbxsdk::FbxSurfaceLambert* lambert = reinterpret_cast<fbxsdk::FbxSurfaceLambert*>(Material);
 
 				FbxModel::MATERIAL MaterialData;
 				ZeroMemory(&MaterialData, sizeof(MaterialData));
 
-				// アンビエントの取得
+				// アンビエントの取得.
 				MaterialData.Ambient.r = (float)lambert->Ambient.Get().mData[0] * (float)lambert->AmbientFactor.Get();
 				MaterialData.Ambient.g = (float)lambert->Ambient.Get().mData[1] * (float)lambert->AmbientFactor.Get();
 				MaterialData.Ambient.b = (float)lambert->Ambient.Get().mData[2] * (float)lambert->AmbientFactor.Get();
@@ -425,36 +418,35 @@ namespace Lib
 
 				if (MaterialData.Ambient == D3DXCOLOR(0, 0, 0, 0))
 				{
-					MaterialData.Ambient = m_DefaultAmbient;// アンビエントがなければ初期値代入
+					MaterialData.Ambient = m_DefaultAmbient;// アンビエントがなければ初期値代入.
 				}
 
-				// ディフューズの取得
+				// ディフューズの取得.
 				MaterialData.Diffuse.r = (float)lambert->Diffuse.Get().mData[0] * (float)lambert->DiffuseFactor.Get();
 				MaterialData.Diffuse.g = (float)lambert->Diffuse.Get().mData[1] * (float)lambert->DiffuseFactor.Get();
 				MaterialData.Diffuse.b = (float)lambert->Diffuse.Get().mData[2] * (float)lambert->DiffuseFactor.Get();
 				GetTextureName(lambert, fbxsdk::FbxSurfaceMaterial::sDiffuse, &TextureFileName, &TextureUvSetName, &TextureFileCount);
 
-				// エミッシブの取得
+				// エミッシブの取得.
 				MaterialData.Emissive.r = (float)lambert->Emissive.Get().mData[0] * (float)lambert->EmissiveFactor.Get();
 				MaterialData.Emissive.g = (float)lambert->Emissive.Get().mData[1] * (float)lambert->EmissiveFactor.Get();
 				MaterialData.Emissive.b = (float)lambert->Emissive.Get().mData[2] * (float)lambert->EmissiveFactor.Get();
 				GetTextureName(lambert, fbxsdk::FbxSurfaceMaterial::sEmissive, &TextureFileName, &TextureUvSetName, &TextureFileCount);
 
-				// 透過度の取得
+				// 透過度の取得.
 				MaterialData.Ambient.a = (float)lambert->TransparentColor.Get().mData[0];
 				MaterialData.Diffuse.a = (float)lambert->TransparentColor.Get().mData[1];
 				MaterialData.Emissive.a = (float)lambert->TransparentColor.Get().mData[2];
 				GetTextureName(lambert, fbxsdk::FbxSurfaceMaterial::sTransparentColor, &TextureFileName, &TextureUvSetName, &TextureFileCount);
 
 
-				// 法線マップの取得
+				// 法線マップの取得.
 				GetTextureName(lambert, fbxsdk::FbxSurfaceMaterial::sNormalMap, &TextureFileName, &TextureUvSetName, &TextureFileCount);
 
 				pMaterial.push_back(MaterialData);
 			}
 			else
 			{
-
 				return false;
 			}
 
@@ -468,6 +460,7 @@ namespace Lib
 				pMaterialData[i].pTextureName[n] = TextureFileName[n];
 				pMaterialData[i].pTextureUVSetName[n] = TextureUvSetName[n];
 
+				// テクスチャ読み込みの設定.
 				D3DX11_IMAGE_LOAD_INFO LoadInfo;
 				ZeroMemory(&LoadInfo, sizeof(D3DX11_IMAGE_LOAD_INFO));
 				LoadInfo.Width = D3DX11_DEFAULT;
@@ -508,7 +501,7 @@ namespace Lib
 
 	bool FbxLoader::LoadMeshAnimationData(FbxMesh* _pMesh, FbxModel::MESH_DATA* _pMeshData)
 	{
-		/// @todo アニメーションデータの取得は未実装
+		/// @todo アニメーションデータの取得は未実装.
 		return true;
 	}
 
@@ -520,8 +513,8 @@ namespace Lib
 		pVertexData->ControlPositionNum = pBaseVertexData->ControlPositionNum;
 		pVertexData->PolygonNum = pBaseVertexData->PolygonNum;
 		pVertexData->PolygonVertexNum = pBaseVertexData->PolygonVertexNum;
-		pVertexData->pVertex = new D3DXVECTOR3[pBaseVertexData->PolygonVertexNum];	// インデックスの数と合わせるべき？
-		pVertexData->pIndexAry = new int[pBaseVertexData->PolygonVertexNum];		// インデックスの数はテクスチャ座標に合わせて変動
+		pVertexData->pVertex = new D3DXVECTOR3[pBaseVertexData->PolygonVertexNum];
+		pVertexData->pIndexAry = new int[pBaseVertexData->PolygonVertexNum];
 
 
 		FbxModel::TEXTURE_DATA* pTextureData = new FbxModel::TEXTURE_DATA;
@@ -540,7 +533,7 @@ namespace Lib
 		{
 			int Index = pBaseVertexData->pIndexAry[i];
 			pVertexData->pVertex[i] = pBaseVertexData->pVertex[Index];
-			pVertexData->pIndexAry[i] = i;	// これじゃあindex描画使う意味ないけど現状はこれで対応する
+			pVertexData->pIndexAry[i] = i;	///@todo これじゃあindex描画使う意味ないけど現状はこれで対応する.
 		}
 
 		for (int n = 0; n < pBaseTextureData->TextureUVCount; n++)
@@ -551,30 +544,25 @@ namespace Lib
 			}
 		}
 
-		pVertexData->ControlPositionNum = pBaseVertexData->PolygonVertexNum;	// インデックス数変更
+		pVertexData->ControlPositionNum = pBaseVertexData->PolygonVertexNum;	// インデックス数変更.
 
 
-		// 法線対応する
+		///@todo 法線対応する.
 
 
+		// テクスチャ関連のデータ入れ替え.
 		for (int n = 0; n < pBaseTextureData->TextureUVCount; n++)
 		{
-			delete[] _pMeshData->pTextureData->pTextureUVData[n].pTextureUV;
-			_pMeshData->pTextureData->pTextureUVData[n].pTextureUV = NULL;
+			SafeDeleteArray(_pMeshData->pTextureData->pTextureUVData[n].pTextureUV);
 		}
-		delete[] _pMeshData->pTextureData->pTextureUVData;
-		_pMeshData->pTextureData->pTextureUVData = NULL;
-		delete _pMeshData->pTextureData;
-
+		SafeDeleteArray(_pMeshData->pTextureData->pTextureUVData);
+		SafeDelete(_pMeshData->pTextureData);
 		_pMeshData->pTextureData = pTextureData;
 
-
-		delete[] _pMeshData->pVertexData->pVertex;
-		_pMeshData->pVertexData->pVertex = NULL;
-		delete[] _pMeshData->pVertexData->pIndexAry;
-		_pMeshData->pVertexData->pIndexAry = NULL;
-		delete _pMeshData->pVertexData;
-
+		// 頂点関連のデータ入れ替え.
+		SafeDeleteArray(_pMeshData->pVertexData->pVertex);
+		SafeDeleteArray(_pMeshData->pVertexData->pIndexAry);
+		SafeDelete(_pMeshData->pVertexData);
 		_pMeshData->pVertexData = pVertexData;
 
 		return true;
@@ -612,7 +600,7 @@ namespace Lib
 		m_pFbxManager = fbxsdk::FbxManager::Create();
 		if (m_pFbxManager == NULL)
 		{
-			OutputDebugString("FbxManagerクラスの生成に失敗\n");
+			OutputErrorLog("FbxManagerクラスの生成に失敗");
 			return false;
 		}
 
@@ -624,7 +612,7 @@ namespace Lib
 		m_pFbxScene = fbxsdk::FbxScene::Create(m_pFbxManager, "");
 		if (m_pFbxScene == NULL)
 		{
-			OutputDebugString("FbxSceneクラスの生成に失敗\n");
+			OutputErrorLog("FbxSceneクラスの生成に失敗");
 			return false;
 		}
 
@@ -636,7 +624,7 @@ namespace Lib
 		m_pFbxImporter = fbxsdk::FbxImporter::Create(m_pFbxManager, "");
 		if (m_pFbxImporter == NULL)
 		{
-			OutputDebugString("FbxImporterクラスの生成に失敗\n");
+			OutputErrorLog("FbxImporterクラスの生成に失敗");
 			return false;
 		}
 
@@ -648,7 +636,7 @@ namespace Lib
 		m_pFbxIOSettings = fbxsdk::FbxIOSettings::Create(m_pFbxManager, IOSROOT);
 		if (m_pFbxIOSettings == NULL)
 		{
-			OutputDebugString("FbxIOSettingsクラスの生成に失敗\n");
+			OutputErrorLog("FbxIOSettingsクラスの生成に失敗");
 			return false;
 		}
 		m_pFbxManager->SetIOSettings(m_pFbxIOSettings);
@@ -658,38 +646,22 @@ namespace Lib
 
 	void FbxLoader::ReleaseFbxManager()
 	{
-		if (m_pFbxManager != NULL)
-		{
-			m_pFbxManager->Destroy();
-			m_pFbxManager = NULL;
-		}
+		SafeDestroy(m_pFbxManager);
 	}
 
 	void FbxLoader::ReleaseFbxScene()
 	{
-		if (m_pFbxScene != NULL)
-		{
-			m_pFbxScene->Destroy();
-			m_pFbxScene = NULL;
-		}
+		SafeDestroy(m_pFbxScene);
 	}
 
 	void FbxLoader::ReleaseFbxImporter()
 	{
-		if (m_pFbxImporter != NULL)
-		{
-			m_pFbxImporter->Destroy();
-			m_pFbxImporter = NULL;
-		}
+		SafeDestroy(m_pFbxImporter);
 	}
 
 	void FbxLoader::ReleaseFbxIOSettings()
 	{
-		if (m_pFbxIOSettings != NULL)
-		{
-			m_pFbxIOSettings->Destroy();
-			m_pFbxIOSettings = NULL;
-		}
+		SafeDestroy(m_pFbxIOSettings);
 	}
 }
 

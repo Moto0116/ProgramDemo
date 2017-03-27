@@ -12,6 +12,7 @@
 #include <Windows.h>
 
 #include "..\Define\Define.h"
+#include "..\Debugger\Debugger.h"
 #include "SceneBase\SceneBase.h"
 
 
@@ -45,10 +46,10 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool SceneManager::Initialize()
 	{
-		SceneBase* pEmptyScene = new SceneBase();
-		m_pSceneData.push_back(new SCENE_DATA(pEmptyScene, m_EmptySceneID));
+		SceneBase* pEmptyScene = new SceneBase(m_EmptySceneID);
+		m_pSceneData.push_back(pEmptyScene);
 
-		m_pCurrentScene = pEmptyScene;	// 空シーンを現在のシーンとして登録しておく
+		m_pCurrentScene = pEmptyScene;	// 空シーンを現在のシーンとして登録しておく.
 
 		return true;
 	}
@@ -57,12 +58,9 @@ namespace Lib
 	{
 		for (auto itr = m_pSceneData.begin(); itr != m_pSceneData.end(); itr++)
 		{
-			if ((*itr)->SceneID == m_EmptySceneID)	// 空シーンを探して削除する
+			if ((*itr)->GetID() == m_EmptySceneID)	// 空シーンを探して削除する.
 			{
-				delete (*itr)->pScene;
-				delete (*itr);
-				(*itr) = NULL;
-
+				SafeDelete(*itr);
 				break;
 			}
 		}
@@ -87,42 +85,41 @@ namespace Lib
 		}
 	}
 
-	bool SceneManager::AddScene(SceneBase* _pScene, int _sceneId)
+	bool SceneManager::AddScene(SceneBase* _pScene)
 	{
 		for (auto itr = m_pSceneData.begin(); itr != m_pSceneData.end(); itr++)
 		{
-			if ((*itr)->SceneID == _sceneId)
+			if ((*itr)->GetID() == _pScene->GetID())
 			{
-				return false;	// SceneIDがユニークではない
+				OutputErrorLog("シーンIDがユニークではありません");
+				return false;
 			}
 		}
 
-		m_pSceneData.push_back(new SCENE_DATA(_pScene, _sceneId));
+		m_pSceneData.push_back(_pScene);
 
 		return true;
 	}
 
-	void SceneManager::DeleteScene(int _sceneId)
+	void SceneManager::DeleteScene(SceneBase* _pScene)
 	{
 		for (auto itr = m_pSceneData.begin(); itr != m_pSceneData.end(); itr++)
 		{
-			if ((*itr)->SceneID == _sceneId)
+			if ((*itr)->GetID() == _pScene->GetID())
 			{
-				SafeDelete(*itr);
 				m_pSceneData.erase(itr);
-
 				break;
 			}
 		}
 	}
 
-	void SceneManager::SetEntryScene(int _sceneId)
+	void SceneManager::SetEntryScene(SceneBase* _pScene)
 	{
 		for (auto itr = m_pSceneData.begin(); itr != m_pSceneData.end(); itr++)
 		{
-			if ((*itr)->SceneID == _sceneId)
+			if ((*itr)->GetID() == _pScene->GetID())
 			{
-				m_pCurrentScene = (*itr)->pScene;
+				m_pCurrentScene = (*itr);
 			}
 		}
 	}

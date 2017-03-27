@@ -9,6 +9,9 @@
 //----------------------------------------------------------------------
 // Define
 //----------------------------------------------------------------------
+/**
+ * DirectInputのバージョン指定
+ */
 #define DIRECTINPUT_VERSION 0x0800
 
 
@@ -31,10 +34,10 @@ namespace Lib
 		 */
 		enum KEYSTATE
 		{
-			KEY_PUSH,		//!< キーが押された瞬間の状態
-			KEY_RELEASE,	//!< キーが離された瞬間の状態
-			KEY_ON,			//!< キーが押され続けている状態
-			KEY_OFF			//!< キーが押されていない状態
+			KEY_PUSH,		//!< キーが押された瞬間の状態.
+			KEY_RELEASE,	//!< キーが離された瞬間の状態.
+			KEY_ON,			//!< キーが押され続けている状態.
+			KEY_OFF			//!< キーが押されていない状態.
 		};
 
 		/** 
@@ -81,12 +84,12 @@ namespace Lib
 		}
 
 	private:
-		LPDIRECTINPUT8			m_pDInput8;
-		LPDIRECTINPUTDEVICE8	m_pDInputDevice8;
-		HWND					m_hWnd;
-		KEYSTATE				m_pKeyState[256];
-		BYTE					m_pDIKeyState[256];
-		BYTE					m_pOldDIKeyState[256];
+		LPDIRECTINPUT8			m_pDInput8;				//!< DirectInput8オブジェクト.
+		LPDIRECTINPUTDEVICE8	m_pDInputDevice8;		//!< DirectInput8デバイス.
+		HWND					m_hWnd;					//!< 対応するウィンドウハンドル.
+		KEYSTATE				m_pKeyState[256];		//!< キーの状態を格納する構造体.
+		BYTE					m_pDIKeyState[256];		//!< キーの状態を格納している配列.
+		BYTE					m_pOldDIKeyState[256];	//!< キーの古い状態を格納している配列.
 
 	};
 }

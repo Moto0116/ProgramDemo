@@ -132,7 +132,7 @@ namespace Lib
 
 
 	private:
-		static const int m_InvalidIndex;	//!< インデックスのエラー値
+		static const int m_InvalidIndex;	//!< インデックスのエラー値.
 
 		/**
 		 * コンストラクタ
@@ -144,11 +144,11 @@ namespace Lib
 		 */
 		~ShaderManager();
 
-		GraphicsDevice*						m_pGraphicsDevice;
-		std::vector<ID3D11VertexShader*>	m_pVertexShader;
-		std::vector<ID3D11PixelShader*>		m_pPixelShader;
-		std::vector<ID3DBlob*>				m_pCompiledVertexShader;
-		std::vector<ID3DBlob*>				m_pCompiledPixelShader;
+		GraphicsDevice*						m_pGraphicsDevice;		//!< グラフィックデバイス.
+		std::vector<ID3D11VertexShader*>	m_pVertexShader;		//!< 頂点シェーダーを格納するコンテナ.
+		std::vector<ID3D11PixelShader*>		m_pPixelShader;			//!< ピクセルシェーダーを格納するコンテナ.
+		std::vector<ID3DBlob*>				m_pCompiledVertexShader;//!< 頂点シェーダのコンパイル情報を格納するコンテナ.
+		std::vector<ID3DBlob*>				m_pCompiledPixelShader;	//!< ピクセルシェーダのコンパイル情報を格納するコンテナ.
 	};
 }
 

@@ -42,7 +42,7 @@ namespace Lib
 		 * テクスチャの取得
 		 * @return テクスチャ
 		 */
-		inline ID3D11ShaderResourceView* Get()
+		inline ID3D11ShaderResourceView* Get() const
 		{ 
 			return m_pTexture; 
 		}
@@ -60,8 +60,8 @@ namespace Lib
 		void Release();
 
 
-		GraphicsDevice*				m_pGraphicsDevice;
-		ID3D11ShaderResourceView*	m_pTexture;
+		GraphicsDevice*				m_pGraphicsDevice;	//!< グラフィックデバイス.
+		ID3D11ShaderResourceView*	m_pTexture;			//!< テクスチャのシェーダーリソースビュー.
 
 		DISALLOW_COPY_AND_ASSIGN(Texture);
 

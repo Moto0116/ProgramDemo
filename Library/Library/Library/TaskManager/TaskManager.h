@@ -56,7 +56,7 @@ namespace Lib
 		inline ~TaskManager();
 
 
-		std::list<Type*> m_pTaskList;
+		std::list<Type*> m_pTaskList;	//!< タスクオブジェクトを管理するコンテナ
 	
 	};
 }

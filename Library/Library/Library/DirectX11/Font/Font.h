@@ -47,6 +47,9 @@ namespace Lib
 
 		/**
 		 * 頂点バッファの生成
+		 * @param[in] _pRect フォントの矩形情報
+		 * @param[in] _pColor フォントのカラー値
+		 * @return 生成に成功したらtrue 失敗したらfalse
 		 */
 		bool CreateVertexBuffer(const D3DXVECTOR2* _pRect, const D3DXCOLOR* _pColor = &D3DXCOLOR(0xffffffff));
 
@@ -57,13 +60,15 @@ namespace Lib
 
 		/**
 		 * 2Dポリゴンの描画
+		 * @param[in] _pDrawPos フォントの描画位置
+		 * @param[in] _pStr 描画する文字列
 		 */
 		void Draw(const D3DXVECTOR2* _pDrawPos, LPCTSTR _pStr);
 
 	private:
 		enum
 		{
-			VERTEX_NUM = 4 //!< 頂点数
+			VERTEX_NUM = 4 //!< 頂点数.
 		};
 
 		/**
@@ -71,9 +76,9 @@ namespace Lib
 		 */
 		struct FONT_VERTEX
 		{
-			D3DXVECTOR3 Pos;	//!< 頂点座標
-			D3DXVECTOR2	Texel;	//!< テクスチャ座標
-			D3DXCOLOR	Color;	//!< 頂点カラー
+			D3DXVECTOR3 Pos;	//!< 頂点座標.
+			D3DXVECTOR2	Texel;	//!< テクスチャ座標.
+			D3DXCOLOR	Color;	//!< 頂点カラー.
 		};
 
 		/**
@@ -81,41 +86,41 @@ namespace Lib
 		 */
 		struct CONSTANT_BUFFER
 		{
-			D3DXMATRIX	MatWorld;	//!< ワールド変換行列
-			D3DXVECTOR4 TexelOffset;//!< テクスチャ座標のオフセット
-			D3DXVECTOR4 PosOffset;	//!< 頂点座標のオフセット
-			D3DXVECTOR4 WindowSize;	//!< ウィンドウの縦横サイズ
+			D3DXMATRIX	MatWorld;	//!< ワールド変換行列.
+			D3DXVECTOR4 TexelOffset;//!< テクスチャ座標のオフセット.
+			D3DXVECTOR4 PosOffset;	//!< 頂点座標のオフセット.
+			D3DXVECTOR4 WindowSize;	//!< ウィンドウの縦横サイズ.
 		};
 
 		/**
-		 * 頂点シェーダーの初期化
-		 * @return 初期化に成功したらtrue
+		 * 頂点シェーダーの生成
+		 * @return 生成に成功したらtrue 失敗したらfalse
 		 */
-		bool InitVertexShader();
+		bool CreateVertexShader();
 
 		/**
-		 * 頂点入力レイアウトの初期化
-		 * @return 初期化に成功したらtrue 失敗したらfalse
+		 * 頂点入力レイアウトの生成
+		 * @return 生成に成功したらtrue 失敗したらfalse
 		 */
-		bool InitVertexLayout();
+		bool CreateVertexLayout();
 
 		/**
-		 * ピクセルシェーダーの初期化
-		 * @return 初期化に成功したらtrue
+		 * ピクセルシェーダーの生成
+		 * @return 生成に成功したらtrue 失敗したらfalse
 		 */
-		bool InitPixelShader();
+		bool CreatePixelShader();
 
 		/**
-		 * 描画ステートの初期化
-		 * @return 初期化に成功したらtrue 失敗したらfalse
+		 * 描画ステートの生成
+		 * @return 生成に成功したらtrue 失敗したらfalse
 		 */
-		bool InitState();
+		bool CreateState();
 
 		/**
-		 * リソースビューの初期化
-		 * @return 初期化に成功したらtrue
+		 * リソースビューの生成
+		 * @return 生成に成功したらtrue 失敗したらfalse
 		 */
-		bool InitResourceView();
+		bool CreateResourceView();
 
 		/**
 		 * 頂点シェーダーの解放
@@ -143,25 +148,25 @@ namespace Lib
 		void ReleaseResourceView();
 
 
-		static const float			m_FontTu;
-		static const int			m_SpaceAsciiCode;
-		GraphicsDevice*				m_pGraphicsDevice;
-		ID3D11VertexShader*			m_pVertexShader;
-		ID3DBlob*					m_pVertexCompiledShader;
-		ID3D11InputLayout*			m_pVertexLayout;
-		ID3D11PixelShader*			m_pPixelShader;
-		ID3DBlob*					m_pPixelCompiledShader;
-		ID3D11BlendState*			m_pBlendState;
-		ID3D11SamplerState*			m_pSamplerState;
-		ID3D11Buffer*				m_pVertexBuffer;
-		ID3D11Buffer*				m_pConstantBuffer;
-		ID3D11ShaderResourceView*	m_pShaderResource;
-		D3DXVECTOR2					m_FontSize;
-		float						m_WindowWidth;
-		float						m_WindowHeight;
+		static const float			m_FontTu;				//!< テクスチャ上でのフォントサイズ.
+		static const int			m_SpaceAsciiCode;		//!< スペースのアスキーコード.
+		GraphicsDevice*				m_pGraphicsDevice;		//!< グラフィックデバイス.
+		ID3D11VertexShader*			m_pVertexShader;		//!< 頂点シェーダー.
+		ID3DBlob*					m_pVertexCompiledShader;//!< 頂点シェーダーのコンパイル情報.
+		ID3D11InputLayout*			m_pVertexLayout;		//!< 頂点入力レイアウト.
+		ID3D11PixelShader*			m_pPixelShader;			//!< ピクセルシェーダー.
+		ID3DBlob*					m_pPixelCompiledShader;	//!< ピクセルシェーダーのコンパイル情報.
+		ID3D11BlendState*			m_pBlendState;			//!< ブレンドステート.
+		ID3D11SamplerState*			m_pSamplerState;		//!< サンプラステート.
+		ID3D11Buffer*				m_pVertexBuffer;		//!< 頂点バッファ.
+		ID3D11Buffer*				m_pConstantBuffer;		//!< 定数バッファ.
+		ID3D11ShaderResourceView*	m_pShaderResource;		//!< テクスチャのシェーダーリソースビュー.
+		D3DXVECTOR2					m_FontSize;				//!< フォントのサイズ.
+		float						m_WindowWidth;			//!< ウィンドウの幅.
+		float						m_WindowHeight;			//!< ウィンドウの高さ.
 
 	};
 }
 
 
-#endif
+#endif // LIB_FONT_H

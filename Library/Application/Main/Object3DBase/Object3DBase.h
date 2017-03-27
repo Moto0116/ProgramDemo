@@ -1,5 +1,10 @@
-﻿#ifndef LIB_OBJECT3DBASE_H
-#define LIB_OBJECT3DBASE_H
+﻿/**
+ * @file   Object3DBase.h
+ * @brief  Object3DBaseクラスの定義
+ * @author morimoto
+ */
+#ifndef OBJECT3DBASE_H
+#define OBJECT3DBASE_H
 
 //----------------------------------------------------------------------
 // Include
@@ -10,6 +15,9 @@
 #include <D3DX10.h>
 
 
+/**
+ * 3Dオブジェクトの基底クラス
+ */
 class Object3DBase : public Lib::ObjectBase
 {
 public:
@@ -128,6 +136,7 @@ protected:
 	ID3D11InputLayout*			m_pVertexLayout;
 	ID3D11DepthStencilState*	m_pDepthStencilState;
 	ID3D11Buffer*				m_pConstantBuffer;
+	
 
 	D3DXVECTOR3					m_Pos;
 	D3DXVECTOR3					m_Scale;
@@ -136,4 +145,4 @@ protected:
 };
 
 
-#endif // LIB_OBJECT3DBASE_H
+#endif // OBJECT3DBASE_H

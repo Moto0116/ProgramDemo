@@ -20,11 +20,11 @@ namespace Lib
 		//----------------------------------------------------------------------
 		// Static Variables
 		//----------------------------------------------------------------------
-		static const int g_DebugLogMax = 512;									//!< デバッグログの最大文字数
-		static FILE*									g_pDebugLogFile = NULL;	//!< デバッグ用ファイルポインタ
-		static std::chrono::system_clock::time_point	g_StartTime;			//!< 計測開始時間
-		static std::chrono::system_clock::time_point	g_EndTime;				//!< 計測終了時間
-		static LONGLONG									g_DiffTime;				//!< 計測時間(msec単位)
+		static const int g_DebugLogMax = 512;									//!< デバッグログの最大文字数.
+		static FILE*									g_pDebugLogFile = NULL;	//!< デバッグ用ファイルポインタ.
+		static std::chrono::system_clock::time_point	g_StartTime;			//!< 計測開始時間.
+		static std::chrono::system_clock::time_point	g_EndTime;				//!< 計測終了時間.
+		static LONGLONG									g_DiffTime;				//!< 計測時間(msec単位).
 
 
 		//----------------------------------------------------------------------

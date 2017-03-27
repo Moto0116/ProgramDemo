@@ -1,0 +1,46 @@
+﻿#ifndef LIGHT_UI
+#define LIGHT_UI
+
+#include "Main\Object2DBase\Object2DBase.h"
+#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
+
+
+class LightUI : public Object2DBase
+{
+public:
+	/**
+	 * コンストラクタ
+	 */
+	LightUI();
+	
+	/**
+	 * デストラクタ
+	 */
+	virtual ~LightUI();
+
+	/**
+	 * 初期化処理
+	 * @return 初期化に成功したか
+	 */
+	virtual bool Initialize();
+
+	/**
+	 * 終了処理
+	 */
+	virtual void Finalize();
+
+	/**
+	 * オブジェクトの更新
+	 */
+	virtual void Update();
+
+	/**
+	 * オブジェクトの描画
+	 */
+	virtual void Draw();
+
+};
+
+
+#endif // LIGHT_UI

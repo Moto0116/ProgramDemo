@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------
 #include "KeyDevice.h"
 
+#include "..\..\Define\Define.h"
 #include "..\..\Debugger\Debugger.h"
 
 
@@ -35,7 +36,11 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool KeyDevice::Initialize(LPDIRECTINPUT8 _pDInput8, HWND _hWnd)
 	{
-		MyAssert(_pDInput8 != NULL, "DirectInputオブジェクトがありません");
+		if (_pDInput8 == NULL)
+		{
+			OutputErrorLog("DirectInputオブジェクトがありません");
+			return false;
+		}
 
 
 		m_pDInput8 = _pDInput8;
@@ -43,12 +48,14 @@ namespace Lib
 
 		if (FAILED(m_pDInput8->CreateDevice(GUID_SysKeyboard, &m_pDInputDevice8, NULL)))
 		{
+			OutputErrorLog("デバイスの生成に失敗しました");
 			return false;
 		}
 
 		if (FAILED(m_pDInputDevice8->SetDataFormat(&c_dfDIKeyboard)))
 		{
-			m_pDInputDevice8->Release();
+			OutputErrorLog("デバイスのフォーマットに失敗しました");
+			SafeRelease(m_pDInputDevice8);
 			return false;
 		}
 
@@ -60,13 +67,15 @@ namespace Lib
 		DiProp.dwData = 1000;
 		if (FAILED(m_pDInputDevice8->SetProperty(DIPROP_BUFFERSIZE, &DiProp.diph)))
 		{
-			m_pDInputDevice8->Release();
+			OutputErrorLog("デバイスのプロパティ設定に失敗しました");
+			SafeRelease(m_pDInputDevice8);
 			return false;
 		}
 
 		if (FAILED(m_pDInputDevice8->SetCooperativeLevel(m_hWnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)))
 		{
-			m_pDInputDevice8->Release();
+			OutputErrorLog("デバイスの協調レベルの設定に失敗しました");
+			SafeRelease(m_pDInputDevice8);
 			return false;
 		}
 
@@ -77,11 +86,7 @@ namespace Lib
 
 	void KeyDevice::Finalize()
 	{
-		if (m_pDInputDevice8 != NULL)
-		{
-			m_pDInputDevice8->Release();
-			m_pDInputDevice8 = NULL;
-		}
+		SafeRelease(m_pDInputDevice8);
 	}
 
 	void KeyDevice::Update()

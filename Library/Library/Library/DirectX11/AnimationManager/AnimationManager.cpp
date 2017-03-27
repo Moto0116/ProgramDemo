@@ -25,7 +25,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	AnimationManager::AnimationManager()
 	{
-		// 読み込みに失敗した際に参照する値としてNULLを追加
+		// 読み込みに失敗した際に参照する値としてNULLを追加.
 		m_pAnimation.push_back(NULL);
 	}
 
@@ -55,10 +55,11 @@ namespace Lib
 	{
 		Animation* pAnimation = new Animation(_pAnimationPath);
 
-		if (!pAnimation->GetCurrentFrame())
+		if (pAnimation->GetCurrentFrame() == NULL)	// 現在のフレームがなければ生成に失敗したと判断する.
 		{
 			delete pAnimation;
 			*_pIndex = m_InvalidIndex;
+
 			return false;
 		}
 
@@ -70,11 +71,7 @@ namespace Lib
 
 	void AnimationManager::ReleaseAnimation(int _index)
 	{
-		if (m_pAnimation[_index] != NULL)
-		{
-			delete m_pAnimation[_index];
-			m_pAnimation[_index] = NULL;
-		}
+		SafeDelete(m_pAnimation[_index]);
 	}
 }
 

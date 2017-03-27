@@ -27,7 +27,7 @@ namespace Lib
 	TextureManager::TextureManager() : 
 		m_pGraphicsDevice(NULL)
 	{
-		// 読み込みに失敗した際に参照する値としてNULLを追加
+		// 読み込みに失敗した際に参照する値としてNULLを追加.
 		m_pTextures.push_back(NULL);
 	}
 
@@ -60,7 +60,7 @@ namespace Lib
 
 		if (pTexture->Get() == NULL)
 		{
-			delete pTexture;
+			SafeDelete(pTexture);
 			*_pIndex = m_InvalidIndex;
 			return false;
 		}
@@ -73,14 +73,10 @@ namespace Lib
 
 	void TextureManager::ReleaseTexture(int _index)
 	{
-		if (m_pTextures[_index] != NULL)
-		{
-			delete m_pTextures[_index];
-			m_pTextures[_index] = NULL;
-		}
+		SafeDelete(m_pTextures[_index]);
 	}
 
-	ITexture* TextureManager::GetTexture(int _index)
+	ITexture* TextureManager::GetTexture(int _index) const
 	{
 		return m_pTextures[_index];
 	}

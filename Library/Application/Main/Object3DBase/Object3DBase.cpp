@@ -1,4 +1,13 @@
-﻿#include "Object3DBase.h"
+﻿/**
+ * @file   Object3DBase.cpp
+ * @brief  Object3DBaseクラスの実装
+ * @author morimoto
+ */
+
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
+#include "Object3DBase.h"
 
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
@@ -6,6 +15,9 @@
 
 
 Object3DBase::Object3DBase() : 
+	m_pVertexLayout(NULL),
+	m_pDepthStencilState(NULL),
+	m_pConstantBuffer(NULL),
 	m_Pos(D3DXVECTOR3(0, 0, 0)),
 	m_Scale(D3DXVECTOR3(1, 1, 1)),
 	m_Rotate(D3DXVECTOR3(0, 0, 0))
@@ -147,7 +159,7 @@ bool Object3DBase::WriteConstantBuffer()
 		D3DXMATRIX MatWorld, MatTranslate, MatRotate;
 		D3DXMatrixIdentity(&MatWorld);
 		D3DXMatrixScaling(&MatWorld, m_Scale.x, m_Scale.y, m_Scale.z);
-		D3DXMatrixRotationZ(&MatRotate, m_Rotate.z);
+		D3DXMatrixRotationY(&MatRotate, m_Rotate.y);
 		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
 		D3DXMatrixTranslation(&MatTranslate, m_Pos.x, m_Pos.y, m_Pos.z);
 		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatTranslate);
@@ -178,27 +190,15 @@ void Object3DBase::ReleaseShader()
 
 void Object3DBase::ReleaseVertexLayout()
 {
-	if (m_pVertexLayout != NULL)
-	{
-		m_pVertexLayout->Release();
-		m_pVertexLayout = NULL;
-	}
+	SafeRelease(m_pVertexLayout);
 }
 
 void Object3DBase::ReleaseDepthStencilState()
 {
-	if (m_pDepthStencilState != NULL)
-	{
-		m_pDepthStencilState->Release();
-		m_pDepthStencilState = NULL;
-	}
+	SafeRelease(m_pDepthStencilState);
 }
 
 void Object3DBase::ReleaseConstantBuffer()
 {
-	if (m_pConstantBuffer != NULL)
-	{
-		m_pConstantBuffer->Release();
-		m_pConstantBuffer = NULL;
-	}
+	SafeRelease(m_pConstantBuffer);
 }

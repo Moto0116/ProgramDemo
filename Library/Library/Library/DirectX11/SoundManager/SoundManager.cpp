@@ -60,7 +60,7 @@ namespace Lib
 
 		if (pSound->Get() == NULL)
 		{
-			delete pSound;
+			SafeDelete(pSound);
 			*_pIndex = m_InvalidIndex;
 			return false;
 		}
@@ -73,11 +73,7 @@ namespace Lib
 
 	void SoundManager::ReleaseSound(int _index)
 	{
-		if (m_pSounds[_index] != NULL)
-		{
-			delete m_pSounds[_index];
-			m_pSounds[_index] = NULL;
-		}
+		SafeDelete(m_pSounds[_index]);
 	}
 
 }

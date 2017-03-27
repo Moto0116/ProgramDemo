@@ -27,10 +27,10 @@ namespace Lib
 		 */
 		enum ANIMATION_PATTERN
 		{
-			ONE_ANIMATION,			//!< アニメーションが終了したらそのまま終了する
-			LOOP_ANIMATION,			//!< アニメーションが終了したら最初からループする
-			REVERSE_ONE_ANIMATION,	//!< アニメーションが終了したら反転して最初まで戻る
-			REVERSE_LOOP_ANIMATION	//!< アニメーションが終了したら反転して最初まで戻るのをする
+			ONE_ANIMATION,			//!< アニメーションが終了したらそのまま終了する.
+			LOOP_ANIMATION,			//!< アニメーションが終了したら最初からループする.
+			REVERSE_ONE_ANIMATION,	//!< アニメーションが終了したら反転して最初まで戻る.
+			REVERSE_LOOP_ANIMATION	//!< アニメーションが終了したら反転して最初まで戻るのをする.
 		};
 
 		/**

@@ -20,7 +20,7 @@ const float MainCamera::m_ViewAngle = 50.f;
 const float MainCamera::m_MaxAngle = 70.f;
 const float MainCamera::m_MinAngle = 10.f;
 const float MainCamera::m_MaxLength = 200.f;
-const float MainCamera::m_MinLength = 2.5f;
+const float MainCamera::m_MinLength = 80.f;
 const float MainCamera::m_MoveSpeedWeight = 0.015f;
 const float MainCamera::m_ZoomSpeedWeight = 0.1f;
 const float MainCamera::m_RotateSpeedWeight = 0.22f;
@@ -31,7 +31,7 @@ MainCamera::MainCamera() :
 	m_MoveSpeed(0.f),
 	m_ZoomSpeed(0.f),
 	m_CameraAngle(0.f, 50.f),
-	m_CameraLength(35.f),
+	m_CameraLength(100.f),
 	m_isCameraControl(false)
 {
 }

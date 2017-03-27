@@ -28,6 +28,8 @@ namespace Lib
 	public:
 		/**
 		 * コンストラクタ
+		 * @param[in] _pSoundDevice サウンドデバイス
+		 * @param[in] _pSoundPath サウンドファイルのパス
 		 */
 		Sound(SoundDevice* _pSoundDevice, LPSTR _pSoundPath);
 
@@ -43,13 +45,12 @@ namespace Lib
 
 		/**
 		 * サウンドの取得
-		 * @return サウンド
+		 * @return サウンドバッファ
 		 */
-		inline LPDIRECTSOUNDBUFFER8 Get()
+		inline LPDIRECTSOUNDBUFFER8 Get() const
 		{
 			return m_pSound;
 		}
-
 
 	private:
 		/**
@@ -65,12 +66,17 @@ namespace Lib
 
 		/**
 		 * waveファイルの読み込み
+		 * @param[in] _pFilePath サウンドファイルのパス
+		 * @param[out] _pWaveFormat waveファイルフォーマットの出力先
+		 * @param[out] _pWaveData waveデータの出力先
+		 * @param[out] _pDataSize データサイズの出力先
+		 * @return 読み込みに成功したらtrue 失敗したらfalse
 		 */
-		bool WaveLoad(LPSTR _pFilepath, WAVEFORMATEX* _pWaveFormat, char** _pWaveData, DWORD* _pDataSize);
+		bool WaveLoad(LPSTR _pFilePath, WAVEFORMATEX* _pWaveFormat, char** _pWaveData, DWORD* _pDataSize);
 
 
-		SoundDevice*			m_pSoundDevice;
-		LPDIRECTSOUNDBUFFER8	m_pSound;
+		SoundDevice*			m_pSoundDevice;	//!< サウンドデバイス.
+		LPDIRECTSOUNDBUFFER8	m_pSound;		//!< サウンドバッファ.
 
 		DISALLOW_COPY_AND_ASSIGN(Sound);
 

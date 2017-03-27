@@ -37,15 +37,15 @@ namespace Lib
 		 * EventListenerのIDを取得する関数
 		 * @return EventListenerのID
 		 */
-		inline unsigned int GetEventListenerID()
+		inline unsigned int GetEventListenerID() const
 		{
 			return m_EventListenerID;
 		}
 
 
 	private:
-		static unsigned int m_EventListenerBaseCount;
-		unsigned int		m_EventListenerID;
+		static unsigned int m_EventListenerBaseCount;	//!< イベントリスナオブジェクトのカウント変数.
+		unsigned int		m_EventListenerID;			//!< イベントリスナのユニークID.
 
 	};
 }

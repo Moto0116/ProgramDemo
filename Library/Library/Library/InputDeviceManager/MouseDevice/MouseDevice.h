@@ -9,6 +9,9 @@
 //----------------------------------------------------------------------
 // Define
 //----------------------------------------------------------------------
+/**
+ * DirectInputのバージョン指定
+ */
 #define DIRECTINPUT_VERSION 0x0800
 
 
@@ -31,10 +34,10 @@ namespace Lib
 		 */
 		enum MOUSEBUTTONSTATE
 		{
-			MOUSEBUTTON_PUSH,	//!< マウスのボタンが押された瞬間の状態
-			MOUSEBUTTON_RELEASE,//!< マウスのボタンが離された瞬間の状態
-			MOUSEBUTTON_ON,		//!< マウスのボタンが押され続けている状態
-			MOUSEBUTTON_OFF		//!< マウスのボタンが離されている状態
+			MOUSEBUTTON_PUSH,	//!< マウスのボタンが押された瞬間の状態.
+			MOUSEBUTTON_RELEASE,//!< マウスのボタンが離された瞬間の状態.
+			MOUSEBUTTON_ON,		//!< マウスのボタンが押され続けている状態.
+			MOUSEBUTTON_OFF		//!< マウスのボタンが離されている状態.
 		};
 
 		/**
@@ -42,11 +45,11 @@ namespace Lib
 		 */
 		struct MOUSESTATE
 		{
-			LONG				lX;			//!< マウスのX方向の移動量
-			LONG				lY;			//!< マウスのY方向の移動量
-			LONG				lZ;			//!< マウスのZ方向の移動量
-			MOUSEBUTTONSTATE	Buttons[4];	//!< マウスのボタンの状態
-			POINT				CursorPos;	//!< ウィンドウ内のカーソル位置
+			LONG				lX;			//!< マウスのX方向の移動量.
+			LONG				lY;			//!< マウスのY方向の移動量.
+			LONG				lZ;			//!< マウスのZ方向の移動量.
+			MOUSEBUTTONSTATE	Buttons[4];	//!< マウスのボタンの状態.
+			POINT				CursorPos;	//!< ウィンドウ内のカーソル位置.
 		};
 
 		/**
@@ -87,12 +90,12 @@ namespace Lib
 		}
 
 	private:
-		LPDIRECTINPUT8			m_pDInput8;
-		LPDIRECTINPUTDEVICE8	m_pDInputDevice8;
-		HWND					m_hWnd;
-		MOUSESTATE				m_MouseState;
-		DIMOUSESTATE			m_DIMouseState;
-		DIMOUSESTATE			m_OldDIMouseState;
+		LPDIRECTINPUT8			m_pDInput8;			//!< DirectInput8オブジェクト.
+		LPDIRECTINPUTDEVICE8	m_pDInputDevice8;	//!< DirectInput8デバイス.
+		HWND					m_hWnd;				//!< 対応するウィンドウハンドル.
+		MOUSESTATE				m_MouseState;		//!< マウスとカーソルの状態を格納する構造体.
+		DIMOUSESTATE			m_DIMouseState;		//!< マウスデバイスの状態を格納する構造体.
+		DIMOUSESTATE			m_OldDIMouseState;	//!< マウスデバイスの古い状態を格納する構造体.
 
 	};
 }
