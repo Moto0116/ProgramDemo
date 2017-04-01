@@ -12,13 +12,13 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
-	template <typename Type>
-	inline TaskManager<Type>::TaskManager()
+	template <typename Type, typename BeginTask>
+	inline TaskManager<Type, BeginTask>::TaskManager()
 	{
 	}
 
-	template <typename Type>
-	inline TaskManager<Type>::~TaskManager()
+	template <typename Type, typename BeginTask>
+	inline TaskManager<Type, BeginTask>::~TaskManager()
 	{
 	}
 
@@ -26,24 +26,29 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------
-	template <typename Type>
-	inline void TaskManager<Type>::Run()
+	template <typename Type, typename BeginTask>
+	inline void TaskManager<Type, BeginTask>::Run()
 	{
+		for (auto itr = m_pBeginTaskList.begin(); itr != m_pBeginTaskList.end(); itr++)
+		{
+			(*itr)->Run();
+		}
+
 		for (auto itr = m_pTaskList.begin(); itr != m_pTaskList.end(); itr++)
 		{
 			(*itr)->Run();
 		}
 	}
 
-	template <typename Type>
-	inline void TaskManager<Type>::AddTask(Type* _pTask)
+	template <typename Type, typename BeginTask>
+	inline void TaskManager<Type, BeginTask>::AddTask(Type* _pTask)
 	{
 		m_pTaskList.push_back(_pTask);
 		m_pTaskList.sort(Type::TaskCmp());
 	}
 
-	template <typename Type>
-	inline void TaskManager<Type>::RemoveTask(Type* _pTask)
+	template <typename Type, typename BeginTask>
+	inline void TaskManager<Type, BeginTask>::RemoveTask(Type* _pTask)
 	{
 		for (auto itr = m_pTaskList.begin(); itr != m_pTaskList.end(); itr++)
 		{
@@ -54,6 +59,27 @@ namespace Lib
 			}
 		}
 	}
+
+	template <typename Type, typename BeginTask>
+	inline void TaskManager<Type, BeginTask>::AddBeginTask(BeginTask* _pBeginTask)
+	{
+		m_pBeginTaskList.push_back(_pBeginTask);
+		m_pBeginTaskList.sort(BeginTask::TaskCmp());
+	}
+
+	template <typename Type, typename BeginTask>
+	inline void TaskManager<Type, BeginTask>::RemoveBeginTask(BeginTask* _pBeginTask)
+	{
+		for (auto itr = m_pBeginTaskList.begin(); itr != m_pBeginTaskList.end(); itr++)
+		{
+			if (_pBeginTask->GetID() == (*itr)->GetID())
+			{
+				m_pBeginTaskList.erase(itr);
+				break;
+			}
+		}
+	}
+
 }
 
 

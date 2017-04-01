@@ -15,12 +15,21 @@
 
 
 Object2DBase::Object2DBase() : 
-	m_pVertex(NULL)
+	m_pVertex(NULL),
+	m_Pos(D3DXVECTOR2(0, 0)),
+	m_Rect(D3DXVECTOR2(0, 0))
 {
+	m_pDrawTask = new Lib::DrawTask();
+	m_pUpdateTask = new Lib::UpdateTask();
+
+	m_pDrawTask->SetDrawObject(this);
+	m_pUpdateTask->SetUpdateObject(this);
 }
 
 Object2DBase::~Object2DBase()
 {
+	delete m_pUpdateTask;
+	delete m_pDrawTask;
 }
 
 bool Object2DBase::Initialize()
@@ -38,6 +47,7 @@ void Object2DBase::Update()
 
 void Object2DBase::Draw()
 {
+	m_pVertex->ShaderSetup();
 	m_pVertex->WriteConstantBuffer(&m_Pos);
 	m_pVertex->Draw();
 }

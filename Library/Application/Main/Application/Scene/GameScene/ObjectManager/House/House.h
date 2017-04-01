@@ -45,17 +45,20 @@ public:
 	 * Z値をテクスチャに描画
 	 */
 	virtual void DepthDraw();
+	
+	/**
+	 * マップへの描画
+	 */
+	virtual void MapDraw();
 
 private:
 	static D3DXVECTOR3 m_DefaultScale;
 
-	Lib::DrawTask*		m_pDrawTask;
-	Lib::UpdateTask*	m_pUpdateTask;
-	DepthDrawTask*		m_pDepthDrawTask;
-
-	int					m_ModelIndex;
-	int					m_ShadowVertexShaderIndex;
-	int					m_ShadowPixelShaderIndex;
+	int	m_ModelIndex;
+	int	m_ShadowVertexShaderIndex;
+	int	m_ShadowPixelShaderIndex;
+	int	m_MapVertexShaderIndex;
+	int	m_MapPixelShaderIndex;
 
 };
 

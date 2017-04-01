@@ -236,6 +236,16 @@ namespace Lib
 		return false;
 	}
 
+	void Vertex2D::ShaderSetup()
+	{
+		m_pGraphicsDevice->GetDeviceContext()->VSSetShader(m_pVertexShader, NULL, 0);
+		m_pGraphicsDevice->GetDeviceContext()->PSSetShader(m_pPixelShader, NULL, 0);
+		m_pGraphicsDevice->GetDeviceContext()->GSSetShader(NULL, NULL, 0);
+		m_pGraphicsDevice->GetDeviceContext()->HSSetShader(NULL, NULL, 0);
+		m_pGraphicsDevice->GetDeviceContext()->DSSetShader(NULL, NULL, 0);
+		m_pGraphicsDevice->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	}
+
 	void Vertex2D::Draw()
 	{
 		// アニメーションインターフェースがあればアニメーションを行う.
@@ -246,14 +256,10 @@ namespace Lib
 			WriteVertexBuffer();
 		}
 
-		m_pGraphicsDevice->GetDeviceContext()->VSSetShader(m_pVertexShader, NULL, 0);
-		m_pGraphicsDevice->GetDeviceContext()->PSSetShader(m_pPixelShader, NULL, 0);
-
 		m_pGraphicsDevice->GetDeviceContext()->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 		m_pGraphicsDevice->GetDeviceContext()->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
 		m_pGraphicsDevice->GetDeviceContext()->IASetInputLayout(m_pVertexLayout);
-		m_pGraphicsDevice->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 		// テクスチャインターフェースがあれば、テクスチャを貼り付ける.
 		if (m_pTexture != NULL)

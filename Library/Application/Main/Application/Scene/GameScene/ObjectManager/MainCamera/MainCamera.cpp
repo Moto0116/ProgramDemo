@@ -103,6 +103,9 @@ void MainCamera::Transform()
 	WriteConstantBuffer();
 
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->HSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->DSSetConstantBuffers(1, 1, &m_pConstantBuffer);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(1, 1, &m_pConstantBuffer);
 }
 
@@ -271,6 +274,7 @@ void MainCamera::WriteConstantBuffer()
 		CAMERA_CONSTANT_BUFFER ConstantBuffer;
 		ConstantBuffer.Proj = m_pCamera->GetProjectionMatrix();
 		ConstantBuffer.View = m_pCamera->GetViewMatrix();
+		ConstantBuffer.CameraPos = D3DXVECTOR4(m_Pos.x, m_Pos.y, m_Pos.z, 1.0f);
 
 		D3DXMatrixTranspose(&ConstantBuffer.View, &ConstantBuffer.View);
 		D3DXMatrixTranspose(&ConstantBuffer.Proj, &ConstantBuffer.Proj);

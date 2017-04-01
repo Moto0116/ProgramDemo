@@ -30,7 +30,8 @@ namespace Lib
 
 		/**
 		 * 初期化処理
-		 * @return 初期化に成功したか
+		 * @param[in] _pGraphicsDevice グラフィックデバイス
+		 * @return 初期化に成功したらtrue 失敗したらfalse
 		 */
 		bool Initialize(GraphicsDevice* _pGraphicsDevice);
 
@@ -58,6 +59,33 @@ namespace Lib
 		bool LoadPixelShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex);
 
 		/**
+		 * ジオメトリシェーダーを読み込む(バージョンはps_5_0)
+		 * @param[in] _pFilePath 読み込むエフェクトファイルのパス
+		 * @param[in] _pFuncName ジオメトリシェーダーの関数名
+		 * @param[out] _pIndex ジオメトリシェーダーとコンパイルデータの格納先インデックスが入る
+		 * @return 成功したらtrue 失敗したらfalse
+		 */
+		bool LoadGeometryShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex);
+
+		/**
+		 * ハルシェーダーを読み込む(バージョンはps_5_0)
+		 * @param[in] _pFilePath 読み込むエフェクトファイルのパス
+		 * @param[in] _pFuncName ハルシェーダーの関数名
+		 * @param[out] _pIndex ハルシェーダーとコンパイルデータの格納先インデックスが入る
+		 * @return 成功したらtrue 失敗したらfalse
+		 */
+		bool LoadHullShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex);
+
+		/**
+		 * ドメインシェーダーを読み込む(バージョンはps_5_0)
+		 * @param[in] _pFilePath 読み込むエフェクトファイルのパス
+		 * @param[in] _pFuncName ドメインシェーダーの関数名
+		 * @param[out] _pIndex ドメインシェーダーとコンパイルデータの格納先インデックスが入る
+		 * @return 成功したらtrue 失敗したらfalse
+		 */
+		bool LoadDomainShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex);
+
+		/**
 		 * 頂点シェーダーとそのコンパイルデータを解放する
 		 * @param[in] _index 解放する頂点シェーダーのインデックス
 		 */
@@ -78,6 +106,39 @@ namespace Lib
 		 * ピクセルシェーダーとそのコンパイルデータを全て解放する
 		 */
 		void ReleasePixelShader();
+
+		/**
+		 * ジオメトリシェーダーとそのコンパイルデータを解放する
+		 * @param[in] _index 解放するジオメトリシェーダーのインデックス
+		 */
+		void ReleaseGeometryShader(int _index);
+
+		/**
+		 * ジオメトリシェーダーとそのコンパイルデータを全て解放する
+		 */
+		void ReleaseGeometryShader();
+
+		/**
+		 * ハルシェーダーとそのコンパイルデータを解放する
+		 * @param[in] _index 解放するハルシェーダーのインデックス
+		 */
+		void ReleaseHullShader(int _index);
+
+		/**
+		 * ハルシェーダーとそのコンパイルデータを全て解放する
+		 */
+		void ReleaseHullShader();
+
+		/**
+		 * ドメインシェーダーとそのコンパイルデータを解放する
+		 * @param[in] _index 解放するドメインシェーダーのインデックス
+		 */
+		void ReleaseDomainShader(int _index);
+
+		/**
+		 * ドメインシェーダーとそのコンパイルデータを全て解放する
+		 */
+		void ReleaseDomainShader();
 
 		/**
 		 * 頂点シェーダーを取得する
@@ -120,14 +181,85 @@ namespace Lib
 		}
 
 		/**
+		 * ジオメトリシェーダーを取得する
+		 * @param[in] _index 取得したいジオメトリシェーダーのインデックス
+		 * @return ジオメトリシェーダー
+		 */
+		inline ID3D11GeometryShader* GetGeometryShader(int _index) const
+		{
+			return m_pGeometryShader[_index];
+		}
+
+		/**
+		 * ジオメトリシェーダーのコンパイルデータを取得する
+		 * @param[in] _index 取得したいコンパイルデータのインデックス
+		 * @return ジオメトリシェーダーのコンパイルデータ
+		 */
+		inline ID3DBlob* GetCompiledGeometryShader(int _index) const
+		{
+			return m_pCompiledGeometryShader[_index];
+		}
+
+		/**
+		 * ハルシェーダーを取得する
+		 * @param[in] _index 取得したいハルシェーダーのインデックス
+		 * @return ハルシェーダー
+		 */
+		inline ID3D11HullShader* GetHullShader(int _index) const
+		{
+			return m_pHullShader[_index];
+		}
+
+		/**
+		 * ハルシェーダーのコンパイルデータを取得する
+		 * @param[in] _index 取得したいコンパイルデータのインデックス
+		 * @return ハルシェーダーのコンパイルデータ
+		 */
+		inline ID3DBlob* GetCompiledHullShader(int _index) const
+		{
+			return m_pCompiledHullShader[_index];
+		}
+
+		/**
+		 * ドメインシェーダーを取得する
+		 * @param[in] _index 取得したいドメインシェーダーのインデックス
+		 * @return ドメインシェーダー
+		 */
+		inline ID3D11DomainShader* GetDomainShader(int _index) const
+		{
+			return m_pDomainShader[_index];
+		}
+
+		/**
+		 * ドメインシェーダーのコンパイルデータを取得する
+		 * @param[in] _index 取得したいコンパイルデータのインデックス
+		 * @return ドメインシェーダーのコンパイルデータ
+		 */
+		inline ID3DBlob* GetCompiledDomainShader(int _index) const
+		{
+			return m_pCompiledDomainShader[_index];
+		}
+
+
+		/**
 		 * シェーダーのデータを確保しているバッファをクリアする
 		 */
 		inline void ClearShaderBuffer()
 		{
 			m_pVertexShader.clear();
 			m_pCompiledVertexShader.clear();
+
 			m_pPixelShader.clear();
 			m_pCompiledPixelShader.clear();
+
+			m_pGeometryShader.clear();
+			m_pCompiledGeometryShader.clear();
+
+			m_pHullShader.clear();
+			m_pCompiledHullShader.clear();
+
+			m_pDomainShader.clear();
+			m_pCompiledDomainShader.clear();
 		}
 
 
@@ -144,11 +276,18 @@ namespace Lib
 		 */
 		~ShaderManager();
 
-		GraphicsDevice*						m_pGraphicsDevice;		//!< グラフィックデバイス.
-		std::vector<ID3D11VertexShader*>	m_pVertexShader;		//!< 頂点シェーダーを格納するコンテナ.
-		std::vector<ID3D11PixelShader*>		m_pPixelShader;			//!< ピクセルシェーダーを格納するコンテナ.
-		std::vector<ID3DBlob*>				m_pCompiledVertexShader;//!< 頂点シェーダのコンパイル情報を格納するコンテナ.
-		std::vector<ID3DBlob*>				m_pCompiledPixelShader;	//!< ピクセルシェーダのコンパイル情報を格納するコンテナ.
+		GraphicsDevice*						m_pGraphicsDevice;			//!< グラフィックデバイス.
+		std::vector<ID3D11VertexShader*>	m_pVertexShader;			//!< 頂点シェーダーを格納するコンテナ.
+		std::vector<ID3D11PixelShader*>		m_pPixelShader;				//!< ピクセルシェーダーを格納するコンテナ.
+		std::vector<ID3D11GeometryShader*>	m_pGeometryShader;			//!< ジオメトリシェーダーを格納するコンテナ.
+		std::vector<ID3D11HullShader*>		m_pHullShader;				//!< ハルシェーダーを格納するコンテナ.
+		std::vector<ID3D11DomainShader*>	m_pDomainShader;			//!< ドメインシェーダーを格納するコンテナ.
+		std::vector<ID3DBlob*>				m_pCompiledVertexShader;	//!< 頂点シェーダのコンパイル情報を格納するコンテナ.
+		std::vector<ID3DBlob*>				m_pCompiledPixelShader;		//!< ピクセルシェーダのコンパイル情報を格納するコンテナ.
+		std::vector<ID3DBlob*>				m_pCompiledGeometryShader;	//!< ジオメトリシェーダーのコンパイル情報を格納するコンテナ.
+		std::vector<ID3DBlob*>				m_pCompiledHullShader;		//!< ハルシェーダーのコンパイル情報を格納するコンテナ.
+		std::vector<ID3DBlob*>				m_pCompiledDomainShader;	//!< ドメインシェーダーのコンパイル情報を格納するコンテナ.
+
 	};
 }
 

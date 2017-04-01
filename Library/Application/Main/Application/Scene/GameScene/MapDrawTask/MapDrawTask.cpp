@@ -1,4 +1,4 @@
-﻿#include "DepthDrawTask.h"
+﻿#include "MapDrawTask.h"
 
 #include "Main\Object3DBase\Object3DBase.h"
 
@@ -6,24 +6,24 @@
 //----------------------------------------------------------------------
 // Constructor	Destructor
 //----------------------------------------------------------------------
-DepthDrawTask::DepthDrawTask() : 
+MapDrawTask::MapDrawTask() :
 	m_pObject3D(NULL)
 {
 }
 
-DepthDrawTask::~DepthDrawTask()
+MapDrawTask::~MapDrawTask()
 {
 }
 
 //----------------------------------------------------------------------
 // Public Functions
 //----------------------------------------------------------------------
-void DepthDrawTask::Run()
+void MapDrawTask::Run()
 {
-	m_pObject3D->DepthDraw();
+	m_pObject3D->MapDraw();
 }
 
-void DepthDrawTask::SetDrawObject(Object3DBase* _pObject3D)
+void MapDrawTask::SetDrawObject(Object3DBase* _pObject3D)
 {
 	m_pObject3D = _pObject3D;
 }

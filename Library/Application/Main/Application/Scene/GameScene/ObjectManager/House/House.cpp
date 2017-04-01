@@ -25,22 +25,18 @@ House::~House()
 
 bool House::Initialize()
 {
-	m_pDrawTask = new Lib::DrawTask();
-	m_pUpdateTask = new Lib::UpdateTask();
-	m_pDepthDrawTask = new DepthDrawTask();
-
-	m_pDrawTask->SetDrawObject(this);
-	m_pUpdateTask->SetUpdateObject(this);
-	m_pDepthDrawTask->SetDrawObject(this);
-
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
+	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
 
 	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(TEXT("Resource\\Model\\house_red.fbx"), &m_ModelIndex);
 
 	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(TEXT("Resource\\Effect\\DepthShadow.fx"), "VS", &m_ShadowVertexShaderIndex);
 	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(TEXT("Resource\\Effect\\DepthShadow.fx"), "PS", &m_ShadowPixelShaderIndex);
+
+	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(TEXT("Resource\\Effect\\MiniMap.fx"), "VS", &m_MapVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(TEXT("Resource\\Effect\\MiniMap.fx"), "PS", &m_MapPixelShaderIndex);
 
 	if (!CreateShader())
 	{
@@ -73,23 +69,23 @@ bool House::Initialize()
 
 void House::Finalize()
 {
-	ReleaseShader();
 	ReleaseConstantBuffer();
 	ReleaseDepthStencilState();
 	ReleaseVertexLayout();
+	ReleaseShader();
+
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_MapPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_MapVertexShaderIndex);
 
 	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_ShadowPixelShaderIndex);
 	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_ShadowVertexShaderIndex);
 
 	SINGLETON_INSTANCE(Lib::FbxFileManager)->ReleaseFbxModel(m_ModelIndex);
 
+	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
-
-	delete m_pDepthDrawTask;
-	delete m_pUpdateTask;
-	delete m_pDrawTask;
 }
 
 void House::Update()
@@ -98,8 +94,6 @@ void House::Update()
 
 void House::Draw()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencilTest(true);
-
 	ShaderSetup();
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
@@ -128,3 +122,21 @@ void House::DepthDraw()
 	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
 }
 
+void House::MapDraw()
+{
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
+		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_MapVertexShaderIndex),
+		NULL,
+		0);
+
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShader(
+		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_MapPixelShaderIndex),
+		NULL,
+		0);
+
+	VertexLayoutSetup();
+	DepthStencilStateSetup();
+	WriteConstantBuffer();
+	ConstantBufferSetup();
+	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
+}

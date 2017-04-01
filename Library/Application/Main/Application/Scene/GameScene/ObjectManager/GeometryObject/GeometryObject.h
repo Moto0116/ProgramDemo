@@ -2,9 +2,6 @@
 #define GEOMETRYOBJECT_H
 
 #include "Main\Object3DBase\Object3DBase.h"
-#include "Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h"
-#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
-#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
 
 class GeometryObject : public Object3DBase
@@ -47,13 +44,12 @@ public:
 	virtual void DepthDraw();
 
 private:
-	Lib::DrawTask*		m_pDrawTask;
-	Lib::UpdateTask*	m_pUpdateTask;
-	DepthDrawTask*		m_pDepthDrawTask;
-
-	int					m_ModelIndex;
-	int					m_ShadowVertexShaderIndex;
-	int					m_ShadowPixelShaderIndex;
+	int	m_ModelIndex;
+	int	m_ShadowVertexShaderIndex;
+	int	m_ShadowPixelShaderIndex;
+	int	m_GeometryVertexShaderIndex;
+	int	m_GeometryPixelShaderIndex;
+	int	m_GeometryShaderIndex;
 
 };
 

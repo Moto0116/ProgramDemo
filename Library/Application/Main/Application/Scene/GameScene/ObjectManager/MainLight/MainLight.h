@@ -42,12 +42,43 @@ public:
 	virtual void Draw();
 
 private:
+	/**
+	 * バックバッファ描画前処理のタスク
+	 */
+	class BeginTask : public Lib::TaskBase<>
+	{
+	public:
+		/**
+		 * コンストラクタ
+		 * @param[in] _pMainLight ライトオブジェクト
+		 */
+		BeginTask(MainLight* _pMainLight);
+
+		/**
+		 * デストラクタ
+		 */
+		virtual ~BeginTask();
+
+		/**
+		 * タスクの実行
+		 */
+		virtual void Run();
+
+	private:
+		MainLight* m_pMainLight;
+
+	};
+
+
 	static const D3DXVECTOR3 m_DefaultLightPos;
 	static const D3DXVECTOR3 m_DefaultLightDirPos;
 	static const float m_NearPoint;
 	static const float m_FarPoint;
 	static const float m_ViewAngle;
 	static const float m_ClearColor[4];
+	static const float m_DepthTextureWidth;
+	static const float m_DepthTextureHeight;
+	static const int m_RenderTargetStage;
 
 	struct LIGHT_CONSTANT_BUFFER
 	{
@@ -55,6 +86,7 @@ private:
 		D3DXVECTOR4 LightDir;
 		D3DXMATRIX	LightView;
 		D3DXMATRIX	LightProj;
+		D3DXVECTOR4 FrameTime;
 	};
 
 	/**
@@ -82,6 +114,11 @@ private:
 	 */
 	void WriteConstantBuffer();
 
+	/**
+	 * バックバッファ描画前処理
+	 */
+	void MainLightBeginScene();
+
 
 	Lib::DrawTask*				m_pDrawTask;
 	Lib::UpdateTask*			m_pUpdateTask;
@@ -95,6 +132,8 @@ private:
 	ID3D11ShaderResourceView*	m_pShaderResourceView;
 	ID3D11Texture2D*			m_pDepthStencilTexture;
 	ID3D11DepthStencilView*		m_pDepthStencilView;
+	D3D11_VIEWPORT				m_ViewPort;
+	BeginTask*					m_pBeginTask;
 
 };
 

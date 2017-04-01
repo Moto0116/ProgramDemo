@@ -7,6 +7,7 @@ cbuffer camera : register(b1)
 {
     matrix g_View;
     matrix g_Proj;
+	float4 g_CameraPos;
 };
 
 cbuffer light : register(b2)
@@ -19,15 +20,17 @@ cbuffer light : register(b2)
 
 struct VS_INPUT
 {
-	float3 Pos   : POSITION;
+	float3 Pos    : POSITION;
 	float3 Normal : NORMAL;   
-	float2 UV : TEXCOORD;   
+	float2 UV     : TEXCOORD;   
 };
 
 struct VS_OUTPUT
 {
     float4 Pos : SV_POSITION;
 };
+
+
 
 VS_OUTPUT VS(VS_INPUT In)
 {
@@ -39,7 +42,7 @@ VS_OUTPUT VS(VS_INPUT In)
 	return Out;
 }
 
-float PS(VS_OUTPUT In) : SV_TARGET
+float PS(VS_OUTPUT In) : SV_Target
 {
 	return In.Pos.z;
 }

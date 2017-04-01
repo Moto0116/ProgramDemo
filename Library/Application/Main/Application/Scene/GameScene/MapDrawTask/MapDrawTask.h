@@ -1,5 +1,5 @@
-﻿#ifndef DEPTHDRAWTASK_H
-#define DEPTHDRAWTASK_H
+﻿#ifndef MAPDRAWTASK_H
+#define MAPDRAWTASK_H
 
 #include "TaskManager\TaskBase\TaskBase.h"
 #include "TaskManager\TaskManager.h"
@@ -7,20 +7,20 @@
 class Object3DBase;
 
 /**
- * 深度バッファへの書き込みタスク
+ * マップへの描画タスク
  */
-class DepthDrawTask : public Lib::TaskBase<>
+class MapDrawTask : public Lib::TaskBase<>
 {
 public:
 	/**
 	 * コンストラクタ
 	 */
-	DepthDrawTask();
+	MapDrawTask();
 
 	/**
 	 * デストラクタ
 	 */
-	virtual ~DepthDrawTask();
+	virtual ~MapDrawTask();
 
 	/**
 	 * タスクの実行
@@ -38,7 +38,7 @@ private:
 
 };
 
-typedef Lib::TaskManager<DepthDrawTask> DepthDrawTaskManager;
+typedef Lib::TaskManager<MapDrawTask> MapDrawTaskManager;
 
 
-#endif // DEPTHDRAWTASK_H
+#endif // MAPDRAWTASK_H

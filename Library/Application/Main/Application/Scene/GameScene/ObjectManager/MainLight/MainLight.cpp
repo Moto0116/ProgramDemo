@@ -2,14 +2,18 @@
 
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
+#include "Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h"
 
 
-const D3DXVECTOR3 MainLight::m_DefaultLightPos = D3DXVECTOR3(120, 90, 140);
+const D3DXVECTOR3 MainLight::m_DefaultLightPos = D3DXVECTOR3(220, 190, 240);
 const D3DXVECTOR3 MainLight::m_DefaultLightDirPos = D3DXVECTOR3(40, 0, 40);
 const float MainLight::m_NearPoint = 1.f;
 const float MainLight::m_FarPoint = 700.f;
 const float MainLight::m_ViewAngle = 50.f;
 const float MainLight::m_ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+const float MainLight::m_DepthTextureWidth = 3200.f;
+const float MainLight::m_DepthTextureHeight = 1800.f;
+const int MainLight::m_RenderTargetStage = 1;
 
 
 MainLight::MainLight() : 
@@ -27,6 +31,7 @@ bool MainLight::Initialize()
 {
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
+	m_pBeginTask = new BeginTask(this);
 
 	m_pDrawTask->SetDrawObject(this);
 	m_pDrawTask->SetPriority(-1);
@@ -34,6 +39,7 @@ bool MainLight::Initialize()
 
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddBeginTask(m_pBeginTask);
 
 	m_pLight = new Lib::Light();
 	m_pLight->SetPos(&m_DefaultLightPos);
@@ -63,21 +69,17 @@ void MainLight::Finalize()
 
 	delete m_pLight;
 
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveBeginTask(m_pBeginTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
 
+	delete m_pBeginTask;
 	delete m_pUpdateTask;
 	delete m_pDrawTask;
 }
 
 void MainLight::Update()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->ClearRenderTargetView(m_pRenderTarget, m_ClearColor);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->OMSetRenderTargets(1, &m_pRenderTarget, m_pDepthStencilView);
-
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(2, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(2, 1, &m_pConstantBuffer);
 }
 
 void MainLight::Draw()
@@ -106,14 +108,10 @@ bool MainLight::CreateConstantBuffer()
 
 bool MainLight::CreateDepthTexture()
 {
-	const RECT* pWindowRect = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowRect();
-	UINT WindowWidth = pWindowRect->right - pWindowRect->left;
-	UINT WindowHeight = pWindowRect->bottom - pWindowRect->top;
-
 	D3D11_TEXTURE2D_DESC DepthTextureDesc;
 	ZeroMemory(&DepthTextureDesc, sizeof(DepthTextureDesc));
-	DepthTextureDesc.Width = WindowWidth;
-	DepthTextureDesc.Height = WindowHeight;
+	DepthTextureDesc.Width = static_cast<UINT>(m_DepthTextureWidth);
+	DepthTextureDesc.Height = static_cast<UINT>(m_DepthTextureHeight);
 	DepthTextureDesc.MipLevels = 1;
 	DepthTextureDesc.ArraySize = 1;
 	DepthTextureDesc.Format = DXGI_FORMAT_R32_FLOAT;
@@ -153,8 +151,8 @@ bool MainLight::CreateDepthTexture()
 
 
 	D3D11_TEXTURE2D_DESC DepthStencilDesc;
-	DepthStencilDesc.Width = WindowWidth;
-	DepthStencilDesc.Height = WindowHeight;
+	DepthStencilDesc.Width = static_cast<UINT>(m_DepthTextureWidth);
+	DepthStencilDesc.Height = static_cast<UINT>(m_DepthTextureHeight);
 	DepthStencilDesc.MipLevels = 1;
 	DepthStencilDesc.ArraySize = 1;
 	DepthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
@@ -183,49 +181,40 @@ bool MainLight::CreateDepthTexture()
 		return false;
 	}
 
+	// ビューポート設定
+	m_ViewPort.TopLeftX = 0;
+	m_ViewPort.TopLeftY = 0;
+	m_ViewPort.Width = m_DepthTextureWidth;
+	m_ViewPort.Height = m_DepthTextureHeight;
+	m_ViewPort.MinDepth = 0.0f;
+	m_ViewPort.MaxDepth = 1.0f;
+
+
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(&m_pRenderTarget, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(&m_pDepthStencilView, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(m_ClearColor, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(&m_ViewPort, m_RenderTargetStage);
+
 	return true;
 }
 
 void MainLight::ReleaseConstantBuffer()
 {
-	if (m_pConstantBuffer != NULL)
-	{
-		m_pConstantBuffer->Release();
-		m_pConstantBuffer = NULL;
-	}
+	SafeRelease(m_pConstantBuffer);
 }
 
 void MainLight::ReleaseDepthTexture()
 {
-	if (m_pDepthStencilView != NULL)
-	{
-		m_pDepthStencilView->Release();
-		m_pDepthStencilView = NULL;
-	}
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(NULL, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(0xffffffff, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(NULL, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(NULL, m_RenderTargetStage);
 
-	if (m_pDepthStencilTexture != NULL)
-	{
-		m_pDepthStencilTexture->Release();
-		m_pDepthStencilTexture = NULL;
-	}
-
-	if (m_pShaderResourceView != NULL)
-	{
-		m_pShaderResourceView->Release();
-		m_pShaderResourceView = NULL;
-	}
-
-	if (m_pRenderTarget != NULL)
-	{
-		m_pRenderTarget->Release();
-		m_pRenderTarget = NULL;
-	}
-
-	if (m_pDepthTexture != NULL)
-	{
-		m_pDepthTexture->Release();
-		m_pDepthTexture = NULL;
-	}
+	SafeRelease(m_pDepthStencilView);
+	SafeRelease(m_pDepthStencilTexture);
+	SafeRelease(m_pShaderResourceView);
+	SafeRelease(m_pRenderTarget);
+	SafeRelease(m_pDepthTexture);
 }
 
 void MainLight::WriteConstantBuffer()
@@ -255,5 +244,39 @@ void MainLight::WriteConstantBuffer()
 
 		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
 	}
+}
+
+void MainLight::MainLightBeginScene()
+{
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(m_RenderTargetStage);
+
+	WriteConstantBuffer();
+
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(2, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(2, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetConstantBuffers(2, 1, &m_pConstantBuffer);
+}
+
+
+
+//----------------------------------------------------------------------
+// Inner Class Constructor Destructor
+//----------------------------------------------------------------------
+MainLight::BeginTask::BeginTask(MainLight* _pMainLight) :
+	m_pMainLight(_pMainLight)
+{
+}
+
+MainLight::BeginTask::~BeginTask()
+{
+}
+
+
+//----------------------------------------------------------------------
+// Inner Class Public Function
+//----------------------------------------------------------------------
+void MainLight::BeginTask::Run()
+{
+	m_pMainLight->MainLightBeginScene();
 }
 

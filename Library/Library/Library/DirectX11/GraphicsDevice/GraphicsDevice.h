@@ -25,6 +25,14 @@ namespace Lib
 	public:
 		friend SingletonBase<GraphicsDevice>;
 
+		static const int m_RenderTargetNum = D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT;
+
+
+		enum RENDER_TARGET
+		{
+			DEFAULT_TARGET = 0
+		};
+
 		/**
 		 * 初期化処理
 		 * @param[in] _hWnd GraphicsDeviceが対応するウィンドウのハンドル
@@ -39,8 +47,9 @@ namespace Lib
 
 		/**
 		 * 描画前処理
+		 * @param[in] _stage 初期化するステージ
 		 */
-		void BeginScene();
+		void BeginScene(int _stage);
 
 		/**
 		 * 描画後処理
@@ -48,10 +57,37 @@ namespace Lib
 		void EndScene();
 
 		/**
-		 * 深度テストの設定
-		 * @param[in] _isStencilTest 深度テストを使用するかのフラグ
+		 * レンダーターゲットの割り当て
+		 * @param[in] _pRenderTarget 割り当てるレンダーターゲット
+		 * @param[in] _stage レンダーターゲットを割り当てるステージ
+		 * @return 割り当てに成功したらtrue 失敗したらfalse
 		 */
-		void SetDepthStencilTest(bool _isStencilTest);
+		bool SetRenderTarget(ID3D11RenderTargetView** _pRenderTarget, int _stage);
+
+		/**
+		 * 深度ステンシルの割り当て
+		 * @param[in] _pRenderTarget 割り当てる深度ステンシル
+		 * @param[in] _stage 深度ステンシルを割り当てるステージ
+		 * @return 割り当てに成功したらtrue 失敗したらfalse
+		 */
+		bool SetDepthStencil(ID3D11DepthStencilView** _pDepthStencilView, int _stage);
+
+		/**
+		 * ビューポートの割り当て
+		 * @param[in] _pViewPort 割り当てるビューポート
+		 * @param[in] _stage ビューポートを割り当てるステージ
+		 * @return 割り当てに成功したらtrue 失敗したらfalse
+		 */
+		bool SetViewPort(const D3D11_VIEWPORT* _pViewPort, int _stage);
+
+		/**
+		 * クリアカラーの割り当て
+		 * @param[in] _clearColor 割り当てるカラー値
+		 * @param[in] _stage カラー値を割り当てるステージ
+		 * @return 割り当てに成功したらtrue 失敗したらfalse
+		 */
+		bool SetClearColor(D3DXCOLOR _clearColor, int _stage);
+
 
 		/**
 		 * DirectXデバイスの取得
@@ -133,18 +169,20 @@ namespace Lib
 		void ReleaseDisplay();
 
 
-		static float			m_ClearColor[4];		//!< バックバッファをクリアするときのカラー値.
 		ID3D11Device*			m_pDevice;				//!< DirectX11デバイス.
 		ID3D11DeviceContext*	m_pDeviceContext;		//!< DirectX11デバイスコンテキスト.
-		IDXGIDevice1*			m_pDXGI;				//!< DirectX11グラフィックインターフェース.
+		IDXGIDevice1*			m_pDXGI;				//!< DirectX11グラフィックインストラクチャ.
 		IDXGIAdapter*			m_pAdapter;				//!< DXGIのアダプタ.
 		IDXGIFactory*			m_pDXGIFactory;			//!< DXGIのファクトリ.
 		IDXGISwapChain*			m_pDXGISwapChain;		//!< スワップチェイン.
 		ID3D11Texture2D*		m_pBackBuffer;			//!< バックバッファ.
-		ID3D11RenderTargetView* m_pRenderTargetView;	//!< バックバッファのレンダーターゲットビュー.
-		ID3D11Texture2D*		m_pDepthStencilBuffer;	//!< 深度ステンシルバッファ.
-		ID3D11DepthStencilView* m_pDepthStencilView;	//!< 深度ステンシルビュー.
-		D3D11_VIEWPORT			m_ViewPort;				//!< ビューポート.
+		
+		float					m_ClearColor[m_RenderTargetNum][4];		//!< バッファをクリアするときのカラー値.
+		ID3D11RenderTargetView* m_pRenderTargetView[m_RenderTargetNum];	//!< バックバッファのレンダーターゲットビュー.
+		ID3D11Texture2D*		m_pDepthStencilBuffer;					//!< 深度ステンシルバッファ.
+		ID3D11DepthStencilView* m_pDepthStencilView[m_RenderTargetNum];	//!< 深度ステンシルビュー.
+		D3D11_VIEWPORT			m_ViewPort[m_RenderTargetNum];			//!< ビューポート.
+
 		ID3D11RasterizerState*  m_pRasterizerState;		//!< ラスタライザステート.
 		HWND					m_hWnd;					//!< 対応するウィンドウハンドル.
 		RECT					m_WindowRect;			//!< ウィンドウの矩形情報.

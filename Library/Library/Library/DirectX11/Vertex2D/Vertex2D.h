@@ -100,6 +100,11 @@ namespace Lib
 			float _angle = 0.f);
 
 		/**
+		 * デフォルトのシェーダーを使用する準備
+		 */
+		void ShaderSetup();
+
+		/**
 		 * 2Dポリゴンの描画
 		 */
 		void Draw();

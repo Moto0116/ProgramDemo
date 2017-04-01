@@ -4,6 +4,9 @@
 #include "MainCamera\MainCamera.h"
 #include "MainLight\MainLight.h"
 #include "House\House.h"
+#include "GeometryObject\GeometryObject.h"
+#include "TessellationObject\TessellationObject.h"
+#include "MiniMap\MiniMap.h"
 
 
 ObjectManager::ObjectManager()
@@ -21,6 +24,9 @@ ObjectManager::ObjectManager()
 	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 60), -90));
 	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 40), -90));
 	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 20), -90));
+	m_pObjects.push_back(new GeometryObject());
+	m_pObjects.push_back(new TessellationObject());
+	m_pObjects.push_back(new MiniMap());
 }
 
 ObjectManager::~ObjectManager()

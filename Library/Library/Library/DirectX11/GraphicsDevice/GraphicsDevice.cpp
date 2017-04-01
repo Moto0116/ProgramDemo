@@ -15,12 +15,6 @@
 namespace Lib
 {
 	//----------------------------------------------------------------------
-	// Static Private Variables
-	//----------------------------------------------------------------------
-	float GraphicsDevice::m_ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-
-	//----------------------------------------------------------------------
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	GraphicsDevice::GraphicsDevice() :
@@ -31,12 +25,20 @@ namespace Lib
 		m_pDXGIFactory(NULL),
 		m_pDXGISwapChain(NULL),
 		m_pBackBuffer(NULL),
-		m_pRenderTargetView(NULL),
 		m_pDepthStencilBuffer(NULL),
-		m_pDepthStencilView(NULL),
 		m_pRasterizerState(NULL),
 		m_hWnd(NULL)
 	{
+		for (int i = 0; i < m_RenderTargetNum; i++)
+		{
+			m_pRenderTargetView[i] = NULL;
+			m_pDepthStencilView[i] = NULL;
+
+			for (int j = 0; j < 4; j++)
+			{
+				m_ClearColor[i][j] = 0.0f;
+			}
+		}
 	}
 
 	GraphicsDevice::~GraphicsDevice()
@@ -79,11 +81,12 @@ namespace Lib
 		ReleaseDevice();
 	}
 
-	void GraphicsDevice::BeginScene()
+	void GraphicsDevice::BeginScene(int _stage)
 	{
-		m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, m_ClearColor);
-		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+		m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView[_stage], m_ClearColor[_stage]);
+		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView[_stage], D3D11_CLEAR_DEPTH, 1.0f, 0);
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView[_stage], m_pDepthStencilView[_stage]);
+		m_pDeviceContext->RSSetViewports(1, &m_ViewPort[_stage]);
 	}
 
 	void GraphicsDevice::EndScene()
@@ -91,16 +94,76 @@ namespace Lib
 		m_pDXGISwapChain->Present(1, 0);
 	}
 
-	void GraphicsDevice::SetDepthStencilTest(bool _isStencilTest)
+	bool GraphicsDevice::SetRenderTarget(ID3D11RenderTargetView** _pRenderTarget, int _stage)
 	{
-		if (_isStencilTest)
+		if (_stage > m_RenderTargetNum)
 		{
-			m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+			return false;
+		}
+
+		if (_pRenderTarget == NULL)
+		{
+			m_pRenderTargetView[_stage] = NULL;
 		}
 		else
 		{
-			m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, NULL);
+			m_pRenderTargetView[_stage] = *_pRenderTarget;
 		}
+
+		return true;
+	}
+
+	bool GraphicsDevice::SetDepthStencil(ID3D11DepthStencilView** _pDepthStencilView, int _stage)
+	{
+		if (_stage > m_RenderTargetNum)
+		{
+			return false;
+		}
+
+		if (_pDepthStencilView == NULL)
+		{
+			m_pDepthStencilView[_stage] = NULL;
+		}
+		else
+		{
+			m_pDepthStencilView[_stage] = *_pDepthStencilView;
+		}
+
+		return true;
+	}
+
+	bool GraphicsDevice::SetViewPort(const D3D11_VIEWPORT* _pViewPort, int _stage)
+	{
+		if (_stage > m_RenderTargetNum)
+		{
+			return false;
+		}
+
+		if (_pViewPort == NULL)
+		{
+			m_ViewPort[_stage] = m_ViewPort[DEFAULT_TARGET];
+		}
+		else
+		{
+			m_ViewPort[_stage] = *_pViewPort;
+		}
+
+		return true;
+	}
+
+	bool GraphicsDevice::SetClearColor(D3DXCOLOR _clearColor, int _stage)
+	{
+		if (_stage > m_RenderTargetNum)
+		{
+			return false;
+		}
+
+		m_ClearColor[_stage][0] = _clearColor.r;
+		m_ClearColor[_stage][1] = _clearColor.g;
+		m_ClearColor[_stage][2] = _clearColor.b;
+		m_ClearColor[_stage][3] = _clearColor.a;
+
+		return true;
 	}
 
 
@@ -130,25 +193,25 @@ namespace Lib
 
 	bool GraphicsDevice::CreateDisplay()
 	{
-		// グラフィックインターフェースの取得.
+		// グラフィックインストラクチャの取得.
 		if (FAILED(m_pDevice->QueryInterface(__uuidof(IDXGIDevice1), reinterpret_cast<void**>(&m_pDXGI))))
 		{
-			OutputErrorLog("グラフィックインターフェースの取得に失敗しました");
+			OutputErrorLog("グラフィックインストラクチャの取得に失敗しました");
 			return false;
 		}
 
-		// グラフィックインターフェースアダプタの取得.
+		// グラフィックインストラクチャアダプタの取得.
 		if (FAILED(m_pDXGI->GetAdapter(&m_pAdapter)))
 		{
-			OutputErrorLog("グラフィックインターフェースアダプタの取得に失敗しました");
+			OutputErrorLog("グラフィックインストラクチャアダプタの取得に失敗しました");
 			ReleaseDisplay();
 			return false;
 		}
 
-		// グラフィックインターフェースファクトリの取得.
+		// グラフィックインストラクチャファクトリの取得.
 		if (FAILED(m_pAdapter->GetParent(__uuidof(IDXGIFactory), reinterpret_cast<void**>(&m_pDXGIFactory))))
 		{
-			OutputErrorLog("グラフィックインターフェースファクトリの取得に失敗しました");
+			OutputErrorLog("グラフィックインストラクチャファクトリの取得に失敗しました");
 			ReleaseDisplay();
 			return false;
 		}
@@ -200,7 +263,7 @@ namespace Lib
 
 
 		// レンダーターゲットビューの作成に失敗しました.
-		if (FAILED(m_pDevice->CreateRenderTargetView(m_pBackBuffer, NULL, &m_pRenderTargetView)))
+		if (FAILED(m_pDevice->CreateRenderTargetView(m_pBackBuffer, NULL, &m_pRenderTargetView[DEFAULT_TARGET])))
 		{
 			OutputErrorLog("レンダーターゲットビューの作成に失敗しました");
 			ReleaseDisplay();
@@ -230,24 +293,25 @@ namespace Lib
 		}
 
 		// 深度ステンシルビューの作成.
-		if (FAILED(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer, NULL, &m_pDepthStencilView)))
+		if (FAILED(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer, NULL, &m_pDepthStencilView[DEFAULT_TARGET])))
 		{
 			OutputErrorLog("深度ステンシルビューの作成に失敗しました");
 			ReleaseDisplay();
 			return false;
 		}
 
-		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView); // 描画先に設定.
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView[DEFAULT_TARGET], m_pDepthStencilView[DEFAULT_TARGET]); // 描画先に設定.
 
 
 		// ビューポートの設定.
-		m_ViewPort.TopLeftX = 0;
-		m_ViewPort.TopLeftY = 0;
-		m_ViewPort.Width = static_cast<float>(m_WindowRect.right - m_WindowRect.left);
-		m_ViewPort.Height = static_cast<float>(m_WindowRect.bottom - m_WindowRect.top);
-		m_ViewPort.MinDepth = 0.0f;
-		m_ViewPort.MaxDepth = 1.0f;
-		m_pDeviceContext->RSSetViewports(1, &m_ViewPort);
+		ZeroMemory(&m_ViewPort, sizeof(m_ViewPort));
+		m_ViewPort[DEFAULT_TARGET].TopLeftX = 0;
+		m_ViewPort[DEFAULT_TARGET].TopLeftY = 0;
+		m_ViewPort[DEFAULT_TARGET].Width = static_cast<float>(m_WindowRect.right - m_WindowRect.left);
+		m_ViewPort[DEFAULT_TARGET].Height = static_cast<float>(m_WindowRect.bottom - m_WindowRect.top);
+		m_ViewPort[DEFAULT_TARGET].MinDepth = 0.0f;
+		m_ViewPort[DEFAULT_TARGET].MaxDepth = 1.0f;
+		m_pDeviceContext->RSSetViewports(1, &m_ViewPort[DEFAULT_TARGET]);
 
 
 		// ラスタライザステートの設定.
@@ -285,9 +349,9 @@ namespace Lib
 	void GraphicsDevice::ReleaseDisplay()
 	{
 		SafeRelease(m_pRasterizerState);
-		SafeRelease(m_pDepthStencilView);
+		SafeRelease(m_pDepthStencilView[DEFAULT_TARGET]);
 		SafeRelease(m_pDepthStencilBuffer);
-		SafeRelease(m_pRenderTargetView);
+		SafeRelease(m_pRenderTargetView[DEFAULT_TARGET]);
 		SafeRelease(m_pBackBuffer);
 		SafeRelease(m_pDXGISwapChain);
 		SafeRelease(m_pDXGIFactory);

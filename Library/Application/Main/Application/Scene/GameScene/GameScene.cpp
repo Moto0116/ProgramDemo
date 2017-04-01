@@ -18,6 +18,7 @@
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "DepthDrawTask\DepthDrawTask.h"
+#include "MapDrawTask\MapDrawTask.h"
 
 
 
@@ -35,6 +36,7 @@ bool GameScene::Initialize()
 	SINGLETON_CREATE(Lib::UpdateTaskManager);
 	SINGLETON_CREATE(Lib::DrawTaskManager);
 	SINGLETON_CREATE(DepthDrawTaskManager);
+	SINGLETON_CREATE(MapDrawTaskManager);
 
 
 	SINGLETON_CREATE(Lib::FbxFileManager);
@@ -118,6 +120,7 @@ void GameScene::Finalize()
 	SINGLETON_INSTANCE(Lib::FbxFileManager)->Finalize();
 	SINGLETON_DELETE(Lib::FbxFileManager);
 
+	SINGLETON_DELETE(MapDrawTaskManager);
 	SINGLETON_DELETE(DepthDrawTaskManager);
 	SINGLETON_DELETE(Lib::DrawTaskManager);
 	SINGLETON_DELETE(Lib::UpdateTaskManager);
@@ -133,10 +136,13 @@ void GameScene::Update()
 
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->MouseUpdate();
 
+
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
+
+	SINGLETON_INSTANCE(MapDrawTaskManager)->Run();
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->Run();
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene();
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(Lib::GraphicsDevice::DEFAULT_TARGET);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->EndScene();
 }

@@ -22,10 +22,23 @@ Object3DBase::Object3DBase() :
 	m_Scale(D3DXVECTOR3(1, 1, 1)),
 	m_Rotate(D3DXVECTOR3(0, 0, 0))
 {
+	m_pDrawTask = new Lib::DrawTask();
+	m_pUpdateTask = new Lib::UpdateTask();
+	m_pDepthDrawTask = new DepthDrawTask();
+	m_pMapDrawTask = new MapDrawTask();
+
+	m_pDrawTask->SetDrawObject(this);
+	m_pUpdateTask->SetUpdateObject(this);
+	m_pDepthDrawTask->SetDrawObject(this);
+	m_pMapDrawTask->SetDrawObject(this);
 }
 
 Object3DBase::~Object3DBase()
 {
+	delete m_pMapDrawTask;
+	delete m_pDepthDrawTask;
+	delete m_pUpdateTask;
+	delete m_pDrawTask;
 }
 
 bool Object3DBase::Initialize()
@@ -49,6 +62,10 @@ void Object3DBase::DepthDraw()
 {
 }
 
+void Object3DBase::MapDraw()
+{
+}
+
 void Object3DBase::ShaderSetup()
 {
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
@@ -58,6 +75,11 @@ void Object3DBase::ShaderSetup()
 	
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShader(
 		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), 
+		NULL,
+		0);
+
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetShader(
+		NULL,
 		NULL,
 		0);
 }

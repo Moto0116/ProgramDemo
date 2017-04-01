@@ -9,10 +9,14 @@
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
-#include "ObjectBase\ObjectBase.h"
-
 #include <D3DX11.h>
 #include <D3DX10.h>
+
+#include "ObjectBase\ObjectBase.h"
+#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
+#include "Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h"
+#include "Main\Application\Scene\GameScene\MapDrawTask\MapDrawTask.h"
 
 
 /**
@@ -56,6 +60,11 @@ public:
 	 * Z値をテクスチャに描画
 	 */
 	virtual void DepthDraw();
+
+	/**
+	 * マップへの描画
+	 */
+	virtual void MapDraw();
 
 protected:
 	/**
@@ -131,12 +140,16 @@ protected:
 	 */
 	void ReleaseConstantBuffer();
 
+	Lib::DrawTask*				m_pDrawTask;
+	Lib::UpdateTask*			m_pUpdateTask;
+	DepthDrawTask*				m_pDepthDrawTask;
+	MapDrawTask*				m_pMapDrawTask;
+
 	int							m_VertexShaderIndex;
 	int							m_PixelShaderIndex;
 	ID3D11InputLayout*			m_pVertexLayout;
 	ID3D11DepthStencilState*	m_pDepthStencilState;
 	ID3D11Buffer*				m_pConstantBuffer;
-	
 
 	D3DXVECTOR3					m_Pos;
 	D3DXVECTOR3					m_Scale;

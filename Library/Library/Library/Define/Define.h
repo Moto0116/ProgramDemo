@@ -1,6 +1,6 @@
-/**
+ï»¿/**
  * @file	Define.h
- * @brief	define’è‹`
+ * @brief	defineå®šç¾©
  * @author	morimoto
  */
 #ifndef DEFINE_H
@@ -11,7 +11,7 @@
 // Define
 //----------------------------------------------------------------------
 
-// ƒRƒs[‹Ö~ƒ}ƒNƒ
+// ã‚³ãƒ”ãƒ¼ç¦æ­¢ãƒã‚¯ãƒ­
 #define DISALLOW_COPY_AND_ASSIGN(Type)	Type(const Type&);			\
 										void operator=(const Type&)
 

@@ -37,9 +37,12 @@
     <ClCompile Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.cpp" />
     <ClCompile Include="Main\Object2DBase\Object2DBase.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\TessellationObject\TessellationObject.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\MapDrawTask\MapDrawTask.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\Application\Application.h">
@@ -57,14 +60,18 @@
     <ClInclude Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.h" />
     <ClInclude Include="Main\Object2DBase\Object2DBase.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\TessellationObject\TessellationObject.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\MapDrawTask\MapDrawTask.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resource\Effect\Ground.fx" />
-    <FxCompile Include="Resource\Effect\House.fx" />
     <FxCompile Include="Resource\Effect\DefaultEffect.fx" />
     <FxCompile Include="Resource\Effect\DepthShadow.fx" />
+    <FxCompile Include="Resource\Effect\Geometry.fx" />
+    <FxCompile Include="Resource\Effect\Tessellation.fx" />
+    <FxCompile Include="Resource\Effect\MiniMap.fx" />
   </ItemGroup>
 </Project>

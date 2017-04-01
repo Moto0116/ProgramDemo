@@ -61,21 +61,22 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(SolutionDir)Library\Library;$(SolutionDir)Application;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(SolutionDir)Library\Library;$(SolutionDir)Application;C:\Program Files\Autodesk\FBX\FBX SDK\2016.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4005</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(SolutionDir)Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;d3dx11.lib;d3dx10.lib;dxguid.lib;Library.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(SolutionDir)Release;C:\Program Files\Autodesk\FBX\FBX SDK\2016.1\lib\vs2013\x86\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;d3dx11.lib;d3dx10.lib;dxguid.lib;Library.lib;libfbxsdk-mt.lib;dinput8.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\House.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.cpp" />
@@ -88,11 +89,14 @@
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.cpp" />
     <ClCompile Include="Main\Object2DBase\Object2DBase.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\TessellationObject\TessellationObject.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\MapDrawTask\MapDrawTask.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\House.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.h" />
@@ -104,6 +108,9 @@
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.h" />
     <ClInclude Include="Main\Object2DBase\Object2DBase.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\TessellationObject\TessellationObject.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\MapDrawTask\MapDrawTask.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\Effect\DefaultEffect.fx">
@@ -111,14 +118,16 @@
       </EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="Resource\Effect\Ground.fx">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Resource\Effect\House.fx">
+    <FxCompile Include="Resource\Effect\Geometry.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
@@ -133,6 +142,18 @@
       </EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\MiniMap.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\Tessellation.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

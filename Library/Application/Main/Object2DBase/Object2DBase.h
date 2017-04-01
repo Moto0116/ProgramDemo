@@ -11,6 +11,8 @@
 //----------------------------------------------------------------------
 #include "ObjectBase\ObjectBase.h"
 #include "DirectX11\Vertex2D\Vertex2D.h"
+#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
 
 /**
@@ -53,6 +55,9 @@ public:
 protected:
 	bool CreateVertex2D();
 	void ReleaseVertex2D();
+
+	Lib::DrawTask*		m_pDrawTask;
+	Lib::UpdateTask*	m_pUpdateTask;
 
 	Lib::Vertex2D*	m_pVertex;
 	D3DXVECTOR2		m_Pos;

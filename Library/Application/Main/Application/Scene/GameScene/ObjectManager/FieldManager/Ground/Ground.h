@@ -2,9 +2,6 @@
 #define GROUND_H
 
 #include "Main\Object3DBase\Object3DBase.h"
-#include "Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h"
-#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
-#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
 
 class Ground : public Object3DBase
@@ -46,18 +43,22 @@ public:
 	 */
 	virtual void DepthDraw();
 
+	/**
+	 * マップへの描画
+	 */
+	virtual void MapDraw();
+
 private:
 	static D3DXVECTOR3 m_DefaultScale;
-
-	Lib::DrawTask*		m_pDrawTask;
-	Lib::UpdateTask*	m_pUpdateTask;
-	DepthDrawTask*		m_pDepthDrawTask;
 
 	int m_GroundModelIndex;
 	int m_MountainModelIndex;
 	int m_SkyModelIndex;
 	int	m_ShadowVertexShaderIndex;
 	int	m_ShadowPixelShaderIndex;
+	int	m_MapVertexShaderIndex;
+	int	m_MapPixelShaderIndex;
+
 
 };
 

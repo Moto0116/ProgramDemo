@@ -11,6 +11,7 @@
 //----------------------------------------------------------------------
 #include <list>
 
+#include "TaskBase\TaskBase.h"
 #include "..\SingletonBase\SingletonBase.h"
 
 
@@ -19,12 +20,13 @@ namespace Lib
 	/**
 	 * タスク管理の基底クラス
 	 * @tparam Type 管理するタスクオブジェクト
+	 * @tparam BeginTask 最初に実行するタスクオブジェクト
 	 */
-	template <typename Type>
-	class TaskManager : public SingletonBase<TaskManager<Type>>
+	template <typename Type, typename BeginTask = TaskBase<>>
+	class TaskManager : public SingletonBase<TaskManager<Type, BeginTask>>
 	{
 	public:
-		friend SingletonBase<TaskManager<Type>>;
+		friend SingletonBase<TaskManager<Type, BeginTask>>;
 	
 		/**
 		 * タスクの実行
@@ -43,7 +45,18 @@ namespace Lib
 		 */
 		inline void RemoveTask(Type* _pTask);
 	
-	
+		/**
+		 * 開始タスクの追加
+		 * @param[in] _pBeginTask 追加するタスク
+		 */
+		inline void AddBeginTask(BeginTask* _pBeginTask);
+
+		/**
+		 * 開始タスクの削除
+		 * @param[in] _pBeginTask 削除するタスク
+		 */
+		inline void RemoveBeginTask(BeginTask* _pBeginTask);
+
 	private:
 		/**
 		 * コンストラクタ
@@ -56,8 +69,9 @@ namespace Lib
 		inline ~TaskManager();
 
 
-		std::list<Type*> m_pTaskList;	//!< タスクオブジェクトを管理するコンテナ
-	
+		std::list<BeginTask*>	m_pBeginTaskList;	//!< 開始タスクオブジェクトを管理するコンテナ 
+		std::list<Type*>		m_pTaskList;		//!< タスクオブジェクトを管理するコンテナ
+
 	};
 }
 

@@ -554,7 +554,7 @@ Objects:  {
 		}
 		UseMipMap: 0
 		Filename: "C:/Users/kei/Desktop/doragon_kingdom_Project/sourceimages/test_dora.png"
-		RelativeFilename: "..\sourceimages\test_dora.png"
+		RelativeFilename: "sourceimages\test_dora.png"
 	}
 	Texture: 178538077120, "Texture::file1", "" {
 		Type: "TextureVideoClip"
@@ -567,7 +567,7 @@ Objects:  {
 		}
 		Media: "Video::file1"
 		FileName: "C:/Users/kei/Desktop/doragon_kingdom_Project/sourceimages/test_dora.png"
-		RelativeFilename: "..\sourceimages\test_dora.png"
+		RelativeFilename: "sourceimages\test_dora.png"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1
 		Texture_Alpha_Source: "None"
