@@ -12,6 +12,7 @@ cbuffer camera : register(b1)
 	matrix g_View;
 	matrix g_Proj;
 	float4 g_CameraPos;
+	float4 g_CameraDir;
 };
 
 cbuffer light : register(b2)

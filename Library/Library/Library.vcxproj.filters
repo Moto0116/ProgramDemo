@@ -115,9 +115,6 @@
     <ClCompile Include="Library\Debugger\Debugger.cpp">
       <Filter>Library\Debugger</Filter>
     </ClCompile>
-    <ClCompile Include="Library\ObjectBase\ObjectBase.cpp">
-      <Filter>Library\ObjectBase</Filter>
-    </ClCompile>
     <ClCompile Include="Library\SceneManager\SceneBase\SceneBase.cpp">
       <Filter>Library\SceneManager\SceneBase</Filter>
     </ClCompile>
@@ -212,13 +209,14 @@
     <ClCompile Include="Library\DirectX11\FbxFileManager\FbxLoader\FbxLoader.cpp" />
     <ClCompile Include="Library\DirectX11\Camera\Camera.cpp" />
     <ClCompile Include="Library\DirectX11\Light\Light.cpp" />
+    <ClCompile Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.cpp">
+      <Filter>Library\ObjectBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\ObjectManagerBase\ObjectManagerBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Debugger\Debugger.h">
       <Filter>Library\Debugger</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\ObjectBase\ObjectBase.h">
-      <Filter>Library\ObjectBase</Filter>
     </ClInclude>
     <ClInclude Include="Library\SceneManager\SceneBase\SceneBase.h">
       <Filter>Library\SceneManager\SceneBase</Filter>
@@ -328,6 +326,10 @@
     <ClInclude Include="Library\DirectX11\FbxFileManager\FbxLoader\FbxLoader.h" />
     <ClInclude Include="Library\DirectX11\Camera\Camera.h" />
     <ClInclude Include="Library\DirectX11\Light\Light.h" />
+    <ClInclude Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.h">
+      <Filter>Library\ObjectBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\ObjectManagerBase\ObjectManagerBase.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Vertex2D\Effect\Vertex2D.fx">

@@ -50,6 +50,8 @@ bool MiniMap::Initialize()
 		return false;
 	}
 
+	m_pVertex->WriteConstantBuffer(&m_Pos);
+
 	return true;
 }
 
@@ -75,9 +77,8 @@ void MiniMap::Update()
 
 void MiniMap::Draw()
 {
-	m_pVertex->ShaderSetup();
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(0, 1, &m_pShaderResourceView);
-	m_pVertex->WriteConstantBuffer(&m_Pos);
+	m_pVertex->ShaderSetup();
 	m_pVertex->Draw();
 }
 

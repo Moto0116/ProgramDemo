@@ -10,6 +10,11 @@
 // Private Static Variables
 //----------------------------------------------------------------------
 D3DXVECTOR3 House::m_DefaultScale = D3DXVECTOR3(50, 50, 50);
+int	House::m_ModelIndex = Lib::FbxFileManager::m_InvalidIndex;
+int	House::m_ShadowVertexShaderIndex = Lib::ShaderManager::m_InvalidIndex;
+int	House::m_ShadowPixelShaderIndex = Lib::ShaderManager::m_InvalidIndex;
+int	House::m_MapVertexShaderIndex = Lib::ShaderManager::m_InvalidIndex;
+int	House::m_MapPixelShaderIndex = Lib::ShaderManager::m_InvalidIndex;
 
 
 House::House(D3DXVECTOR3 _Pos, float _rotate)
@@ -30,13 +35,31 @@ bool House::Initialize()
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
 
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(TEXT("Resource\\Model\\house_red.fbx"), &m_ModelIndex);
+	if (m_ModelIndex == Lib::FbxFileManager::m_InvalidIndex)
+	{
+		SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(TEXT("Resource\\Model\\house_red.fbx"), &m_ModelIndex);
+	}
 
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(TEXT("Resource\\Effect\\DepthShadow.fx"), "VS", &m_ShadowVertexShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(TEXT("Resource\\Effect\\DepthShadow.fx"), "PS", &m_ShadowPixelShaderIndex);
+	if (m_ShadowVertexShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	{
+		SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(TEXT("Resource\\Effect\\DepthShadow.fx"), "VS", &m_ShadowVertexShaderIndex);
+	}
 
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(TEXT("Resource\\Effect\\MiniMap.fx"), "VS", &m_MapVertexShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(TEXT("Resource\\Effect\\MiniMap.fx"), "PS", &m_MapPixelShaderIndex);
+	if (m_ShadowPixelShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	{
+		SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(TEXT("Resource\\Effect\\DepthShadow.fx"), "PS", &m_ShadowPixelShaderIndex);
+	}
+
+	if (m_MapVertexShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	{
+		SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(TEXT("Resource\\Effect\\MiniMap.fx"), "VS", &m_MapVertexShaderIndex);
+	}
+
+	if (m_MapPixelShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	{
+		SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(TEXT("Resource\\Effect\\MiniMap.fx"), "PS", &m_MapPixelShaderIndex);
+	}
+
 
 	if (!CreateShader())
 	{
@@ -97,7 +120,6 @@ void House::Draw()
 	ShaderSetup();
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
-	WriteConstantBuffer();
 	ConstantBufferSetup();
 
 	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
@@ -117,7 +139,6 @@ void House::DepthDraw()
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
-	WriteConstantBuffer();
 	ConstantBufferSetup();
 	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
 }
@@ -136,7 +157,6 @@ void House::MapDraw()
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
-	WriteConstantBuffer();
 	ConstantBufferSetup();
 	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
 }

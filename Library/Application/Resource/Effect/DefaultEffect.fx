@@ -16,6 +16,7 @@ cbuffer camera : register(b1)
 	matrix g_View;
 	matrix g_Proj;
 	float4 g_CameraPos;
+	float4 g_CameraDir;
 };
 
 cbuffer light : register(b2)
@@ -46,8 +47,9 @@ struct VS_OUTPUT
 	float4 PosWVP   : SV_POSITION;
 	float4 Normal   : NORMAL;
 	float2 UV       : TEXCOORD;
-	float4 LightUV  : TEXCOORD2;
-	float Distance  : TEXCOORD3;
+	float2 LightUV  : TEXCOORD2;
+	float ZValue : TEXCOORD3;
+	float Distance : TEXCOORD4;
 	float4 Color    : COLOR;
 };
 
@@ -65,38 +67,30 @@ VS_OUTPUT VS(VS_INPUT In)
 	// ライトビュープロジェクション
 	float4x4 LightMat = mul(g_World, g_LightView);
 	LightMat = mul(LightMat, g_LightProj);
-	Out.LightUV = mul(float4(In.Pos, 1.0f), LightMat);
+	float4 LightUVData = mul(float4(In.Pos, 1.0f), LightMat);
+	Out.ZValue = LightUVData.z / LightUVData.w;
+	Out.LightUV.x = (LightUVData.x / LightUVData.w) * 0.5f + 0.5f;
+	Out.LightUV.y = (LightUVData.y / LightUVData.w) * -0.5f + 0.5f;
 
 	// 法線とライトからカラー値を計算
 	float3 InvLightDir = -normalize(g_LightDir.xyz);
 	float3 Normal = normalize(In.Normal.xyz);
 	Out.Color = max(g_Ambient, dot(Normal, InvLightDir));
 
-	Out.Distance = (FAR - distance(In.Pos, g_CameraPos.xyz)) / (FAR - NEAR);
+	Out.Distance = clamp((FAR - distance(In.Pos, g_CameraPos.xyz)) / (FAR - NEAR), 0.0f, 1.0f);
 
 	return Out;
 }
 
 float4 PS(VS_OUTPUT In) : SV_TARGET
 {
-	float f = In.Distance;
-	f = clamp(f, 0.0f, 1.0f);
-
-	float4 ShadowColor = In.Color;
-	float ZValue = In.LightUV.z / In.LightUV.w;
-
-	float2 Texel;
-	Texel.x = (In.LightUV.x / In.LightUV.w) * 0.5f + 0.5f;
-	Texel.y = (In.LightUV.y / In.LightUV.w) * -0.5f + 0.5f;
-	float SM_Z = g_DepthTexture.Sample(g_Sampler, Texel).r;
-
-	if (Texel.x <= 0.01 || Texel.x >= 0.99 || Texel.y <= 0.01 || Texel.y >= 0.99)
+	if (In.ZValue > (g_DepthTexture.Sample(g_Sampler, In.LightUV).r + 0.00002f))
 	{
-	}
-	else if (ZValue > (SM_Z + 0.00002f))
-	{
-		ShadowColor.rgb = In.Color.rgb * 0.4f;
+		if (In.LightUV.x >= 0.01 && In.LightUV.x <= 0.99 && In.LightUV.y >= 0.01 && In.LightUV.y <= 0.99)
+		{
+			In.Color.rgb = In.Color.rgb * 0.4f;
+		}
 	}
 
-	return g_Texture.Sample(g_Sampler, In.UV) * ShadowColor * f + FOGCOLOR * (1.0f - f);
+	return g_Texture.Sample(g_Sampler, In.UV) * In.Color * In.Distance + FOGCOLOR * (1.0f - In.Distance);
 }

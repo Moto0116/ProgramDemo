@@ -6,7 +6,7 @@
 //----------------------------------------------------------------------
 #include <vector>
 
-#include "ObjectBase\ObjectBase.h"
+#include "ObjectManagerBase\ObjectBase\ObjectBase.h"
 
 
 class ObjectManager

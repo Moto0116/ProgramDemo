@@ -28,6 +28,8 @@ namespace Lib
 	public:
 		friend SingletonBase<ShaderManager>;
 
+		static const int m_InvalidIndex;	//!< ShaderManagerクラスがとるインデックスのエラー値.
+
 		/**
 		 * 初期化処理
 		 * @param[in] _pGraphicsDevice グラフィックデバイス
@@ -264,8 +266,6 @@ namespace Lib
 
 
 	private:
-		static const int m_InvalidIndex;	//!< インデックスのエラー値.
-
 		/**
 		 * コンストラクタ
 		 */

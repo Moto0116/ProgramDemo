@@ -15,7 +15,7 @@
 namespace Lib
 {
 	//----------------------------------------------------------------------
-	// Static Private Variables
+	// Static Public Variables
 	//----------------------------------------------------------------------
 	const int ShaderManager::m_InvalidIndex = 0;
 

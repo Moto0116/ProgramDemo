@@ -53,12 +53,11 @@ public:
 
 private:
 	static D3DXVECTOR3 m_DefaultScale;
-
-	int	m_ModelIndex;
-	int	m_ShadowVertexShaderIndex;
-	int	m_ShadowPixelShaderIndex;
-	int	m_MapVertexShaderIndex;
-	int	m_MapPixelShaderIndex;
+	static int	m_ModelIndex;
+	static int	m_ShadowVertexShaderIndex;
+	static int	m_ShadowPixelShaderIndex;
+	static int	m_MapVertexShaderIndex;
+	static int	m_MapPixelShaderIndex;
 
 };
 

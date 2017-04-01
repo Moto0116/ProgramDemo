@@ -26,6 +26,8 @@ namespace Lib
 	public:
 		friend SingletonBase<AnimationManager>;
 
+		static const int m_InvalidIndex;	//!< AnimationManagerクラスがとるインデックスのエラー値
+
 		/**
 		 * 初期化処理
 		 * @return 初期化に成功したらtrue 失敗したらfalse
@@ -70,8 +72,6 @@ namespace Lib
 		}
 
 	private:
-		static const int m_InvalidIndex;	//!< AnimationManagerクラスがとるインデックスのエラー値
-
 		/**
 		 * コンストラクタ
 		 */

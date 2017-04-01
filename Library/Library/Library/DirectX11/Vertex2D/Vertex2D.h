@@ -49,7 +49,7 @@ namespace Lib
 
 		/**
 		 * 頂点バッファの生成
-		 * @param[in] _pRect 矩形情報
+		 * @param[in] _pRect 描画する2Dポリゴンの矩形サイズ
 		 * @param[in] _pMinUV テクスチャのMin座標
 		 * @param[in] _pMaxUV テクスチャのMax座標
 		 * @param[in] _pColor 頂点色
@@ -74,24 +74,28 @@ namespace Lib
 
 		/**
 		 * 頂点座標をセットする
-		 * @param[in] _pDrawPos 描画する2Dポリゴンの座標
+		 * @param[in] _pRect 描画する2Dポリゴンの矩形サイズ
 		 */
 		void SetVertex(const D3DXVECTOR2* _pRect);
 
 		/**
 		 * テクスチャ座標をセットする
-		 * @param[in] _pScale 描画する2Dポリゴンの拡縮率
+		 * @param[in] _pMinUV UVの最小値
+		 * @param[in] _pMaxUV UVの最大値
 		 */
 		void SetUV(const D3DXVECTOR2* _pMinUV, const D3DXVECTOR2* _pMaxUV);
 
 		/**
 		 * カラー情報をセットする
-		 * @param[in] _angle 描画する2Dポリゴンの傾き
+		 * @param[in] _pColor 描画するポリゴンの色
 		 */
 		void SetColor(const D3DXCOLOR* _pColor);
 
 		/**
 		 * 定数バッファにデータを書き込む
+		 * @param[in] _pDrawPos 描画位置
+		 * @param[in] _pScale 2Dオブジェクトのスケーリング値
+		 * @param[in] _angle 2Dオブジェクトの角度
 		 * @return 書き込みに成功したらtrue 失敗したらfalse
 		 */
 		bool WriteConstantBuffer(

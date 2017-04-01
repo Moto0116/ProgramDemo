@@ -24,8 +24,8 @@ ObjectManager::ObjectManager()
 	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 60), -90));
 	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 40), -90));
 	m_pObjects.push_back(new House(D3DXVECTOR3(100, 0, 20), -90));
-	m_pObjects.push_back(new GeometryObject());
-	m_pObjects.push_back(new TessellationObject());
+	m_pObjects.push_back(new House(D3DXVECTOR3(-100, 0, 20), 90));
+	m_pObjects.push_back(new House(D3DXVECTOR3(-100, 0, 40), 90));
 	m_pObjects.push_back(new MiniMap());
 }
 

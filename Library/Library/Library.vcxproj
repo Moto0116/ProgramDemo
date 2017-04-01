@@ -107,7 +107,7 @@
     <ClInclude Include="Library\InputDeviceManager\InputDeviceManager.h" />
     <ClInclude Include="Library\SingletonBase\SingletonBase_private.h" />
     <ClInclude Include="Library\TaskManager\TaskBase\DrawTask\DrawTask.h" />
-    <ClInclude Include="Library\ObjectBase\ObjectBase.h" />
+    <ClInclude Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.h" />
     <ClInclude Include="Library\TaskManager\TaskBase\TaskBase_private.h" />
     <ClInclude Include="Library\TaskManager\TaskManager.h" />
     <ClInclude Include="Library\TaskManager\TaskBase\TaskBase.h" />
@@ -128,6 +128,7 @@
     <ClInclude Include="Library\DirectX11\VertexManager\VertexManager.h" />
     <ClInclude Include="Library\DirectX11\VertexManager\Vertex\Vertex.h" />
     <ClInclude Include="Library\DirectX11\Light\Light.h" />
+    <ClInclude Include="Library\ObjectManagerBase\ObjectManagerBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\DirectX11\AnimationManager\IAnimation\IAnimation.cpp" />
@@ -151,7 +152,7 @@
     <ClCompile Include="Library\Debugger\Debugger.cpp" />
     <ClCompile Include="Library\InputDeviceManager\InputDeviceManager.cpp" />
     <ClCompile Include="Library\TaskManager\TaskBase\DrawTask\DrawTask.cpp" />
-    <ClCompile Include="Library\ObjectBase\ObjectBase.cpp" />
+    <ClCompile Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.cpp" />
     <ClCompile Include="Library\TaskManager\TaskManager.cpp" />
     <ClCompile Include="Library\TaskManager\TaskBase\TaskBase.cpp" />
     <ClCompile Include="Library\TaskManager\TaskBase\UpdateTask\UpdateTask.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="Library\DirectX11\VertexManager\VertexManager.cpp" />
     <ClCompile Include="Library\DirectX11\VertexManager\Vertex\Vertex.cpp" />
     <ClCompile Include="Library\DirectX11\Light\Light.cpp" />
+    <ClCompile Include="Library\ObjectManagerBase\ObjectManagerBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Font\Effect\Font.fx">

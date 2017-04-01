@@ -27,6 +27,8 @@ namespace Lib
 	public:
 		friend SingletonBase<TextureManager>;
 
+		static const int m_InvalidIndex;	//!< TextureManagerクラスがとるインデックスエラー値.
+
 		/**
 		 * 初期化処理
 		 * @param[in] _pGraphicsDevice グラフィックデバイス
@@ -66,8 +68,6 @@ namespace Lib
 		void ClearBuffer();
 
 	private:
-		static const int m_InvalidIndex;	//!< TextureManagerクラスがとるインデックスエラー値.
-
 		/**
 		 * コンストラクタ
 		 */

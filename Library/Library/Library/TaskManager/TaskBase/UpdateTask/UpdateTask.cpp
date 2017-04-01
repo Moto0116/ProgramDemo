@@ -11,7 +11,7 @@
 
 #include <Windows.h>
 
-#include "..\..\..\ObjectBase\ObjectBase.h"
+#include "..\..\..\ObjectManagerBase\ObjectBase\ObjectBase.h"
 
 
 namespace Lib

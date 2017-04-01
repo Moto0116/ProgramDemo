@@ -2,7 +2,7 @@
 #define MAINLIGHT_H
 
 #include "DirectX11\Light\Light.h"
-#include "ObjectBase\ObjectBase.h"
+#include "ObjectManagerBase\ObjectBase\ObjectBase.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 

@@ -107,6 +107,17 @@ namespace Lib
 		{
 			if ((*itr)->GetID() == _pScene->GetID())
 			{
+				switch ((*itr)->GetState())
+				{
+				case SceneBase::INIT_STATE:
+					break;
+				case SceneBase::UPDATE_STATE:
+					(*itr)->Finalize();	// オブジェクトが生きていれば破棄する
+					break;
+				case SceneBase::FINAL_STATE:
+					break;
+				}
+
 				m_pSceneData.erase(itr);
 				break;
 			}

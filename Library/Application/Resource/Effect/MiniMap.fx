@@ -22,7 +22,6 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
 	float4 Pos		: SV_POSITION;
-	float4 Normal   : NORMAL;
 	float2 UV       : TEXCOORD;
 };
 
@@ -34,7 +33,6 @@ VS_OUTPUT VS(VS_INPUT In)
 	float4x4 Mat = mul(g_World, g_View);
 	Mat = mul(Mat, g_Proj);
 	Out.Pos = mul(float4(In.Pos, 1.0f), Mat);
-	Out.Normal = float4(In.Normal, 1.0f);
 	Out.UV = In.UV;
 
 	return Out;

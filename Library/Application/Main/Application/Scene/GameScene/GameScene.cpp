@@ -43,9 +43,6 @@ bool GameScene::Initialize()
 	if (!SINGLETON_INSTANCE(Lib::FbxFileManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
 	{
 		OutputErrorLog("Fbxモデル管理クラスの生成に失敗しました");
-
-		SINGLETON_DELETE(Lib::ShaderManager);
-
 		return false;
 	}
 
@@ -54,12 +51,6 @@ bool GameScene::Initialize()
 	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
 	{
 		OutputErrorLog("シェーダー管理クラスの生成に失敗しました");
-
-		SINGLETON_DELETE(Lib::ShaderManager);
-
-		SINGLETON_INSTANCE(Lib::FbxFileManager)->Finalize();
-		SINGLETON_DELETE(Lib::ShaderManager);
-
 		return false;
 	}
 
@@ -68,15 +59,6 @@ bool GameScene::Initialize()
 	if (!SINGLETON_INSTANCE(Lib::TextureManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
 	{
 		OutputErrorLog("テクスチャ管理クラスの生成に失敗しました");
-
-		SINGLETON_DELETE(Lib::TextureManager);
-
-		SINGLETON_INSTANCE(Lib::ShaderManager)->Finalize();
-		SINGLETON_DELETE(Lib::ShaderManager);
-
-		SINGLETON_INSTANCE(Lib::FbxFileManager)->Finalize();
-		SINGLETON_DELETE(Lib::ShaderManager);
-
 		return false;
 	}
 
@@ -84,19 +66,7 @@ bool GameScene::Initialize()
 	m_pObjectManager = new ObjectManager();
 	if (!m_pObjectManager->Initialize())
 	{
-		OutputErrorLog("グラウンドの生成に失敗しました");
-
-		delete m_pObjectManager;
-
-		SINGLETON_INSTANCE(Lib::TextureManager)->Finalize();
-		SINGLETON_DELETE(Lib::TextureManager);
-
-		SINGLETON_INSTANCE(Lib::ShaderManager)->Finalize();
-		SINGLETON_DELETE(Lib::ShaderManager);
-
-		SINGLETON_INSTANCE(Lib::FbxFileManager)->Finalize();
-		SINGLETON_DELETE(Lib::ShaderManager);
-
+		OutputErrorLog("オブジェクト管理クラスの生成に失敗しました");
 		return false;
 	}
 
@@ -128,21 +98,36 @@ void GameScene::Finalize()
 
 void GameScene::Update()
 {
+	Lib::Debugger::StartTimer();
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyUpdate();
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_W);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_A);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_S);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_D);
-
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->MouseUpdate();
 
-
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
+	Lib::Debugger::EndTimer();
+	Lib::Debugger::OutputDebugLog("Update : %d\n\n", Lib::Debugger::GetTime());
 
+
+
+	Lib::Debugger::StartTimer();
 	SINGLETON_INSTANCE(MapDrawTaskManager)->Run();
-	SINGLETON_INSTANCE(DepthDrawTaskManager)->Run();
+	Lib::Debugger::EndTimer();
+	Lib::Debugger::OutputDebugLog("MapDraw : %d\n\n", Lib::Debugger::GetTime());
 
+	Lib::Debugger::StartTimer();
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->Run();
+	Lib::Debugger::EndTimer();
+	Lib::Debugger::OutputDebugLog("DepthDraw : %d\n\n", Lib::Debugger::GetTime());
+
+
+	Lib::Debugger::StartTimer();
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(Lib::GraphicsDevice::DEFAULT_TARGET);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->EndScene();
+	Lib::Debugger::EndTimer();
+	Lib::Debugger::OutputDebugLog("Draw : %d\n\n", Lib::Debugger::GetTime());
+
 }

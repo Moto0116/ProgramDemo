@@ -14,7 +14,7 @@
 
 #include "DirectX11\Camera\Camera.h"
 #include "InputDeviceManager\InputDeviceManager.h"
-#include "ObjectBase\ObjectBase.h"
+#include "ObjectManagerBase\ObjectBase\ObjectBase.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
 
@@ -94,6 +94,7 @@ private:
 		D3DXMATRIX View;
 		D3DXMATRIX Proj;
 		D3DXVECTOR4	CameraPos;
+		D3DXVECTOR4	CameraDir;
 	};
 
 	/**

@@ -1,17 +1,13 @@
 ﻿/**
- * @file	DrawTask.cpp
- * @brief	描画のタスククラス実装
+ * @file	ObjectManagerBase.cpp
+ * @brief	オブジェクト管理基底クラス実装
  * @author	morimoto
  */
 
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
-#include "DrawTask.h"
-
-#include <Windows.h>
-
-#include "..\..\..\ObjectManagerBase\ObjectBase\ObjectBase.h"
+#include "ObjectManagerBase.h"
 
 
 namespace Lib
@@ -19,12 +15,11 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
-	DrawTask::DrawTask() :
-		m_pObject(NULL)
+	ObjectManagerBase::ObjectManagerBase()
 	{
 	}
 
-	DrawTask::~DrawTask()
+	ObjectManagerBase::~ObjectManagerBase()
 	{
 	}
 
@@ -32,14 +27,26 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------
-	void DrawTask::Run()
+	bool ObjectManagerBase::Initialize()
 	{
-		m_pObject->Draw();
+		for (auto itr = m_pObjects.begin(); itr != m_pObjects.end(); itr++)
+		{
+			if (!(*itr)->Initialize())
+			{
+				Finalize();
+				return false;
+			}
+		}
+
+		return true;
 	}
 
-	void DrawTask::SetDrawObject(ObjectBase* _pObject)
+	void ObjectManagerBase::Finalize()
 	{
-		m_pObject = _pObject;
+		for (auto itr = m_pObjects.begin(); itr != m_pObjects.end(); itr++)
+		{
+			(*itr)->Finalize();
+		}
 	}
 }
 

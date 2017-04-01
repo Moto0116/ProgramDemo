@@ -27,6 +27,8 @@ namespace Lib
 	public:
 		friend SingletonBase<SoundManager>;
 
+		static const int m_InvalidIndex;	//!< SoundManagerクラスがとるインデックスのエラー値.
+
 		/**
 		 * サウンドの操作
 		 */
@@ -84,8 +86,6 @@ namespace Lib
 		}
 
 	private:
-		static const int m_InvalidIndex;	//!< SoundManagerクラスがとるインデックスのエラー値.
-
 		/**
 		 * コンストラクタ
 		 */

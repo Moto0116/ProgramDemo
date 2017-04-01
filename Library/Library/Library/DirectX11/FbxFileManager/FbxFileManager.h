@@ -29,6 +29,7 @@ namespace Lib
 	public:
 		friend SingletonBase<FbxFileManager>;
 
+		static const int m_InvalidIndex; //!< FbxFileManagerクラスがとるインデックスのエラー値.
 
 		/**
 		 * 初期化処理
@@ -78,8 +79,6 @@ namespace Lib
 		}
 
 	private:
-		static const int m_InvalidIndex; //!< FbxFileManagerクラスがとるインデックスのエラー値.
-
 		/**
 		 * FbxFileManagerクラスのコンストラクタ
 		 */

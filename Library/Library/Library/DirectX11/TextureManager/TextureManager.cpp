@@ -16,7 +16,7 @@
 namespace Lib
 {
 	//----------------------------------------------------------------------
-	// Static Private Variables
+	// Static Public Variables
 	//----------------------------------------------------------------------
 	const int TextureManager::m_InvalidIndex = 0;
 
