@@ -68,7 +68,10 @@ void Application::Run()
 	{
 		if (!m_pMainWindow->Update())
 		{
-			m_pSceneManager->Update();
+			if (m_pSceneManager->Update())
+			{
+				break;
+			}
 		}
 		else
 		{
@@ -142,13 +145,6 @@ bool Application::CreateSceneManager()
 	}
 
 	m_pGameScene = new GameScene(GAME_SCENE_ID);
-	if (!m_pGameScene->Initialize())
-	{
-		m_pSceneManager->Finalize();
-		SafeDelete(m_pSceneManager);
-		SafeDelete(m_pGameScene);
-		return false;
-	}
 
 	m_pSceneManager->AddScene(m_pGameScene);
 	m_pSceneManager->SetEntryScene(m_pGameScene);
@@ -191,8 +187,6 @@ void Application::ReleaseSceneManager()
 	if (m_pSceneManager != NULL)
 	{
 		m_pSceneManager->DeleteScene(m_pGameScene);
-
-		m_pGameScene->Finalize();
 		SafeDelete(m_pGameScene);
 
 		m_pSceneManager->Finalize();

@@ -211,6 +211,7 @@ namespace Lib
 		ID3DBlob*					m_pPixelCompiledShader;		//!< ピクセルシェーダーのコンパイル情報.
 		ID3D11BlendState*			m_pBlendState;				//!< ブレンドステート.
 		ID3D11SamplerState*			m_pSamplerState;			//!< サンプラステート.
+		ID3D11DepthStencilState*	m_pDepthStencilState;		//!< 深度ステンシルステート.
 		ID3D11Buffer*				m_pVertexBuffer;			//!< 頂点バッファ.
 		ID3D11Buffer*				m_pConstantBuffer;			//!< 定数バッファ.
 		ITexture*					m_pTexture;					//!< テクスチャインターフェース.

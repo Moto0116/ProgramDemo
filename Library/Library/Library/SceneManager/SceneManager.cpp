@@ -66,7 +66,7 @@ namespace Lib
 		}
 	}
 
-	void SceneManager::Update()
+	bool SceneManager::Update()
 	{
 		switch (m_pCurrentScene->GetState())
 		{
@@ -79,10 +79,24 @@ namespace Lib
 
 			break;
 		case SceneBase::FINAL_STATE:
+			int NextID = m_pCurrentScene->GetNextSceneID();	// 遷移先を取得する
 			m_pCurrentScene->Finalize();
+
+			for (auto itr = m_pSceneData.begin(); itr != m_pSceneData.end(); itr++)
+			{
+				if ((*itr)->GetID() == NextID)
+				{
+					m_pCurrentScene = (*itr);	// 遷移先を見つけたら現在のシーンに設定
+					return false;
+				}
+			}
+
+			return true;// 遷移先が見つからなければ動作を終了する
 
 			break;
 		}
+
+		return false;
 	}
 
 	bool SceneManager::AddScene(SceneBase* _pScene)

@@ -42,9 +42,9 @@ namespace Lib
 	{
 		for (auto itr = m_pEventListener.begin(); itr != m_pEventListener.end(); itr++)
 		{
-			if ((*itr)->GetID() == _pEventListener->GetID())
+			if ((*itr)->GetEventListenerID() == _pEventListener->GetEventListenerID())
 			{
-				m_pEventListener->erase(itr);
+				m_pEventListener.erase(itr);
 				break;
 			}
 		}

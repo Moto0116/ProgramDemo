@@ -28,6 +28,7 @@ namespace Lib
 		m_pPixelCompiledShader(NULL),
 		m_pBlendState(NULL),
 		m_pSamplerState(NULL),
+		m_pDepthStencilState(NULL),
 		m_pVertexBuffer(NULL),
 		m_pConstantBuffer(NULL),
 		m_pTexture(NULL),
@@ -269,6 +270,7 @@ namespace Lib
 			m_pGraphicsDevice->GetDeviceContext()->PSSetShaderResources(0, 1, &pTextureResource);
 		}
 
+		m_pGraphicsDevice->GetDeviceContext()->OMSetDepthStencilState(m_pDepthStencilState, 0);
 		m_pGraphicsDevice->GetDeviceContext()->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
 
 		UINT Stride = sizeof(VERTEX);
@@ -413,6 +415,21 @@ namespace Lib
 			return false;
 		}
 
+		D3D11_DEPTH_STENCIL_DESC DepthStencilDesc;
+		ZeroMemory(&DepthStencilDesc, sizeof(DepthStencilDesc));
+		DepthStencilDesc.DepthEnable = TRUE;
+		DepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+		DepthStencilDesc.StencilEnable = FALSE;
+
+		if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
+			&DepthStencilDesc,
+			&m_pDepthStencilState)))
+		{
+			OutputErrorLog("深度ステンシルステートの生成に失敗しました");
+			return false;
+		}
+
 		D3D11_BUFFER_DESC ConstantBufferDesc;
 		ZeroMemory(&ConstantBufferDesc, sizeof(D3D11_BUFFER_DESC));
 		ConstantBufferDesc.ByteWidth = sizeof(CONSTANT_BUFFER);
@@ -451,6 +468,7 @@ namespace Lib
 	void Vertex2D::ReleaseState()
 	{
 		SafeRelease(m_pConstantBuffer);
+		SafeRelease(m_pDepthStencilState);
 		SafeRelease(m_pSamplerState);
 		SafeRelease(m_pBlendState);
 	}

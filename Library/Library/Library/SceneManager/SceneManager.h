@@ -45,8 +45,9 @@ namespace Lib
 
 		/**
 		 * シーンを更新する
+		 * @return シーン動作が終了したらtrue そうでなければfalse
 		 */
-		void Update();
+		bool Update();
 
 		/**
 		 * シーンの追加
