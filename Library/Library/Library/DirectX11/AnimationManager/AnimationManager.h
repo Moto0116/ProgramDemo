@@ -71,6 +71,7 @@ namespace Lib
 			m_pAnimation.clear();
 		}
 
+
 	private:
 		/**
 		 * コンストラクタ
@@ -81,6 +82,7 @@ namespace Lib
 		 * デストラクタ
 		 */
 		~AnimationManager();
+
 
 		std::vector<IAnimation*>	m_pAnimation;	//!< アニメーションを格納するコンテナ.
 

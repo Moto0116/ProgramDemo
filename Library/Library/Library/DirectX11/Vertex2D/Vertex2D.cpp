@@ -34,7 +34,8 @@ namespace Lib
 		m_pTexture(NULL),
 		m_pAnimation(NULL),
 		m_WindowWidth(0),
-		m_WindowHeight(0)
+		m_WindowHeight(0),
+		m_IsInverse(false)
 	{
 	}
 
@@ -59,29 +60,29 @@ namespace Lib
 
 		RECT WindowRect;
 		GetWindowRect(m_pGraphicsDevice->GetMainWindowHandle(), &WindowRect);
-		m_WindowWidth = static_cast<float>(WindowRect.right);
-		m_WindowHeight = static_cast<float>(WindowRect.bottom);
+		m_WindowWidth = static_cast<float>(WindowRect.right - WindowRect.left);
+		m_WindowHeight = static_cast<float>(WindowRect.bottom - WindowRect.top);
 
 
-		if (!InitVertexShader())
+		if (!CreateVertexShader())
 		{
 			return false;
 		}
 
-		if (!InitVertexLayout())
+		if (!CreateVertexLayout())
 		{
 			ReleaseVertexShader();
 			return false;
 		}
 
-		if (!InitPixelShader())
+		if (!CreatePixelShader())
 		{
 			ReleaseVertexLayout();
 			ReleaseVertexShader();
 			return false;
 		}
 
-		if (!InitState())
+		if (!CreateState())
 		{
 			ReleaseState();
 			ReleasePixelShader();
@@ -102,7 +103,7 @@ namespace Lib
 		ReleaseVertexShader();
 	}
 
-	bool Vertex2D::CreateVertexBuffer(const D3DXVECTOR2* _pRect, const D3DXVECTOR2* _pMinUV, const D3DXVECTOR2* _pMaxUV, const D3DXCOLOR* _pColor)
+	bool Vertex2D::CreateVertexBuffer(const D3DXVECTOR2* _pSize, const D3DXVECTOR2* _pMinUV, const D3DXVECTOR2* _pMaxUV, const D3DXCOLOR* _pColor)
 	{
 		if (m_pVertexBuffer != NULL)
 		{
@@ -112,10 +113,10 @@ namespace Lib
 
 		VERTEX VertexData[VERTEX_NUM] =
 		{
-			VERTEX{ D3DXVECTOR3(-_pRect->x / 2,  -_pRect->y / 2, 0), D3DXVECTOR2(_pMinUV->x, _pMinUV->y), *_pColor },
-			VERTEX{ D3DXVECTOR3( _pRect->x / 2,  -_pRect->y / 2, 0), D3DXVECTOR2(_pMaxUV->x, _pMinUV->y), *_pColor },
-			VERTEX{ D3DXVECTOR3(-_pRect->x / 2,   _pRect->y / 2, 0), D3DXVECTOR2(_pMinUV->x, _pMaxUV->y), *_pColor },
-			VERTEX{ D3DXVECTOR3( _pRect->x / 2,   _pRect->y / 2, 0), D3DXVECTOR2(_pMaxUV->x, _pMaxUV->y), *_pColor }
+			VERTEX{ D3DXVECTOR3(-_pSize->x / 2,  -_pSize->y / 2, 0), D3DXVECTOR2(_pMinUV->x, _pMinUV->y), *_pColor },
+			VERTEX{ D3DXVECTOR3( _pSize->x / 2,  -_pSize->y / 2, 0), D3DXVECTOR2(_pMaxUV->x, _pMinUV->y), *_pColor },
+			VERTEX{ D3DXVECTOR3(-_pSize->x / 2,   _pSize->y / 2, 0), D3DXVECTOR2(_pMinUV->x, _pMaxUV->y), *_pColor },
+			VERTEX{ D3DXVECTOR3( _pSize->x / 2,   _pSize->y / 2, 0), D3DXVECTOR2(_pMaxUV->x, _pMaxUV->y), *_pColor }
 		};
 
 		for (int i = 0; i < VERTEX_NUM; i++)
@@ -172,16 +173,16 @@ namespace Lib
 		return false;
 	}
 
-	void Vertex2D::SetVertex(const D3DXVECTOR2* _pRect)
+	void Vertex2D::SetVertex(const D3DXVECTOR2* _pSize)
 	{
-		m_pVertexData[0].Pos.x = -_pRect->x / 2;
-		m_pVertexData[0].Pos.y = -_pRect->y / 2;
-		m_pVertexData[1].Pos.x = _pRect->x / 2;
-		m_pVertexData[1].Pos.y = -_pRect->y / 2;
-		m_pVertexData[2].Pos.x = -_pRect->x / 2;
-		m_pVertexData[2].Pos.y = _pRect->y / 2;
-		m_pVertexData[3].Pos.x = _pRect->x / 2;
-		m_pVertexData[3].Pos.y = _pRect->y / 2;
+		m_pVertexData[0].Pos.x = -_pSize->x / 2;
+		m_pVertexData[0].Pos.y = -_pSize->y / 2;
+		m_pVertexData[1].Pos.x = _pSize->x / 2;
+		m_pVertexData[1].Pos.y = -_pSize->y / 2;
+		m_pVertexData[2].Pos.x = -_pSize->x / 2;
+		m_pVertexData[2].Pos.y = _pSize->y / 2;
+		m_pVertexData[3].Pos.x = _pSize->x / 2;
+		m_pVertexData[3].Pos.y = _pSize->y / 2;
 	}
 
 	void Vertex2D::SetUV(const D3DXVECTOR2* _pMinUV, const D3DXVECTOR2* _pMaxUV)
@@ -252,8 +253,16 @@ namespace Lib
 		// アニメーションインターフェースがあればアニメーションを行う.
 		if (m_pAnimation != NULL)
 		{
-			Animation::ANIMATION_FRAME* pFrame = dynamic_cast<Animation*>(m_pAnimation)->GetCurrentFrame();
-			SetUV(&D3DXVECTOR2(pFrame->MinTu, pFrame->MinTv), &D3DXVECTOR2(pFrame->MaxTu, pFrame->MaxTv));
+			Animation::ANIMATION_FRAME* pFrame = m_pAnimation->GetCurrentFrame();
+			if (m_IsInverse)
+			{
+				SetUV(&D3DXVECTOR2(pFrame->MaxTu, pFrame->MinTv), &D3DXVECTOR2(pFrame->MinTu, pFrame->MaxTv));
+			}
+			else
+			{
+				SetUV(&D3DXVECTOR2(pFrame->MinTu, pFrame->MinTv), &D3DXVECTOR2(pFrame->MaxTu, pFrame->MaxTv));
+			}
+				
 			WriteVertexBuffer();
 		}
 
@@ -265,7 +274,7 @@ namespace Lib
 		// テクスチャインターフェースがあれば、テクスチャを貼り付ける.
 		if (m_pTexture != NULL)
 		{
-			ID3D11ShaderResourceView* pTextureResource = dynamic_cast<Texture*>(m_pTexture)->Get();
+			ID3D11ShaderResourceView* pTextureResource = m_pTexture->Get();
 			m_pGraphicsDevice->GetDeviceContext()->PSSetSamplers(0, 1, &m_pSamplerState);
 			m_pGraphicsDevice->GetDeviceContext()->PSSetShaderResources(0, 1, &pTextureResource);
 		}
@@ -284,7 +293,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Private Functions
 	//----------------------------------------------------------------------
-	bool Vertex2D::InitVertexShader()
+	bool Vertex2D::CreateVertexShader()
 	{
 		ID3DBlob* pShaderErrors = NULL;
 		if (FAILED(D3DX11CompileFromFile(
@@ -300,7 +309,7 @@ namespace Lib
 			&pShaderErrors,
 			NULL)))
 		{
-			OutputErrorLog("緒店シェーダーの読み込みに失敗しました");
+			OutputErrorLog("頂点シェーダーの読み込みに失敗しました");
 			SafeRelease(pShaderErrors);
 			return false;
 		}
@@ -321,7 +330,7 @@ namespace Lib
 		return true;
 	}
 
-	bool Vertex2D::InitVertexLayout()
+	bool Vertex2D::CreateVertexLayout()
 	{
 		D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
 		{
@@ -344,7 +353,7 @@ namespace Lib
 		return true;
 	}
 
-	bool Vertex2D::InitPixelShader()
+	bool Vertex2D::CreatePixelShader()
 	{
 		ID3DBlob* pShaderErrors = NULL;
 		if (FAILED(D3DX11CompileFromFile(
@@ -381,7 +390,7 @@ namespace Lib
 		return true;
 	}
 
-	bool Vertex2D::InitState()
+	bool Vertex2D::CreateState()
 	{
 		D3D11_BLEND_DESC BlendDesc;
 		ZeroMemory(&BlendDesc, sizeof(D3D11_BLEND_DESC));
@@ -395,7 +404,9 @@ namespace Lib
 		BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 		BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBlendState(&BlendDesc, &m_pBlendState)))
+		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBlendState(
+			&BlendDesc, 
+			&m_pBlendState)))
 		{
 			OutputErrorLog("ブレンドステートの生成に失敗しました");
 			ReleaseState();
@@ -408,7 +419,9 @@ namespace Lib
 		SamplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 		SamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 		SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateSamplerState(&SamplerDesc, &m_pSamplerState)))
+		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateSamplerState(
+			&SamplerDesc, 
+			&m_pSamplerState)))
 		{
 			OutputErrorLog("サンプラステートの生成に失敗しました");
 			ReleaseState();
@@ -421,12 +434,12 @@ namespace Lib
 		DepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 		DepthStencilDesc.StencilEnable = FALSE;
-
-		if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
+		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateDepthStencilState(
 			&DepthStencilDesc,
 			&m_pDepthStencilState)))
 		{
 			OutputErrorLog("深度ステンシルステートの生成に失敗しました");
+			ReleaseState();
 			return false;
 		}
 
@@ -438,7 +451,10 @@ namespace Lib
 		ConstantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		ConstantBufferDesc.MiscFlags = 0;
 		ConstantBufferDesc.StructureByteStride = 0;
-		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
+		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(
+			&ConstantBufferDesc,
+			NULL,
+			&m_pConstantBuffer)))
 		{
 			OutputErrorLog("定数バッファの生成に失敗しました");
 			ReleaseState();

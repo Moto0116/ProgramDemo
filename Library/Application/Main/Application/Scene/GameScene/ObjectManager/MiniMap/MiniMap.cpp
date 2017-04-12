@@ -1,11 +1,22 @@
-﻿#include "MiniMap.h"
+﻿/**
+ * @file	MiniMap.cpp
+ * @brief	ミニマップクラス実装
+ * @author	morimoto
+ */
+
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
+#include "MiniMap.h"
 
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "Main\Application\Scene\GameScene\MapDrawTask\MapDrawTask.h"
 
 
-
+//----------------------------------------------------------------------
+// Static Private Variables
+//----------------------------------------------------------------------
 const float MiniMap::m_NearPoint = 1.f;
 const float MiniMap::m_FarPoint = 900;
 const float MiniMap::m_ViewAngle = 50.f;
@@ -16,16 +27,23 @@ const int MiniMap::m_RenderTargetStage = 2;
 const D3DXVECTOR3 MiniMap::m_DefaultPos = D3DXVECTOR3(0, 370, 10);
 
 
+//----------------------------------------------------------------------
+// Constructor	Destructor
+//----------------------------------------------------------------------
 MiniMap::MiniMap()
 {
 	m_Pos = D3DXVECTOR2(1350, 170);
-	m_Rect = D3DXVECTOR2(250, 250);
+	m_Size = D3DXVECTOR2(250, 250);
 }
 
 MiniMap::~MiniMap()
 {
 }
 
+
+//----------------------------------------------------------------------
+// Public Functions
+//----------------------------------------------------------------------
 bool MiniMap::Initialize()
 {
 	m_pBeginTask = new BeginTask(this);
@@ -34,7 +52,6 @@ bool MiniMap::Initialize()
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddBeginTask(m_pBeginTask);
 
-	const RECT* pWindowRect = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowRect();
 	m_pCamera = new Lib::Camera(
 		m_TextureWidth,
 		m_TextureHeight,
@@ -82,6 +99,10 @@ void MiniMap::Draw()
 	m_pVertex->Draw();
 }
 
+
+//----------------------------------------------------------------------
+// Private Functions
+//----------------------------------------------------------------------
 bool MiniMap::CreateConstantBuffer()
 {
 	D3D11_BUFFER_DESC ConstantBufferDesc;

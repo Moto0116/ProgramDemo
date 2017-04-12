@@ -1,10 +1,20 @@
-﻿#ifndef MAPDRAWTASK_H
+﻿/**
+ * @file	マップへの描画タスククラス定義
+ * @brief	MadDrawTask.h
+ * @author	morimoto
+ */
+#ifndef MAPDRAWTASK_H
 #define MAPDRAWTASK_H
 
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
 #include "TaskManager\TaskBase\TaskBase.h"
 #include "TaskManager\TaskManager.h"
 
+
 class Object3DBase;
+
 
 /**
  * マップへの描画タスク
@@ -33,10 +43,13 @@ public:
 	 */
 	void SetDrawObject(Object3DBase* _pObject3D);
 
+
 private:
 	Object3DBase* m_pObject3D;	//!< 描画を行うオブジェクト
 
+
 };
+
 
 typedef Lib::TaskManager<MapDrawTask> MapDrawTaskManager;
 

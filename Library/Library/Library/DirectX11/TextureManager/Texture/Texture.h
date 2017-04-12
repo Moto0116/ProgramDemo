@@ -42,10 +42,8 @@ namespace Lib
 		 * テクスチャの取得
 		 * @return テクスチャ
 		 */
-		inline ID3D11ShaderResourceView* Get() const
-		{ 
-			return m_pTexture; 
-		}
+		virtual ID3D11ShaderResourceView* Get() const;
+		
 
 	private:
 		/**

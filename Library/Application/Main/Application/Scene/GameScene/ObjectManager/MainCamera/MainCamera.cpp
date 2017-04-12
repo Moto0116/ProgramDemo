@@ -1,7 +1,7 @@
 ﻿/**
  * @file   MainCamera.cpp
  * @brief  MainCameraクラスの実装
- * @author kotani
+ * @author morimoto
  */
 
 //----------------------------------------------------------------------
@@ -14,25 +14,31 @@
 #include "InputDeviceManager\InputDeviceManager.h"
 
 
+//----------------------------------------------------------------------
+// Static Private Variables
+//----------------------------------------------------------------------
 const float MainCamera::m_NearPoint = 1.f;
 const float MainCamera::m_FarPoint = 700;
 const float MainCamera::m_ViewAngle = 50.f;
 const float MainCamera::m_MaxAngle = 70.f;
 const float MainCamera::m_MinAngle = 10.f;
 const float MainCamera::m_MaxLength = 170.f;
-const float MainCamera::m_MinLength = 80.f;
+const float MainCamera::m_MinLength = 60.f;
 const float MainCamera::m_MoveSpeedWeight = 0.025f;
 const float MainCamera::m_ZoomSpeedWeight = 0.1f;
 const float MainCamera::m_RotateSpeedWeight = 0.22f;
 
 
+//----------------------------------------------------------------------
+// Constructor	Destructor
+//----------------------------------------------------------------------
 MainCamera::MainCamera() :
 	m_LookPoint(D3DXVECTOR3(0.f, 0.f, 0.f)),
 	m_MoveSpeed(0.f),
 	m_ZoomSpeed(0.f),
 	m_CameraAngle(0.f, 50.f),
 	m_CameraLength(70.f),
-	m_isCameraControl(false)
+	m_IsCameraControl(false)
 {
 }
 
@@ -40,6 +46,10 @@ MainCamera::~MainCamera()
 {
 }
 
+
+//----------------------------------------------------------------------
+// Public Functions
+//----------------------------------------------------------------------
 bool MainCamera::Initialize()
 {
 	m_pUpdateTask = new Lib::UpdateTask();
@@ -77,7 +87,7 @@ void MainCamera::Finalize()
 
 void MainCamera::Update()
 {
-	m_isCameraControl = false;
+	m_IsCameraControl = false;
 	m_MouseState = SINGLETON_INSTANCE(Lib::InputDeviceManager)->GetMouseState();
 	m_pKeyState = SINGLETON_INSTANCE(Lib::InputDeviceManager)->GetKeyState();
 
@@ -88,7 +98,7 @@ void MainCamera::Update()
 	Rotate();
 	Zoom();
 	
-	if (m_isCameraControl)
+	if (m_IsCameraControl)
 	{
 		Transform();	// カメラが動いたら定数バッファを更新する
 	}
@@ -98,38 +108,31 @@ void MainCamera::Draw()
 {
 }
 
-void MainCamera::Transform()
-{
-	WriteConstantBuffer();
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(1, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetConstantBuffers(1, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->HSSetConstantBuffers(1, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->DSSetConstantBuffers(1, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(1, 1, &m_pConstantBuffer);
-}
-
+//----------------------------------------------------------------------
+// Private Functions
+//----------------------------------------------------------------------
 void MainCamera::Move()
 {
 	if (m_pKeyState[DIK_W] == Lib::KeyDevice::KEYSTATE::KEY_ON)
 	{
 		MoveFront();
-		m_isCameraControl = true;
+		m_IsCameraControl = true;
 	}
 	if (m_pKeyState[DIK_A] == Lib::KeyDevice::KEYSTATE::KEY_ON)
 	{
 		MoveLeft();
-		m_isCameraControl = true;
+		m_IsCameraControl = true;
 	}
 	if (m_pKeyState[DIK_S] == Lib::KeyDevice::KEYSTATE::KEY_ON)
 	{
 		MoveBack();
-		m_isCameraControl = true;
+		m_IsCameraControl = true;
 	}
 	if (m_pKeyState[DIK_D] == Lib::KeyDevice::KEYSTATE::KEY_ON)
 	{
 		MoveRight();
-		m_isCameraControl = true;
+		m_IsCameraControl = true;
 	}
 }
 
@@ -157,7 +160,7 @@ void MainCamera::Rotate()
 		}
 
 		RotateCalculate();
-		m_isCameraControl = true;
+		m_IsCameraControl = true;
 	}
 }
 
@@ -178,7 +181,7 @@ void MainCamera::Zoom()
 			m_CameraLength = m_MinLength;
 		}
 		RotateCalculate();
-		m_isCameraControl = true;
+		m_IsCameraControl = true;
 	}
 	else if (m_MouseState.lZ < 0)
 	{
@@ -188,7 +191,7 @@ void MainCamera::Zoom()
 			m_CameraLength = m_MaxLength;
 		}
 		RotateCalculate();
-		m_isCameraControl = true;
+		m_IsCameraControl = true;
 	}
 }
 
@@ -234,6 +237,17 @@ void MainCamera::MoveRight()
 	m_Pos.z += moveZ;
 	m_LookPoint.x += moveX;
 	m_LookPoint.z += moveZ;
+}
+
+void MainCamera::Transform()
+{
+	WriteConstantBuffer();
+
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->HSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->DSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(1, 1, &m_pConstantBuffer);
 }
 
 bool MainCamera::CreateConstantBuffer()

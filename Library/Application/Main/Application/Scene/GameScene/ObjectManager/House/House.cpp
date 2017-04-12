@@ -1,4 +1,13 @@
-﻿#include "House.h"
+﻿/**
+ * @file	House.cpp
+ * @brief	ハウスオブジェクト実装
+ * @author	morimoto
+ */
+
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
+#include "House.h"
 
 #include "Debugger\Debugger.h"
 #include "DirectX11\FbxFileManager\FbxFileManager.h"
@@ -17,6 +26,9 @@ int	House::m_MapVertexShaderIndex = Lib::ShaderManager::m_InvalidIndex;
 int	House::m_MapPixelShaderIndex = Lib::ShaderManager::m_InvalidIndex;
 
 
+//----------------------------------------------------------------------
+// Constructor	Destructor
+//----------------------------------------------------------------------
 House::House(D3DXVECTOR3 _Pos, float _rotate)
 {
 	m_Pos = _Pos;
@@ -28,6 +40,10 @@ House::~House()
 {
 }
 
+
+//----------------------------------------------------------------------
+// Public Functions
+//----------------------------------------------------------------------
 bool House::Initialize()
 {
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
@@ -85,7 +101,6 @@ bool House::Initialize()
 	{
 		return false;
 	}
-
 
 	return true;
 }

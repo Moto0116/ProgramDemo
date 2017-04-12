@@ -1,4 +1,13 @@
-﻿#include "MapDrawTask.h"
+﻿/**
+ * @file	マップへの描画タスククラス実装
+ * @brief	MadDrawTask.cpp
+ * @author	morimoto
+ */
+
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
+#include "MapDrawTask.h"
 
 #include "Main\Object3DBase\Object3DBase.h"
 

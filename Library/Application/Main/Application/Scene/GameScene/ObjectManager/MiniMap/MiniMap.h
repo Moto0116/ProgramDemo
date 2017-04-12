@@ -1,11 +1,22 @@
-﻿#ifndef MINIMAP_H
+﻿/**
+ * @file	MiniMap.h
+ * @brief	ミニマップクラス定義
+ * @author	morimoto
+ */
+#ifndef MINIMAP_H
 #define MINIMAP_H
 
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
 #include "Main\Object2DBase\Object2DBase.h"
 #include "TaskManager\TaskBase\TaskBase.h"
 #include "DirectX11\Camera\Camera.h"
 
 
+/**
+ * ミニマップクラス
+ */
 class MiniMap : public Object2DBase
 {
 public:
@@ -40,6 +51,7 @@ public:
 	 */
 	virtual void Draw();
 
+
 private:
 	/**
 	 * ミニマップ描画前処理のタスク
@@ -64,35 +76,40 @@ private:
 		virtual void Run();
 
 	private:
-		MiniMap* m_pMiniMap;
+		MiniMap* m_pMiniMap;	//!< 描画前処理を実行するオブジェクト
 
 	};
 
 
-
-	static const float	m_NearPoint;	//!< 最近点
-	static const float	m_FarPoint;		//!< 最遠点
-	static const float	m_ViewAngle;	//!< 視野角
-	static const float m_ClearColor[4];
-	static const float m_TextureWidth;
-	static const float m_TextureHeight;
-	static const int m_RenderTargetStage;
-	static const D3DXVECTOR3 m_DefaultPos;
-
-
+	/**
+	 * ミニマップ描画定数バッファ
+	 */
 	struct MINIMAP_CONSTANT_BUFFER
 	{
-		D3DXMATRIX View;
-		D3DXMATRIX Proj;
+		D3DXMATRIX View;	//!< ミニマップ描画ビュー行列
+		D3DXMATRIX Proj;	//!< ミニマップ描画プロジェクション行列
 	};
+
+
+	static const float	m_NearPoint;		//!< 最近点
+	static const float	m_FarPoint;			//!< 最遠点
+	static const float	m_ViewAngle;		//!< 視野角
+	static const float m_ClearColor[4];		//!< 初期化色
+	static const float m_TextureWidth;		//!< マップテクスチャの幅
+	static const float m_TextureHeight;		//!< マップテクスチャの高さ
+	static const int m_RenderTargetStage;	//!< 描画ターゲットステージ
+	static const D3DXVECTOR3 m_DefaultPos;	//!< 描画位置
+
 
 	/**
 	 * 定数バッファ初期化
+	 * @return 成功したらtrue
 	 */
 	bool CreateConstantBuffer();
 
 	/**
 	 * テクスチャの生成
+	 * @return 成功したらtrue
 	 */
 	bool CreateTexture();
 
@@ -117,17 +134,18 @@ private:
 	void MiniMapBeginScene();
 
 
-	ID3D11Texture2D*			m_pMapTexture;
-	ID3D11RenderTargetView*		m_pRenderTarget;
-	ID3D11ShaderResourceView*	m_pShaderResourceView;
-	ID3D11Texture2D*			m_pDepthStencilTexture;
-	ID3D11DepthStencilView*		m_pDepthStencilView;
-	D3D11_VIEWPORT				m_ViewPort;
-	BeginTask*					m_pBeginTask;
-	ID3D11Buffer*				m_pConstantBuffer;
-	D3DXMATRIX					m_CameraView;
-	D3DXMATRIX					m_CameraProj;
-	Lib::Camera*				m_pCamera;
+	BeginTask*					m_pBeginTask;			//!< 描画前タスクオブジェクト
+	Lib::Camera*				m_pCamera;				//!< カメラオブジェクト
+	ID3D11Texture2D*			m_pMapTexture;			//!< マップテクスチャ
+	ID3D11RenderTargetView*		m_pRenderTarget;		//!< マップテクスチャレンダーターゲットビュー
+	ID3D11ShaderResourceView*	m_pShaderResourceView;	//!< マップテクスチャシェーダーリソースビュー
+	ID3D11Texture2D*			m_pDepthStencilTexture;	//!< 深度ステンシルテクスチャ
+	ID3D11DepthStencilView*		m_pDepthStencilView;	//!< 深度ステンシルビュー
+	D3D11_VIEWPORT				m_ViewPort;				//!< ビューポート
+	ID3D11Buffer*				m_pConstantBuffer;		//!< マップ描画定数バッファ
+	D3DXMATRIX					m_CameraView;			//!< マップ描画ビュー行列
+	D3DXMATRIX					m_CameraProj;			//!< マップ描画プロジェクション行列
+
 
 };
 

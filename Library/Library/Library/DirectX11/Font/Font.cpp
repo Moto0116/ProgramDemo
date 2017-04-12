@@ -61,8 +61,8 @@ namespace Lib
 
 		RECT WindowRect;
 		GetWindowRect(m_pGraphicsDevice->GetMainWindowHandle(), &WindowRect);
-		m_WindowWidth = static_cast<float>(WindowRect.right);
-		m_WindowHeight = static_cast<float>(WindowRect.bottom);
+		m_WindowWidth = static_cast<float>(WindowRect.right - WindowRect.left);
+		m_WindowHeight = static_cast<float>(WindowRect.bottom - WindowRect.top);
 
 
 		if (!CreateVertexShader())
@@ -112,9 +112,9 @@ namespace Lib
 		ReleaseVertexShader();
 	}
 
-	bool Font::CreateVertexBuffer(const D3DXVECTOR2* _pRect, const D3DXCOLOR* _pColor)
+	bool Font::CreateVertexBuffer(const D3DXVECTOR2* _pSize, const D3DXCOLOR* _pColor)
 	{
-		m_FontSize = *_pRect;
+		m_FontSize = *_pSize;
 		FONT_VERTEX FontVertex[] =
 		{
 			D3DXVECTOR3(-m_FontSize.x / 2, -m_FontSize.y / 2, 0), D3DXVECTOR2(0,        0), *_pColor,

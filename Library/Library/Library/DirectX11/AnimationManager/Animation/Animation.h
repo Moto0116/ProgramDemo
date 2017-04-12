@@ -24,19 +24,6 @@ namespace Lib
 	{
 	public:
 		/**
-		 * アニメーションのフレーム情報
-		 */
-		struct ANIMATION_FRAME
-		{
-			int FrameID;	//!< フレームのID.
-			float MinTu;	//!< tuの最小値.
-			float MinTv;	//!< tvの最小値.
-			float MaxTu;	//!< tuの最大値.
-			float MaxTv;	//!< tvの最大値.
-		};
-
-
-		/**
 		 * コンストラクタ
 		 * @param[in] _pAnimationPath アニメーションファイルのパス
 		 */
@@ -66,13 +53,29 @@ namespace Lib
 		virtual void SetAnimationSpeed(float _animationSpeed);
 
 		/**
+		 * フレーム番号の設定
+		 * @param[in] _frameNumber 設定するフレームの番号
+		 */
+		virtual void SetFrameNumber(int _frameNumber);
+
+		/**
+		 * フレーム番号の取得
+		 * @return 現在のフレーム番号
+		 */
+		virtual int GetFrameNumber();
+
+		/**
+		 * フレームの数を取得
+		 * @return フレームの数
+		 */
+		virtual int GetFrameMax();
+
+		/**
 		 * 現在のフレームを取得する
 		 * @return 現在のアニメーションフレーム
 		 */
-		inline ANIMATION_FRAME* GetCurrentFrame() const
-		{
-			return m_pFrame[m_CurrentFrame];
-		}
+		virtual ANIMATION_FRAME* GetCurrentFrame() const;
+
 
 	private:
 		/**

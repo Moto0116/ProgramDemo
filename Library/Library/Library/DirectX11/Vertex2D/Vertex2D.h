@@ -49,14 +49,14 @@ namespace Lib
 
 		/**
 		 * 頂点バッファの生成
-		 * @param[in] _pRect 描画する2Dポリゴンの矩形サイズ
+		 * @param[in] _pSize 描画する2Dポリゴンの矩形サイズ
 		 * @param[in] _pMinUV テクスチャのMin座標
 		 * @param[in] _pMaxUV テクスチャのMax座標
 		 * @param[in] _pColor 頂点色
 		 * @return 初期化に成功したらtrue 失敗したらfalse
 		 */
 		bool CreateVertexBuffer(
-			const D3DXVECTOR2* _pRect, 
+			const D3DXVECTOR2* _pSize, 
 			const D3DXVECTOR2* _pMinUV = &D3DXVECTOR2(0.f, 0.f),
 			const D3DXVECTOR2* _pMaxUV = &D3DXVECTOR2(1.0f, 1.0f),
 			const D3DXCOLOR* _pColor = &D3DXCOLOR(0xffffffff));
@@ -74,9 +74,9 @@ namespace Lib
 
 		/**
 		 * 頂点座標をセットする
-		 * @param[in] _pRect 描画する2Dポリゴンの矩形サイズ
+		 * @param[in] _pSize 描画する2Dポリゴンの矩形サイズ
 		 */
-		void SetVertex(const D3DXVECTOR2* _pRect);
+		void SetVertex(const D3DXVECTOR2* _pSize);
 
 		/**
 		 * テクスチャ座標をセットする
@@ -131,6 +131,15 @@ namespace Lib
 			m_pAnimation = _pAnimation;
 		}
 
+		/**
+		 * 画像が反転しているのか設定
+		 * @param[in] _isInverse 画像が反転しているか
+		 */
+		inline void SetInverse(bool _isInverse)
+		{
+			m_IsInverse = _isInverse;
+		}
+
 
 	private:
 		enum 
@@ -162,25 +171,25 @@ namespace Lib
 		 * 頂点シェーダーの初期化
 		 * @return 初期化に成功したらtrue 失敗したらfalse
 		 */
-		bool InitVertexShader();
+		bool CreateVertexShader();
 
 		/**
 		 * 頂点入力レイアウトの初期化
 		 * @return 初期化に成功したらtrue 失敗したらfalse
 		 */
-		bool InitVertexLayout();
+		bool CreateVertexLayout();
 
 		/**
 		 * ピクセルシェーダーの初期化
 		 * @return 初期化に成功したらtrue 失敗したらfalse
 		 */
-		bool InitPixelShader();
+		bool CreatePixelShader();
 
 		/**
 		 * 描画ステートの初期化
 		 * @return 初期化に成功したらtrue 失敗したらfalse
 		 */
-		bool InitState();
+		bool CreateState();
 		
 		/**
 		 * 頂点シェーダーの解放
@@ -219,6 +228,7 @@ namespace Lib
 		VERTEX						m_pVertexData[VERTEX_NUM];	//!< 頂点情報構造体.
 		float						m_WindowWidth;				//!< ウィンドウの幅.
 		float						m_WindowHeight;				//!< ウィンドウの高さ.
+		bool						m_IsInverse;				//!< 画像が反転しているか.
 
 	};
 }

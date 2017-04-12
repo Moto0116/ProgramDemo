@@ -1,15 +1,31 @@
-﻿#include "Application.h"
+﻿/**
+ * @file	Application.h
+ * @brief	アプリケーションクラス実装
+ * @author	morimoto
+ */
+
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
+#include "Application.h"
 
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "Scene\GameScene\GameScene.h"
 
+
+//----------------------------------------------------------------------
+// Static Private Variables
+//----------------------------------------------------------------------
 const int Application::m_WindowWidth = 1600;
 const int Application::m_WindowHeight = 900;
 const DWORD Application::m_WindowStyle = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & ~WS_MAXIMIZEBOX | WS_VISIBLE;
 
 
+//----------------------------------------------------------------------
+// Constructor	Destructor
+//----------------------------------------------------------------------
 Application::Application() :
 	m_pMainWindow(NULL),
 	m_pSceneManager(NULL),
@@ -21,16 +37,20 @@ Application::~Application()
 {
 }
 
+
+//----------------------------------------------------------------------
+// Public Functions
+//----------------------------------------------------------------------
 bool Application::Initialize()
 {
-	Lib::Debugger::CheckMemoryLeak();
+	Lib::Debugger::CheckMemoryLeak();	// メモリリークチェック関数
 
 	if (!CreateMainWindow())
 	{
 		return false;
 	}
 
-	if (!CreateDX11Manager())
+	if (!CreateGraphicsDevice())
 	{
 		ReleaseMainWindow();
 		return false;
@@ -38,7 +58,7 @@ bool Application::Initialize()
 
 	if (!CreateInputDevice())
 	{
-		ReleaseDX11Manager();
+		ReleaseGraphicsDevice();
 		ReleaseMainWindow();
 		return false;
 	}
@@ -46,7 +66,7 @@ bool Application::Initialize()
 	if (!CreateSceneManager())
 	{
 		ReleaseInputDevice();
-		ReleaseDX11Manager();
+		ReleaseGraphicsDevice();
 		ReleaseMainWindow();
 		return false;
 	}
@@ -58,7 +78,7 @@ void Application::Finalize()
 {
 	ReleaseSceneManager();
 	ReleaseInputDevice();
-	ReleaseDX11Manager();
+	ReleaseGraphicsDevice();
 	ReleaseMainWindow();
 }
 
@@ -81,7 +101,9 @@ void Application::Run()
 }
 
 
-
+//----------------------------------------------------------------------
+// Private Functions
+//----------------------------------------------------------------------
 bool Application::CreateMainWindow()
 {
 	m_pMainWindow = new Lib::Window();
@@ -95,7 +117,7 @@ bool Application::CreateMainWindow()
 	return true;
 }
 
-bool Application::CreateDX11Manager()
+bool Application::CreateGraphicsDevice()
 {
 	SINGLETON_CREATE(Lib::GraphicsDevice);
 	if (!SINGLETON_INSTANCE(Lib::GraphicsDevice)->Initialize(m_pMainWindow->GetWindowHandle()))
@@ -146,8 +168,8 @@ bool Application::CreateSceneManager()
 
 	m_pGameScene = new GameScene(GAME_SCENE_ID);
 
-	m_pSceneManager->AddScene(m_pGameScene);
-	m_pSceneManager->SetEntryScene(m_pGameScene);
+	m_pSceneManager->AddScene(m_pGameScene);		// 管理オブジェクトに追加
+	m_pSceneManager->SetEntryScene(m_pGameScene);	// エントリシーンとして設定
 
 	return true;
 }
@@ -161,7 +183,7 @@ void Application::ReleaseMainWindow()
 	}
 }
 
-void Application::ReleaseDX11Manager()
+void Application::ReleaseGraphicsDevice()
 {
 	if (SINGLETON_INSTANCE(Lib::GraphicsDevice) != NULL)
 	{

@@ -45,6 +45,7 @@ namespace Lib
 		 */
 		void SendEventMessage(Event* _pEvent);
 
+
 	private:
 		/**
 		 * コンストラクタ
@@ -57,6 +58,7 @@ namespace Lib
 		virtual ~EventManager();
 
 		std::vector<Listener*> m_pEventListener;	//!< イベントリスナを格納するコンテナ.
+
 
 	};
 }

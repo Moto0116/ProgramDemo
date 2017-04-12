@@ -140,20 +140,21 @@ protected:
 	 */
 	void ReleaseConstantBuffer();
 
-	Lib::DrawTask*				m_pDrawTask;
-	Lib::UpdateTask*			m_pUpdateTask;
-	DepthDrawTask*				m_pDepthDrawTask;
-	MapDrawTask*				m_pMapDrawTask;
 
-	int							m_VertexShaderIndex;
-	int							m_PixelShaderIndex;
-	ID3D11InputLayout*			m_pVertexLayout;
-	ID3D11DepthStencilState*	m_pDepthStencilState;
-	ID3D11Buffer*				m_pConstantBuffer;
+	Lib::DrawTask*				m_pDrawTask;		//!< 描画タスクオブジェクト
+	Lib::UpdateTask*			m_pUpdateTask;		//!< 更新タスクオブジェクト
+	DepthDrawTask*				m_pDepthDrawTask;	//!< 深度バッファ描画タスクオブジェクト
+	MapDrawTask*				m_pMapDrawTask;		//!< マップ描画タスクオブジェクト
 
-	D3DXVECTOR3					m_Pos;
-	D3DXVECTOR3					m_Scale;
-	D3DXVECTOR3					m_Rotate;
+	int							m_VertexShaderIndex;	//!< 頂点シェーダーインデックス
+	int							m_PixelShaderIndex;		//!< ピクセルシェーダーインデックス
+	ID3D11InputLayout*			m_pVertexLayout;		//!< 頂点入力レイアウト
+	ID3D11DepthStencilState*	m_pDepthStencilState;	//!< 深度ステンシルステート
+	ID3D11Buffer*				m_pConstantBuffer;		//!< 定数バッファ
+
+	D3DXVECTOR3					m_Pos;		//!< 座標
+	D3DXVECTOR3					m_Scale;	//!< スケール
+	D3DXVECTOR3					m_Rotate;	//!< 回転
 
 };
 

@@ -1,21 +1,36 @@
-﻿#include "MainLight.h"
+﻿/**
+ * @file	MainLight.cpp
+ * @brief	メインライトオブジェクト実装
+ * @author	morimoto
+ */
+
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
+#include "MainLight.h"
 
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h"
 
 
+//----------------------------------------------------------------------
+// Static Private Variables
+//----------------------------------------------------------------------
 const D3DXVECTOR3 MainLight::m_DefaultLightPos = D3DXVECTOR3(220, 190, 240);
 const D3DXVECTOR3 MainLight::m_DefaultLightDirPos = D3DXVECTOR3(40, 0, 40);
 const float MainLight::m_NearPoint = 1.f;
 const float MainLight::m_FarPoint = 700.f;
 const float MainLight::m_ViewAngle = 50.f;
 const float MainLight::m_ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-const float MainLight::m_DepthTextureWidth = 3200.f;
-const float MainLight::m_DepthTextureHeight = 1800.f;
+const float MainLight::m_DepthTextureWidth = 4800.f;
+const float MainLight::m_DepthTextureHeight = 2700.f;
 const int MainLight::m_RenderTargetStage = 1;
 
 
+//----------------------------------------------------------------------
+// Constructor	Destructor
+//----------------------------------------------------------------------
 MainLight::MainLight() : 
 	m_pLight(NULL),
 	m_pDepthTexture(NULL),
@@ -27,6 +42,10 @@ MainLight::~MainLight()
 {
 }
 
+
+//----------------------------------------------------------------------
+// Public Functions
+//----------------------------------------------------------------------
 bool MainLight::Initialize()
 {
 	m_pDrawTask = new Lib::DrawTask();
@@ -87,6 +106,10 @@ void MainLight::Draw()
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(2, 1, &m_pShaderResourceView);
 }
 
+
+//----------------------------------------------------------------------
+// Private Functions
+//----------------------------------------------------------------------
 bool MainLight::CreateConstantBuffer()
 {
 	D3D11_BUFFER_DESC ConstantBufferDesc;
@@ -256,7 +279,6 @@ void MainLight::MainLightBeginScene()
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(2, 1, &m_pConstantBuffer);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetConstantBuffers(2, 1, &m_pConstantBuffer);
 }
-
 
 
 //----------------------------------------------------------------------

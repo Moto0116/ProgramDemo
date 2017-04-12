@@ -1,4 +1,9 @@
-﻿#ifndef OBJECTMANAGER_H
+﻿/**
+ * @file	ObjectManager.h
+ * @brief	オブジェクト管理クラス定義
+ * @author	morimoto
+ */
+#ifndef OBJECTMANAGER_H
 #define OBJECTMANAGER_H
 
 //----------------------------------------------------------------------
@@ -6,10 +11,14 @@
 //----------------------------------------------------------------------
 #include <vector>
 
+#include "ObjectManagerBase\ObjectManagerBase.h"
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
 
 
-class ObjectManager
+/**
+ * オブジェクト管理クラス
+ */
+class ObjectManager : public Lib::ObjectManagerBase
 {
 public:
 	/**
@@ -20,23 +29,9 @@ public:
 	/**
 	 * デストラクタ
 	 */
-	~ObjectManager();
-
-	/**
-	 * 初期化処理
-	 * @return 初期化に成功したらtrue 失敗したらfalse
-	 */
-	bool Initialize();
-
-	/**
-	 * 終了処理
-	 */
-	void Finalize();
-
-private:
-	std::vector<Lib::ObjectBase*> m_pObjects;
+	virtual ~ObjectManager();
 
 };
 
 
-#endif
+#endif // OBJECTMANAGER_H

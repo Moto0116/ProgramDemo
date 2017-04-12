@@ -53,17 +53,28 @@ public:
 	virtual void Draw();
 
 protected:
+	/** 
+	 * 2D描画オブジェクトの生成
+	 * @return 生成に成功したらtrue 失敗したらfalse
+	 */
 	bool CreateVertex2D();
+
+	/**
+	 * 2D描画オブジェクトの破棄
+	 */
 	void ReleaseVertex2D();
 
-	Lib::DrawTask*		m_pDrawTask;
-	Lib::UpdateTask*	m_pUpdateTask;
 
-	Lib::Vertex2D*	m_pVertex;
-	D3DXVECTOR2		m_Pos;
-	D3DXVECTOR2		m_Rect;
-	int				m_TextureIndex;
+	Lib::DrawTask*		m_pDrawTask;	//!< 描画タスクオブジェクト
+	Lib::UpdateTask*	m_pUpdateTask;	//!< 更新タスクオブジェクト
+
+	Lib::Vertex2D*	m_pVertex;		//!< 2D描画オブジェクト
+	D3DXVECTOR2		m_Pos;			//!< 描画座標
+	D3DXVECTOR2		m_Size;			//!< 描画サイズ
+	int				m_TextureIndex;	//!< テクスチャのインデックス
+
 
 };
+
 
 #endif // OBJECT2DBASE_H

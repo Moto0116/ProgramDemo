@@ -1,4 +1,13 @@
-﻿#include "DepthDrawTask.h"
+﻿/**
+ * @file	DepthDrawTask.cpp
+ * @brief	深度バッファ書き込みタスククラス実装
+ * @author	morimoto
+ */
+
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
+#include "DepthDrawTask.h"
 
 #include "Main\Object3DBase\Object3DBase.h"
 

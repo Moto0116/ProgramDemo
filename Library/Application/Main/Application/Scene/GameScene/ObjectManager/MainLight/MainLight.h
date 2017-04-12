@@ -1,12 +1,23 @@
-﻿#ifndef MAINLIGHT_H
+﻿/**
+ * @file	MainLight.h
+ * @brief	メインライトオブジェクト定義
+ * @author	morimoto
+ */
+#ifndef MAINLIGHT_H
 #define MAINLIGHT_H
 
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
 #include "DirectX11\Light\Light.h"
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
 
+/**
+ * メインライトクラス
+ */
 class MainLight : public Lib::ObjectBase
 {
 public:
@@ -41,6 +52,7 @@ public:
 	 */
 	virtual void Draw();
 
+
 private:
 	/**
 	 * バックバッファ描画前処理のタスク
@@ -64,22 +76,16 @@ private:
 		 */
 		virtual void Run();
 
+
 	private:
-		MainLight* m_pMainLight;
+		MainLight* m_pMainLight;	//!< 描画前処理タスク
 
 	};
 
 
-	static const D3DXVECTOR3 m_DefaultLightPos;
-	static const D3DXVECTOR3 m_DefaultLightDirPos;
-	static const float m_NearPoint;
-	static const float m_FarPoint;
-	static const float m_ViewAngle;
-	static const float m_ClearColor[4];
-	static const float m_DepthTextureWidth;
-	static const float m_DepthTextureHeight;
-	static const int m_RenderTargetStage;
-
+	/**
+	 * 深度値描画定数バッファ
+	 */
 	struct LIGHT_CONSTANT_BUFFER
 	{
 		D3DXVECTOR4 LightPos;
@@ -89,13 +95,27 @@ private:
 		D3DXVECTOR4 FrameTime;
 	};
 
+
+	static const D3DXVECTOR3 m_DefaultLightPos;		//!< ライト座標
+	static const D3DXVECTOR3 m_DefaultLightDirPos;	//!< ライト注視座標
+	static const float m_NearPoint;					//!< 最近点
+	static const float m_FarPoint;					//!< 最遠点
+	static const float m_ViewAngle;					//!< 画角
+	static const float m_ClearColor[4];				//!< 初期化色
+	static const float m_DepthTextureWidth;			//!< 深度テクスチャ幅
+	static const float m_DepthTextureHeight;		//!< 深度テクスチャ高さ
+	static const int m_RenderTargetStage;			//!< レンダーターゲットステージ
+
+
 	/**
 	 * 定数バッファ初期化
+	 * @return 初期化に成功したらtrue
 	 */
 	bool CreateConstantBuffer();
 
 	/**
 	 * 深度テクスチャ初期化
+	 * @return 初期化に成功したらtrue
 	 */
 	bool CreateDepthTexture();
 
@@ -120,20 +140,20 @@ private:
 	void MainLightBeginScene();
 
 
-	Lib::DrawTask*				m_pDrawTask;
-	Lib::UpdateTask*			m_pUpdateTask;
-	Lib::Light*					m_pLight;
-	ID3D11Buffer*				m_pConstantBuffer;
-	D3DXVECTOR3					m_LightDir;
-	D3DXMATRIX					m_LightView;
-	D3DXMATRIX					m_LightProj;
-	ID3D11Texture2D*			m_pDepthTexture;
-	ID3D11RenderTargetView*		m_pRenderTarget;
-	ID3D11ShaderResourceView*	m_pShaderResourceView;
-	ID3D11Texture2D*			m_pDepthStencilTexture;
-	ID3D11DepthStencilView*		m_pDepthStencilView;
-	D3D11_VIEWPORT				m_ViewPort;
-	BeginTask*					m_pBeginTask;
+	BeginTask*					m_pBeginTask;			//!< 描画前処理タスクオブジェクト
+	Lib::DrawTask*				m_pDrawTask;			//!< 描画タスクオブジェクト
+	Lib::UpdateTask*			m_pUpdateTask;			//!< 更新タスクオブジェクト
+	Lib::Light*					m_pLight;				//!< ライトオブジェクト
+	ID3D11Buffer*				m_pConstantBuffer;		//!< 定数バッファ
+	D3DXVECTOR3					m_LightDir;				//!< ライトの向き
+	D3DXMATRIX					m_LightView;			//!< ライトのビュー行列
+	D3DXMATRIX					m_LightProj;			//!< ライトのプロジェクション行列
+	ID3D11Texture2D*			m_pDepthTexture;		//!< 深度テクスチャ
+	ID3D11RenderTargetView*		m_pRenderTarget;		//!< 深度テクスチャのレンダーターゲットビュー
+	ID3D11ShaderResourceView*	m_pShaderResourceView;	//!< 深度テクスチャのシェーダーリソースビュー
+	ID3D11Texture2D*			m_pDepthStencilTexture;	//!< 深度ステンシルテクスチャ
+	ID3D11DepthStencilView*		m_pDepthStencilView;	//!< 深度ステンシルビュー
+	D3D11_VIEWPORT				m_ViewPort;				//!< ビューポート
 
 };
 

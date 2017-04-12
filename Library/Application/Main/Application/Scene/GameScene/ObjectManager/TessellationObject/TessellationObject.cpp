@@ -9,7 +9,7 @@
 TessellationObject::TessellationObject()
 {
 	m_Pos = D3DXVECTOR2(200, 200);
-	m_Rect = D3DXVECTOR2(200, 200);
+	m_Size = D3DXVECTOR2(200, 200);
 }
 
 TessellationObject::~TessellationObject()

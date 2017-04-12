@@ -82,6 +82,31 @@ namespace Lib
 		m_AnimationSpeed = _animationSpeed;
 	}
 
+	void Animation::SetFrameNumber(int _frameNumber)
+	{
+		if (m_pFrame.size() <= static_cast<unsigned int>(_frameNumber))
+		{
+			return;
+		}
+
+		m_CurrentFrame = _frameNumber;
+	}
+
+	int Animation::GetFrameNumber()
+	{
+		return m_CurrentFrame;
+	}
+
+	int Animation::GetFrameMax()
+	{
+		return m_pFrame.size();
+	}
+
+	Animation::ANIMATION_FRAME* Animation::GetCurrentFrame() const
+	{
+		return m_pFrame[m_CurrentFrame];
+	}
+
 
 	//----------------------------------------------------------------------
 	// Private Functions

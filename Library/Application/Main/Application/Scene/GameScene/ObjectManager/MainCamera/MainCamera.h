@@ -73,7 +73,29 @@ public:
 		return m_pCamera->GetProjectionMatrix();
 	}
 
+	/**
+	 * カメラ座標を取得
+	 * @return カメラ座標
+	 */
+	inline D3DXVECTOR3 GetPos()
+	{
+		return m_Pos;
+	}
+
+
 private:
+	/**
+	 * カメラの定数バッファ
+	 */
+	struct CAMERA_CONSTANT_BUFFER
+	{
+		D3DXMATRIX View;
+		D3DXMATRIX Proj;
+		D3DXVECTOR4	CameraPos;
+		D3DXVECTOR4	CameraDir;
+	};
+
+
 	static const float	m_NearPoint;	//!< 最近点
 	static const float	m_FarPoint;		//!< 最遠点
 	static const float	m_ViewAngle;	//!< 視野角
@@ -85,17 +107,6 @@ private:
 	static const float	m_ZoomSpeedWeight; //!< ズーム速度を計算する際の重み
 	static const float	m_RotateSpeedWeight; //!< ズーム速度を計算する際の重み
 
-
-	/**
-	 * カメラの定数バッファ
-	 */
-	struct CAMERA_CONSTANT_BUFFER
-	{
-		D3DXMATRIX View;
-		D3DXMATRIX Proj;
-		D3DXVECTOR4	CameraPos;
-		D3DXVECTOR4	CameraDir;
-	};
 
 	/**
 	 * 移動処理
@@ -158,18 +169,18 @@ private:
 	void WriteConstantBuffer();
 
 
-	Lib::UpdateTask*				m_pUpdateTask;
-	Lib::Camera*					m_pCamera;
-	D3DXVECTOR3						m_Pos;
-	D3DXVECTOR3						m_LookPoint; //!< カメラの注視点
-	D3DXVECTOR2						m_CameraAngle;
-	ID3D11Buffer*					m_pConstantBuffer;
-	Lib::MouseDevice::MOUSESTATE	m_MouseState;
-	const Lib::KeyDevice::KEYSTATE* m_pKeyState;
-	float							m_MoveSpeed;
-	float							m_ZoomSpeed;
-	float							m_CameraLength; //!< カメラの注視点の距離
-	bool							m_isCameraControl;
+	Lib::UpdateTask*				m_pUpdateTask;		//!< 更新タスクオブジェクト
+	Lib::Camera*					m_pCamera;			//!< カメラオブジェクト
+	D3DXVECTOR3						m_Pos;				//!< カメラ座標
+	D3DXVECTOR3						m_LookPoint;		//!< カメラの注視点
+	D3DXVECTOR2						m_CameraAngle;		//!< カメラの画角
+	ID3D11Buffer*					m_pConstantBuffer;	//!< 定数バッファ
+	Lib::MouseDevice::MOUSESTATE	m_MouseState;		//!< マウスの状態
+	const Lib::KeyDevice::KEYSTATE* m_pKeyState;		//!< キーの状態
+	float							m_MoveSpeed;		//!< カメラの移動速度
+	float							m_ZoomSpeed;		//!< カメラのズーム速度
+	float							m_CameraLength;		//!< カメラの注視点の距離
+	bool							m_IsCameraControl;	//!< カメラを操作したか
 
 };
 

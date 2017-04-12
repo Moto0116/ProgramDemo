@@ -14,6 +14,8 @@
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "DirectX11\ShaderManager\ShaderManager.h"
 #include "DirectX11\TextureManager\TextureManager.h"
+#include "DirectX11\SoundDevice\SoundDevice.h"
+#include "DirectX11\SoundManager\SoundManager.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
@@ -21,7 +23,9 @@
 #include "MapDrawTask\MapDrawTask.h"
 
 
-
+//----------------------------------------------------------------------
+// Constructor	Destructor
+//----------------------------------------------------------------------
 GameScene::GameScene(int _sceneId) : 
 	SceneBase(_sceneId)
 {
@@ -31,6 +35,10 @@ GameScene::~GameScene()
 {
 }
 
+
+//----------------------------------------------------------------------
+// Public Functions
+//----------------------------------------------------------------------
 bool GameScene::Initialize()
 {
 	SINGLETON_CREATE(Lib::UpdateTaskManager);
@@ -62,6 +70,20 @@ bool GameScene::Initialize()
 		return false;
 	}
 
+	SINGLETON_CREATE(Lib::SoundDevice);
+	if (!SINGLETON_INSTANCE(Lib::SoundDevice)->Initialize(
+		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowHandle()))
+	{
+		OutputErrorLog("サウンドデバイスの生成に失敗しました")
+		return false;
+	}
+
+	SINGLETON_CREATE(Lib::SoundManager);
+	if (!SINGLETON_INSTANCE(Lib::SoundManager)->Initialize(SINGLETON_INSTANCE(Lib::SoundDevice)))
+	{
+		OutputErrorLog("サウンド管理クラスの生成に失敗しました");
+		return false;
+	}
 
 	m_pObjectManager = new ObjectManager();
 	if (!m_pObjectManager->Initialize())
@@ -80,6 +102,12 @@ void GameScene::Finalize()
 {
 	m_pObjectManager->Finalize();
 	delete m_pObjectManager;
+
+	SINGLETON_INSTANCE(Lib::SoundManager)->Finalize();
+	SINGLETON_DELETE(Lib::SoundManager);
+
+	SINGLETON_INSTANCE(Lib::SoundDevice)->Finalize();
+	SINGLETON_DELETE(Lib::SoundDevice);
 
 	SINGLETON_INSTANCE(Lib::TextureManager)->Finalize();
 	SINGLETON_DELETE(Lib::TextureManager);

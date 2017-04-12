@@ -2,6 +2,9 @@
 #define NEAR 150.0f
 #define FOGCOLOR float4(1.0f, 1.0f, 1.0f, 1.0f)
 
+///@todo 暗くするための係数
+#define COLOR_DATA float4(0.6, 0.6, 0.6, 1)
+
 Texture2D g_Texture : register(t0);
 Texture2D g_DepthTexture : register(t2);
 SamplerState g_Sampler : register(s0);
@@ -48,8 +51,8 @@ struct VS_OUTPUT
 	float4 Normal   : NORMAL;
 	float2 UV       : TEXCOORD;
 	float2 LightUV  : TEXCOORD2;
-	float ZValue : TEXCOORD3;
-	float Distance : TEXCOORD4;
+	float ZValue    : TEXCOORD3;
+	float Distance  : TEXCOORD4;
 	float4 Color    : COLOR;
 };
 
@@ -75,7 +78,7 @@ VS_OUTPUT VS(VS_INPUT In)
 	// 法線とライトからカラー値を計算
 	float3 InvLightDir = -normalize(g_LightDir.xyz);
 	float3 Normal = normalize(In.Normal.xyz);
-	Out.Color = max(g_Ambient, dot(Normal, InvLightDir));
+	Out.Color = max(g_Ambient, dot(Normal, InvLightDir)) * COLOR_DATA;
 
 	Out.Distance = clamp((FAR - distance(In.Pos, g_CameraPos.xyz)) / (FAR - NEAR), 0.0f, 1.0f);
 
@@ -84,11 +87,11 @@ VS_OUTPUT VS(VS_INPUT In)
 
 float4 PS(VS_OUTPUT In) : SV_TARGET
 {
-	if (In.ZValue > (g_DepthTexture.Sample(g_Sampler, In.LightUV).r + 0.00002f))
+	if (In.ZValue > (g_DepthTexture.Sample(g_Sampler, In.LightUV).r + 0.00003f))
 	{
 		if (In.LightUV.x >= 0.01 && In.LightUV.x <= 0.99 && In.LightUV.y >= 0.01 && In.LightUV.y <= 0.99)
 		{
-			In.Color.rgb = In.Color.rgb * 0.4f;
+			In.Color.rgb = In.Color.rgb * 0.6f;
 		}
 	}
 

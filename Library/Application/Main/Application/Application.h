@@ -1,13 +1,25 @@
-﻿#ifndef APPLICATION_H
+﻿/**
+ * @file	Application.cpp
+ * @brief	アプリケーションクラス定義
+ * @author	morimoto
+ */
+#ifndef APPLICATION_H
 #define APPLICATION_H
 
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
 #include "Window\Window.h"
 #include "SceneManager\SceneManager.h"
+
 
 class GameScene;
 class TitleScene;
 
 
+/**
+ * アプリケーションクラス
+ */
 class Application
 {
 public:
@@ -48,22 +60,58 @@ private:
 		GAME_SCENE_ID	//!< ゲームシーンID
 	};
 
-	static const int m_WindowWidth;
-	static const int m_WindowHeight;
-	static const DWORD m_WindowStyle;
+	static const int m_WindowWidth;		//!< ウィンドウの幅
+	static const int m_WindowHeight;	//!< ウィンドウの高さ
+	static const DWORD m_WindowStyle;	//!< ウィンドウのスタイル
 
+	/**
+	 * メインウィンドウの生成
+	 * @return 成功したらtrue
+	 */
 	bool CreateMainWindow();
-	bool CreateDX11Manager();
+
+	/**
+	 * グラフィックスデバイスの生成
+	 * @return 成功したらtrue
+	 */
+	bool CreateGraphicsDevice();
+
+	/**
+	 * 入力デバイスの生成
+	 * @return 成功したらtrue
+	 */
 	bool CreateInputDevice();
+
+	/**
+	 * シーン管理オブジェクトの生成
+	 * @return 成功したらtrue
+	 */
 	bool CreateSceneManager();
+
+	/**
+	 * メインウィンドウの破棄
+	 */
 	void ReleaseMainWindow();
-	void ReleaseDX11Manager();
+
+	/**
+	 * グラフィックデバイスの破棄
+	 */
+	void ReleaseGraphicsDevice();
+
+	/**
+	 * 入力デバイスの破棄
+	 */
 	void ReleaseInputDevice();
+
+	/**
+	 * シーン管理オブジェクトの破棄
+	 */
 	void ReleaseSceneManager();
 
-	Lib::Window*		m_pMainWindow;
-	Lib::SceneManager*	m_pSceneManager;
-	GameScene*			m_pGameScene;
+
+	Lib::Window*		m_pMainWindow;		//!< メインウィンドウ
+	Lib::SceneManager*	m_pSceneManager;	//!< シーン管理オブジェクト
+	GameScene*			m_pGameScene;		//!< シーンオブジェクト
 
 };
 

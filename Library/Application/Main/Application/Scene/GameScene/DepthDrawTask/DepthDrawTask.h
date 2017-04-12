@@ -1,10 +1,20 @@
-﻿#ifndef DEPTHDRAWTASK_H
+﻿/**
+ * @file	DepthDrawTask.h
+ * @brief	深度バッファ書き込みタスククラス定義
+ * @author	morimoto
+ */
+#ifndef DEPTHDRAWTASK_H
 #define DEPTHDRAWTASK_H
 
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
 #include "TaskManager\TaskBase\TaskBase.h"
 #include "TaskManager\TaskManager.h"
 
+
 class Object3DBase;
+
 
 /**
  * 深度バッファへの書き込みタスク
@@ -33,10 +43,13 @@ public:
 	 */
 	void SetDrawObject(Object3DBase* _pObject3D);
 
+
 private:
 	Object3DBase* m_pObject3D;	//!< 描画を行うオブジェクト
 
+
 };
+
 
 typedef Lib::TaskManager<DepthDrawTask> DepthDrawTaskManager;
 

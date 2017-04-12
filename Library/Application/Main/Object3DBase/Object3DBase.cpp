@@ -22,11 +22,13 @@ Object3DBase::Object3DBase() :
 	m_Scale(D3DXVECTOR3(1, 1, 1)),
 	m_Rotate(D3DXVECTOR3(0, 0, 0))
 {
+	// タスク生成処理
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 	m_pDepthDrawTask = new DepthDrawTask();
 	m_pMapDrawTask = new MapDrawTask();
 
+	// タスクにオブジェクト設定
 	m_pDrawTask->SetDrawObject(this);
 	m_pUpdateTask->SetUpdateObject(this);
 	m_pDepthDrawTask->SetDrawObject(this);
@@ -68,6 +70,7 @@ void Object3DBase::MapDraw()
 
 void Object3DBase::ShaderSetup()
 {
+	// 頂点シェーダーとピクセルシェーダーの設定
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
 		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), 
 		NULL, 
@@ -110,6 +113,7 @@ bool Object3DBase::CreateShader()
 
 bool Object3DBase::CreateVertexLayout()
 {
+	// 入力レイアウトの設定
 	D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -117,6 +121,7 @@ bool Object3DBase::CreateVertexLayout()
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(D3DXVECTOR3) + sizeof(D3DXVECTOR3), D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
+	// 入力レイアウトの生成
 	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateInputLayout(
 		InputElementDesc,
 		sizeof(InputElementDesc) / sizeof(InputElementDesc[0]),
@@ -133,6 +138,7 @@ bool Object3DBase::CreateVertexLayout()
 
 bool Object3DBase::CreateDepthStencilState()
 {
+	// 深度ステンシルステートの設定
 	D3D11_DEPTH_STENCIL_DESC DepthStencilDesc;
 	ZeroMemory(&DepthStencilDesc, sizeof(DepthStencilDesc));
 	DepthStencilDesc.DepthEnable = TRUE;
@@ -140,6 +146,7 @@ bool Object3DBase::CreateDepthStencilState()
 	DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	DepthStencilDesc.StencilEnable = FALSE;
 
+	// 深度ステンシルステートの生成
 	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
 		&DepthStencilDesc,
 		&m_pDepthStencilState)))
@@ -153,6 +160,7 @@ bool Object3DBase::CreateDepthStencilState()
 
 bool Object3DBase::CreateConstantBuffer()
 {
+	// 定数バッファの設定
 	D3D11_BUFFER_DESC ConstantBufferDesc;
 	ConstantBufferDesc.ByteWidth = sizeof(CONSTANT_BUFFER);
 	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -161,6 +169,7 @@ bool Object3DBase::CreateConstantBuffer()
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
+	// 定数バッファの生成
 	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
 		&ConstantBufferDesc,
 		NULL,
@@ -178,11 +187,13 @@ bool Object3DBase::WriteConstantBuffer()
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
 	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResourceData)))
 	{
-		D3DXMATRIX MatWorld, MatTranslate, MatRotate;
+		D3DXMATRIX MatWorld, MatTranslate, MatRotateX, MatRotateY;
 		D3DXMatrixIdentity(&MatWorld);
 		D3DXMatrixScaling(&MatWorld, m_Scale.x, m_Scale.y, m_Scale.z);
-		D3DXMatrixRotationY(&MatRotate, m_Rotate.y);
-		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
+		D3DXMatrixRotationX(&MatRotateX, m_Rotate.x);
+		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotateX);
+		D3DXMatrixRotationY(&MatRotateY, m_Rotate.y);
+		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotateY);
 		D3DXMatrixTranslation(&MatTranslate, m_Pos.x, m_Pos.y, m_Pos.z);
 		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatTranslate);
 

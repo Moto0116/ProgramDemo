@@ -47,10 +47,12 @@ public:
 	 */
 	virtual void Update();
 
+
 private:
-	ObjectManager* m_pObjectManager;
+	ObjectManager* m_pObjectManager;	//!< シーン内オブジェクト管理クラス
+
 
 };
 
 
-#endif
+#endif // GAMESCENE_H

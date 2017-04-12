@@ -1,11 +1,23 @@
-﻿#ifndef LIGHT_UI
-#define LIGHT_UI
+﻿/**
+ * @file	LightUI.h
+ * @brief	ライトUIクラス定義
+ * @author	morimoto
+ */
 
+#ifndef LIGHTUI_H
+#define LIGHTUI_H
+
+//----------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------
 #include "Main\Object2DBase\Object2DBase.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
 
+/**
+ * ライトUIクラス
+ */
 class LightUI : public Object2DBase
 {
 public:
@@ -40,7 +52,8 @@ public:
 	 */
 	virtual void Draw();
 
+
 };
 
 
-#endif // LIGHT_UI
+#endif // LIGHTUI_H

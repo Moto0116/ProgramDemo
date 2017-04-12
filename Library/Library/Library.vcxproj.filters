@@ -213,6 +213,9 @@
       <Filter>Library\ObjectBase</Filter>
     </ClCompile>
     <ClCompile Include="Library\ObjectManagerBase\ObjectManagerBase.cpp" />
+    <ClCompile Include="Library\CollisionManager\CollisionManager.cpp" />
+    <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionBase.cpp" />
+    <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Debugger\Debugger.h">
@@ -330,6 +333,9 @@
       <Filter>Library\ObjectBase</Filter>
     </ClInclude>
     <ClInclude Include="Library\ObjectManagerBase\ObjectManagerBase.h" />
+    <ClInclude Include="Library\CollisionManager\CollisionManager.h" />
+    <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionBase.h" />
+    <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Vertex2D\Effect\Vertex2D.fx">

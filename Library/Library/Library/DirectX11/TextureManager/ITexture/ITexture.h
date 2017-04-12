@@ -9,7 +9,8 @@
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
-#include <Windows.h>
+#include <D3DX11.h>
+#include <D3DX10.h>
 
 #include "..\..\..\Define\Define.h"
 
@@ -31,6 +32,13 @@ namespace Lib
 		 * デストラクタ
 		 */
 		virtual ~ITexture() = 0;
+
+		/**
+		 * テクスチャの取得
+		 * @return テクスチャ
+		 */
+		virtual ID3D11ShaderResourceView* Get() const = 0;
+
 
 	private:
 		DISALLOW_COPY_AND_ASSIGN(ITexture);

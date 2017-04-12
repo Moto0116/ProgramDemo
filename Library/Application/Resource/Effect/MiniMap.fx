@@ -21,8 +21,9 @@ struct VS_INPUT
 
 struct VS_OUTPUT
 {
-	float4 Pos		: SV_POSITION;
-	float2 UV       : TEXCOORD;
+	float4 Pos	  : SV_POSITION;
+	float3 Normal : NORMAL;
+	float2 UV     : TEXCOORD;
 };
 
 
@@ -33,6 +34,7 @@ VS_OUTPUT VS(VS_INPUT In)
 	float4x4 Mat = mul(g_World, g_View);
 	Mat = mul(Mat, g_Proj);
 	Out.Pos = mul(float4(In.Pos, 1.0f), Mat);
+	Out.Normal = In.Normal;
 	Out.UV = In.UV;
 
 	return Out;
@@ -40,5 +42,7 @@ VS_OUTPUT VS(VS_INPUT In)
 
 float4 PS(VS_OUTPUT In) : SV_Target
 {
-	return g_Texture.Sample(g_Sampler, In.UV);
+	float4 Color = g_Texture.Sample(g_Sampler, In.UV);
+	Color.rgb = Color.rgb * 0.7;
+	return Color;
 }

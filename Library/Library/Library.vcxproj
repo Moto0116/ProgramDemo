@@ -82,6 +82,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.h" />
+    <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionBase.h" />
+    <ClInclude Include="Library\CollisionManager\CollisionManager.h" />
     <ClInclude Include="Library\DirectX11\AnimationManager\IAnimation\IAnimation.h" />
     <ClInclude Include="Library\DirectX11\Camera\Camera.h" />
     <ClInclude Include="Library\DirectX11\FbxFileManager\FbxFileManager.h" />
@@ -131,6 +134,9 @@
     <ClInclude Include="Library\ObjectManagerBase\ObjectManagerBase.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.cpp" />
+    <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionBase.cpp" />
+    <ClCompile Include="Library\CollisionManager\CollisionManager.cpp" />
     <ClCompile Include="Library\DirectX11\AnimationManager\IAnimation\IAnimation.cpp" />
     <ClCompile Include="Library\DirectX11\Camera\Camera.cpp" />
     <ClCompile Include="Library\DirectX11\FbxFileManager\FbxFileManager.cpp" />

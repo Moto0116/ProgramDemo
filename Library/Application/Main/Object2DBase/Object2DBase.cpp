@@ -17,7 +17,7 @@
 Object2DBase::Object2DBase() : 
 	m_pVertex(NULL),
 	m_Pos(D3DXVECTOR2(0, 0)),
-	m_Rect(D3DXVECTOR2(0, 0))
+	m_Size(D3DXVECTOR2(0, 0))
 {
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
@@ -62,7 +62,7 @@ bool Object2DBase::CreateVertex2D()
 		return false;
 	}
 
-	if(!m_pVertex->CreateVertexBuffer(&m_Rect))
+	if (!m_pVertex->CreateVertexBuffer(&m_Size))
 	{
 		OutputErrorLog("頂点バッファの生成に失敗しました");
 		m_pVertex->Finalize();
