@@ -7,6 +7,7 @@ cbuffer camera : register(b1)
 	matrix g_Proj;
 	float4 g_CameraPos;
 	float4 g_CameraDir;
+	float4 g_Aspect;
 };
 
 struct VS_INPUT
@@ -50,3 +51,6 @@ float4 PS(VS_OUTPUT In) : SV_TARGET
 	}
 	return In.Color * TextureColor;
 }
+
+///@todo 雨はジオメトリを使用して描画する
+// 上に行くほど雨も小さくしていく感じに

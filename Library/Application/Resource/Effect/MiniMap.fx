@@ -42,7 +42,5 @@ VS_OUTPUT VS(VS_INPUT In)
 
 float4 PS(VS_OUTPUT In) : SV_Target
 {
-	float4 Color = g_Texture.Sample(g_Sampler, In.UV);
-	Color.rgb = Color.rgb * 0.7;
-	return Color;
+	return g_Texture.Sample(g_Sampler, In.UV) + float4(0.1f, 0.1f, 0.1f, 0.f); // è≠ÇµÇæÇØñæÇÈÇ≠Ç∑ÇÈ
 }

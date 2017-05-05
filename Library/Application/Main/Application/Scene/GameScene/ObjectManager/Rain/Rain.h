@@ -16,7 +16,7 @@
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
-
+#include "InputDeviceManager\InputDeviceManager.h"
 #include "..\MainCamera\MainCamera.h"
 
 
@@ -28,6 +28,7 @@ class Rain : public Lib::ObjectBase
 public:
 	/**
 	 * コンストラクタ
+	 * @param[in] _pCamera カメラオブジェクト
 	 */
 	Rain(MainCamera* _pCamera);
 
@@ -62,8 +63,9 @@ private:
 	enum
 	{
 		VERTEX_NUM = 4,	//!< 頂点数
-		RAIN_NUM = 80	//!< 雨の数
+		RAIN_NUM = 2500	//!< 雨の数
 	};
+
 
 	/**
 	 * ポイントスプライト用の頂点構造体
@@ -102,6 +104,16 @@ private:
 	static const D3DXVECTOR2 m_ZRange;				//!< zの範囲
 
 
+	//----------------------------------------------------------------------
+	// 生成処理
+	//----------------------------------------------------------------------
+
+	/**
+	 * タスクオブジェクト初期化
+	 * @return 初期化に成功したらtrue
+	 */
+	bool CreateTask();
+
 	/**
 	 * 頂点バッファの生成
 	 * @return 初期化に成功したらtrue 失敗したらfalse
@@ -109,10 +121,10 @@ private:
 	bool CreateVertexBuffer();
 
 	/**
-	 * 頂点シェーダーの初期化
+	 * シェーダーの初期化
 	 * @return 初期化に成功したらtrue 失敗したらfalse
 	 */
-	bool CreateVertexShader();
+	bool CreateShader();
 
 	/**
 	 * 頂点入力レイアウトの初期化
@@ -121,26 +133,30 @@ private:
 	bool CreateVertexLayout();
 
 	/**
-	 * ピクセルシェーダーの初期化
-	 * @return 初期化に成功したらtrue 失敗したらfalse
-	 */
-	bool CreatePixelShader();
-
-	/**
 	 * 描画ステートの初期化
 	 * @return 初期化に成功したらtrue 失敗したらfalse
 	 */
 	bool CreateState();
 	
+
+	//----------------------------------------------------------------------
+	// 解放処理
+	//----------------------------------------------------------------------
+
+	/**
+	 * タスクオブジェクトの解放
+	 */
+	void ReleaseTask();
+
 	/**
 	 * 頂点バッファの解放
 	 */
 	void ReleaseVertexBuffer();
 
 	/**
-	 * 頂点シェーダーの解放
+	 * シェーダーの解放
 	 */
-	void ReleaseVertexShader();
+	void ReleaseShader();
 
 	/**
 	 * 頂点入力レイアウトの解放
@@ -148,14 +164,14 @@ private:
 	void ReleaseVertexLayout();
 
 	/**
-	 * ピクセルシェーダーの解放
-	 */
-	void ReleasePixelShader();
-
-	/**
 	 * ステートの解放
 	 */
 	void ReleaseState();
+
+
+	//----------------------------------------------------------------------
+	// その他処理
+	//----------------------------------------------------------------------
 
 	/**
 	 * インスタンスバッファへの書き込み
@@ -164,17 +180,17 @@ private:
 	bool WriteInstanceBuffer();
 
 
-	Lib::DrawTask*				m_pDrawTask;				//!< 描画タスクオブジェクト
-	Lib::UpdateTask*			m_pUpdateTask;				//!< 更新タスクオブジェクト
-	int							m_VertexShaderIndex;		//!< 頂点シェーダーインデックス
-	int							m_PixelShaderIndex;			//!< ピクセルシェーダーインデックス
+	Lib::DrawTask*				m_pDrawTask;				//!< 描画タスクオブジェクト.
+	Lib::UpdateTask*			m_pUpdateTask;				//!< 更新タスクオブジェクト.
+	int							m_VertexShaderIndex;		//!< 頂点シェーダーインデックス.
+	int							m_PixelShaderIndex;			//!< ピクセルシェーダーインデックス.
 	ID3D11Buffer*				m_pVertexBuffer;			//!< 頂点バッファ.
 	ID3D11Buffer*				m_pInstanceBuffer;			//!< インスタンシングバッファ.
-	ID3D11InputLayout*			m_pVertexLayout;			//!< 頂点入力レイアウト
-	ID3D11DepthStencilState*	m_pDepthStencilState;		//!< 深度ステンシルステート
+	ID3D11InputLayout*			m_pVertexLayout;			//!< 頂点入力レイアウト.
+	ID3D11DepthStencilState*	m_pDepthStencilState;		//!< 深度ステンシルステート.
 	ID3D11BlendState*			m_pBlendState;				//!< ブレンドステート.
-	VERTEX						m_pVertexData[VERTEX_NUM];	//!< 頂点データ
-	INSTANCE_DATA				m_pInstanceData[RAIN_NUM];	//!< インスタンスデータ
+	VERTEX						m_pVertexData[VERTEX_NUM];	//!< 頂点データ.
+	INSTANCE_DATA				m_pInstanceData[RAIN_NUM];	//!< インスタンスデータ.
 
 	RAIN_DATA					m_RainData[RAIN_NUM];
 
@@ -187,6 +203,8 @@ private:
 	int							m_TextureIndex;				//!< テクスチャインデックス
 	int							m_SoundIndex;				//!< サウンドインデックス
 
+	const Lib::KeyDevice::KEYSTATE* m_pKeyState;			//!< キーの状態
+	bool							m_IsActive;
 };
 
 

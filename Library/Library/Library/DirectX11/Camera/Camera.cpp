@@ -32,10 +32,14 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------------------------------------
-	void Camera::TransformView(const D3DXVECTOR3* _pEyePos, const D3DXVECTOR3* _pLookPos, float _viewAngle)
+	void Camera::TransformView(
+		const D3DXVECTOR3* _pEyePos,
+		const D3DXVECTOR3* _pLookPos,
+		const D3DXVECTOR3* _pUpVec,
+		float _viewAngle)
 	{
 		// ビュー座標変換行列の作成.
-		D3DXMatrixLookAtLH(&m_MatView, _pEyePos, _pLookPos, &D3DXVECTOR3(0, 1, 0));
+		D3DXMatrixLookAtLH(&m_MatView, _pEyePos, _pLookPos, _pUpVec);
 
 		// プロジェクション座標変換行列の作成.
 		D3DXMatrixPerspectiveFovLH(&m_MatProj, static_cast<float>(D3DXToRadian(_viewAngle)), m_Aspect, m_NearZ, m_FarZ);

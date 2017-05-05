@@ -30,6 +30,7 @@ namespace Lib
 		m_AnimationSpeed(1.0f),
 		m_AnimationPattern(ONE_ANIMATION),
 		m_IsReverse(false),
+		m_IsAnimationEnd(false),
 		m_pAnimationFunc(&Animation::OneAnimationControl)
 	{
 		Load(_pAnimationPath);
@@ -44,6 +45,14 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------
+	void Animation::AnimationStart()
+	{
+		m_CurrentFrame = 0;
+		m_AnimationCounter = 0;
+		m_IsReverse = false;
+		m_IsAnimationEnd = 0;
+	}
+
 	bool Animation::Update()
 	{
 		return (this->*m_pAnimationFunc)();
@@ -183,17 +192,21 @@ namespace Lib
 
 	bool Animation::OneAnimationControl()
 	{
-		m_AnimationCounter += m_AnimationSpeed;
-
-		if (m_AnimationCounter >= m_AnimationTime)
+		if (m_IsAnimationEnd == false)
 		{
-			m_AnimationCounter = 0.0f;
-			m_CurrentFrame++;
+			m_AnimationCounter += m_AnimationSpeed;
 
-			if (static_cast<int>(m_pFrame.size()) <= m_CurrentFrame)
+			if (m_AnimationCounter >= m_AnimationTime)
 			{
-				m_CurrentFrame = 0;
-				return true;
+				m_AnimationCounter = 0.0f;
+				m_CurrentFrame++;
+
+				if (static_cast<int>(m_pFrame.size()) <= m_CurrentFrame)
+				{
+					m_CurrentFrame--;
+					m_IsAnimationEnd = true;
+					return true;
+				}
 			}
 		}
 
@@ -220,33 +233,37 @@ namespace Lib
 	
 	bool Animation::ReverseOneAnimationControl()
 	{
-		m_AnimationCounter += m_AnimationSpeed;
-
-		if (!m_IsReverse)
+		if (m_IsAnimationEnd == false)
 		{
-			if (m_AnimationCounter >= m_AnimationTime)
-			{
-				m_AnimationCounter = 0.0f;
-				m_CurrentFrame++;
+			m_AnimationCounter += m_AnimationSpeed;
 
-				if (static_cast<int>(m_pFrame.size()) - 1 <= m_CurrentFrame)
+			if (!m_IsReverse)
+			{
+				if (m_AnimationCounter >= m_AnimationTime)
 				{
-					m_IsReverse = true;
+					m_AnimationCounter = 0.0f;
+					m_CurrentFrame++;
+
+					if (static_cast<int>(m_pFrame.size()) - 1 <= m_CurrentFrame)
+					{
+						m_IsReverse = true;
+					}
 				}
 			}
-		}
-		else
-		{
-			if (m_AnimationCounter >= m_AnimationTime)
+			else
 			{
-				m_AnimationCounter = 0.0f;
-				m_CurrentFrame--;
-
-				if (m_CurrentFrame > 0)
+				if (m_AnimationCounter >= m_AnimationTime)
 				{
-					m_CurrentFrame = 0;
-					m_IsReverse = false;
-					return true;
+					m_AnimationCounter = 0.0f;
+					m_CurrentFrame--;
+
+					if (m_CurrentFrame < 0)
+					{
+						m_IsAnimationEnd = true;
+						m_CurrentFrame = 0;
+						m_IsReverse = false;
+						return true;
+					}
 				}
 			}
 		}
@@ -278,7 +295,7 @@ namespace Lib
 				m_AnimationCounter = 0.0f;
 				m_CurrentFrame--;
 
-				if (m_CurrentFrame > 0)
+				if (m_CurrentFrame < 0)
 				{
 					m_CurrentFrame = 0;
 					m_IsReverse = false;

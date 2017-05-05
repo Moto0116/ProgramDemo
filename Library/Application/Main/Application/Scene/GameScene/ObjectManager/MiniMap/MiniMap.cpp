@@ -11,7 +11,7 @@
 
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "Main\Application\Scene\GameScene\MapDrawTask\MapDrawTask.h"
+#include "Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.h"
 
 
 //----------------------------------------------------------------------
@@ -68,6 +68,7 @@ bool MiniMap::Initialize()
 	}
 
 	m_pVertex->WriteConstantBuffer(&m_Pos);
+	m_pVertex->SetInverse(false);
 
 	return true;
 }
@@ -130,7 +131,7 @@ bool MiniMap::CreateTexture()
 	MapTextureDesc.Height = static_cast<UINT>(m_TextureHeight);
 	MapTextureDesc.MipLevels = 1;
 	MapTextureDesc.ArraySize = 1;
-	MapTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	MapTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	MapTextureDesc.SampleDesc.Count = 1;
 	MapTextureDesc.SampleDesc.Quality = 0;
 	MapTextureDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -236,7 +237,7 @@ void MiniMap::ReleaseTexture()
 
 void MiniMap::WriteConstantBuffer()
 {
-	m_pCamera->TransformView(&m_DefaultPos, &D3DXVECTOR3(0, 0, 0), m_ViewAngle);
+	m_pCamera->TransformView(&m_DefaultPos, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 1, 0), m_ViewAngle);
 
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
 	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResourceData)))

@@ -1,6 +1,6 @@
 ﻿/**
- * @file	マップへの描画タスククラス実装
- * @brief	MadDrawTask.cpp
+ * @file	MadDrawTask.cpp
+ * @brief	マップへの描画タスククラス実装
  * @author	morimoto
  */
 

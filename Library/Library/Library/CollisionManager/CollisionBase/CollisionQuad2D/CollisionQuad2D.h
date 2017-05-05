@@ -26,6 +26,26 @@ namespace Lib
 	{
 	public:
 		/**
+		 * 矩形のあたり判定の位置
+		 */
+		enum HIT
+		{
+			TOP_HIT = 1,	//!< 上部が当たっている
+			LEFT_HIT = 2,	//!< 左側が当たっている
+			RIGHT_HIT = 4,	//!< 右側が当たっている
+			BOTTOM_HIT = 8	//!< 画部が当たっている
+		};
+
+		/**
+		 * 衝突判定オブジェクトの情報を格納する構造体
+		 */
+		struct COLLISION_INFO
+		{
+			LPCSTR	pName;		//!< 当たったオブジェクトの名前
+			BYTE	HitData;	//!< 当たった部分
+		};
+
+		/**
 		 * コンストラクタ
 		 */
 		CollisionQuad2D();
@@ -36,29 +56,29 @@ namespace Lib
 		virtual ~CollisionQuad2D();
 
 		/**
-		 * 衝突オブジェクトの名前を追加する
+		 * 衝突オブジェクトの情報を追加する
 		 * @param[in] _pName 衝突したオブジェクトの名前
 		 */
-		void AddCollisionName(LPCTSTR _pName)
+		void AddCollisionInfo(COLLISION_INFO* _pInfo)
 		{
-			m_pCollisionNames.push_back(_pName);
+			m_CollisionInfos.push_back(*_pInfo);
 		}
 
 		/**
-		 * 衝突オブジェクトの名前を取得する
+		 * 衝突オブジェクトの情報を取得する
 		 * @return 衝突したオブジェクトの名前が格納されたコンテナ
 		 */
-		std::vector<LPCSTR>* GetCollisionNames()
+		std::vector<COLLISION_INFO>* GetCollisionInfo()
 		{
-			return &m_pCollisionNames;
+			return &m_CollisionInfos;
 		}
 
 		/**
-		 * 衝突オブジェクトの名前を破棄する
+		 * 衝突オブジェクトの情報を破棄する
 		 */
-		void ClearCollisionNames()
+		void ClearCollisionInfo()
 		{
-			m_pCollisionNames.clear();
+			m_CollisionInfos.clear();
 		}
 
 		/**
@@ -121,7 +141,7 @@ namespace Lib
 		D3DXVECTOR2		m_Size;	//!< あたり判定のサイズ
 		std::string		m_Name;	//!< あたり判定オブジェクトの名前
 
-		std::vector<LPCSTR> m_pCollisionNames;	// 衝突したオブジェクトの名前を格納するコンテナ
+		std::vector<COLLISION_INFO> m_CollisionInfos;	//!< 衝突したオブジェクトの情報
 
 	};
 }

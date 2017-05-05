@@ -17,7 +17,7 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	// Static Private Variables
 	//----------------------------------------------------------------------------------------------------
-	const D3DXCOLOR FbxLoader::m_DefaultAmbient = D3DXCOLOR(0.35f, 0.35f, 0.35f, 1.0f);
+	const D3DXCOLOR FbxLoader::m_DefaultAmbient = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
 
 	//----------------------------------------------------------------------------------------------------
 	// Constructor	Destructor
@@ -416,10 +416,8 @@ namespace Lib
 				MaterialData.Ambient.b = (float)lambert->Ambient.Get().mData[2] * (float)lambert->AmbientFactor.Get();
 				GetTextureName(lambert, fbxsdk::FbxSurfaceMaterial::sAmbient, &TextureFileName, &TextureUvSetName, &TextureFileCount);
 
-				if (MaterialData.Ambient == D3DXCOLOR(0, 0, 0, 0))
-				{
-					MaterialData.Ambient = m_DefaultAmbient;// アンビエントがなければ初期値代入.
-				}
+				MaterialData.Ambient = m_DefaultAmbient; ///@todo デフォルトのアンビエントを使うようにする
+
 
 				// ディフューズの取得.
 				MaterialData.Diffuse.r = (float)lambert->Diffuse.Get().mData[0] * (float)lambert->DiffuseFactor.Get();

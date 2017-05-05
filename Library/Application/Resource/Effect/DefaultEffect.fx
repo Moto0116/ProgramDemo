@@ -2,11 +2,9 @@
 #define NEAR 150.0f
 #define FOGCOLOR float4(1.0f, 1.0f, 1.0f, 1.0f)
 
-///@todo 暗くするための係数
-#define COLOR_DATA float4(0.6, 0.6, 0.6, 1)
-
 Texture2D g_Texture : register(t0);
 Texture2D g_DepthTexture : register(t2);
+Texture2D g_SkyCLUT : register(t3);
 SamplerState g_Sampler : register(s0);
 
 cbuffer model : register(b0)
@@ -20,6 +18,7 @@ cbuffer camera : register(b1)
 	matrix g_Proj;
 	float4 g_CameraPos;
 	float4 g_CameraDir;
+	float4 g_Aspect;
 };
 
 cbuffer light : register(b2)
@@ -28,6 +27,8 @@ cbuffer light : register(b2)
 	float4 g_LightDir;
 	matrix g_LightView;
 	matrix g_LightProj;
+	matrix g_LightMatrix;
+	float4 g_LightDot;
 };
 
 cbuffer Material : register(b3)
@@ -76,9 +77,10 @@ VS_OUTPUT VS(VS_INPUT In)
 	Out.LightUV.y = (LightUVData.y / LightUVData.w) * -0.5f + 0.5f;
 
 	// 法線とライトからカラー値を計算
-	float3 InvLightDir = -normalize(g_LightDir.xyz);
+	float3 InvLightDir = normalize(g_LightDir.xyz);
 	float3 Normal = normalize(In.Normal.xyz);
-	Out.Color = max(g_Ambient, dot(Normal, InvLightDir)) * COLOR_DATA;
+
+	Out.Color = max(g_Ambient, dot(Normal, InvLightDir));
 
 	Out.Distance = clamp((FAR - distance(In.Pos, g_CameraPos.xyz)) / (FAR - NEAR), 0.0f, 1.0f);
 
@@ -87,13 +89,18 @@ VS_OUTPUT VS(VS_INPUT In)
 
 float4 PS(VS_OUTPUT In) : SV_TARGET
 {
-	if (In.ZValue > (g_DepthTexture.Sample(g_Sampler, In.LightUV).r + 0.00003f))
+	if (In.ZValue > (g_DepthTexture.Sample(g_Sampler, In.LightUV).r + 0.00006f))
 	{
 		if (In.LightUV.x >= 0.01 && In.LightUV.x <= 0.99 && In.LightUV.y >= 0.01 && In.LightUV.y <= 0.99)
 		{
-			In.Color.rgb = In.Color.rgb * 0.6f;
+			In.Color.rgb = In.Color.rgb * 0.7f;
 		}
 	}
 
-	return g_Texture.Sample(g_Sampler, In.UV) * In.Color * In.Distance + FOGCOLOR * (1.0f - In.Distance);
+	return g_Texture.Sample(g_Sampler, In.UV) * 
+		In.Color * 
+		g_SkyCLUT.Sample(g_Sampler, float2(g_LightDot.x, 0.0f)) *
+		In.Distance + 
+		FOGCOLOR * 
+		(1.0f - In.Distance);
 }

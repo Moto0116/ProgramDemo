@@ -57,6 +57,11 @@ namespace Lib
 		virtual ~IAnimation() = 0;
 
 		/**
+		 * アニメーションの開始
+		 */
+		virtual void AnimationStart() = 0;
+
+		/**
 		 * アニメーションの更新
 		 * @return アニメーションが終了したらtrue 終了していなかったらfalse
 		 */
@@ -96,7 +101,7 @@ namespace Lib
 		 * 現在のフレームを取得する
 		 * @return 現在のアニメーションフレーム
 		 */
-		virtual ANIMATION_FRAME* GetCurrentFrame() const;
+		virtual ANIMATION_FRAME* GetCurrentFrame() const = 0;
 
 
 	private:

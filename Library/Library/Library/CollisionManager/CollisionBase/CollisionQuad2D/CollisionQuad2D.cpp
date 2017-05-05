@@ -1,6 +1,6 @@
 ﻿/**
- * @file	2D四角形衝突判定オブジェクトクラス実装
- * @brief	CollisionQuad2D.cpp
+ * @file	CollisionQuad2D.cpp
+ * @brief	2D四角形衝突判定オブジェクトクラス実装
  * @author	morimoto
  */
 

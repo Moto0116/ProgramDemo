@@ -22,9 +22,9 @@
 // Static Private Variables
 //----------------------------------------------------------------------
 const D3DXVECTOR2 Rain::m_DefaultSize = D3DXVECTOR2(0.2f, 0.2f);
-const D3DXVECTOR2 Rain::m_XRange = D3DXVECTOR2(-55, 130);
+const D3DXVECTOR2 Rain::m_XRange = D3DXVECTOR2(-55, 180);
 const D3DXVECTOR2 Rain::m_YRange = D3DXVECTOR2(80, 100);
-const D3DXVECTOR2 Rain::m_ZRange = D3DXVECTOR2(-55, 130);
+const D3DXVECTOR2 Rain::m_ZRange = D3DXVECTOR2(-55, 180);
 
 
 //----------------------------------------------------------------------
@@ -33,7 +33,8 @@ const D3DXVECTOR2 Rain::m_ZRange = D3DXVECTOR2(-55, 130);
 Rain::Rain(MainCamera* _pCamera) : 
 	m_pCamera(_pCamera),
 	m_RandDevice(),
-	m_MersenneTwister(m_RandDevice())
+	m_MersenneTwister(m_RandDevice()),
+	m_IsActive(false)
 {
 	for (int i = 0; i < RAIN_NUM; i++)
 	{
@@ -63,17 +64,10 @@ Rain::~Rain()
 //----------------------------------------------------------------------
 bool Rain::Initialize()
 {
-	// タスク生成処理
-	m_pDrawTask = new Lib::DrawTask();
-	m_pUpdateTask = new Lib::UpdateTask();
-
-	// タスクにオブジェクト設定
-	m_pDrawTask->SetDrawObject(this);
-	m_pUpdateTask->SetUpdateObject(this);
-
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
-
+	if (!CreateTask())
+	{
+		return false;
+	}
 
 	if (!CreateVertexBuffer())
 	{
@@ -85,7 +79,7 @@ bool Rain::Initialize()
 		return false;
 	}
 
-	if (!CreateVertexShader())
+	if (!CreateShader())
 	{
 		return false;
 	}
@@ -95,22 +89,14 @@ bool Rain::Initialize()
 		return false;
 	}
 
-	if (!CreatePixelShader())
-	{
-		return false;
-	}
-
 	if (!CreateState())
 	{
 		return false;
 	}
 
-
 	SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture("Resource\\Texture\\Ring.png", &m_TextureIndex);
 
 	SINGLETON_INSTANCE(Lib::SoundManager)->LoadSound("Resource\\Sound\\Rain.wav", &m_SoundIndex);
-	SINGLETON_INSTANCE(Lib::SoundManager)->GetSound(m_SoundIndex)->SoundOperation(Lib::SoundManager::PLAY_LOOP);
-
 
 	return true;
 }
@@ -123,104 +109,136 @@ void Rain::Finalize()
 	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_TextureIndex);
 
 	ReleaseState();
-	ReleasePixelShader();
 	ReleaseVertexLayout();
-	ReleaseVertexShader();
+	ReleaseShader();
 	ReleaseVertexBuffer();
-
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
-
-	delete m_pUpdateTask;
-	delete m_pDrawTask;
+	ReleaseTask();
 }
 
 void Rain::Update()
 {
-	// 雨の操作
-	for (int i = 0; i < RAIN_NUM; i++)
+	m_pKeyState = SINGLETON_INSTANCE(Lib::InputDeviceManager)->GetKeyState();
+
+	if (m_pKeyState[DIK_R] == Lib::KeyDevice::KEYSTATE::KEY_PUSH)
 	{
-		if (m_RainData[i].IsFall == true)
+		m_IsActive = !m_IsActive;
+
+		if (m_IsActive)
 		{
-			// 落下中であれば座標移動を行う
-			m_RainData[i].Pos.y -= 3.5f;
-
-			if (m_RainData[i].Pos.y <= -4.5f)
-			{
-				m_RainData[i].Pos.y = 0;
-				m_RainData[i].IsFall = false;
-
-				m_RainData[i].Scale.x = 2.0f;
-				m_RainData[i].Scale.y = 2.0f;
-				m_RainData[i].Scale.z = 2.0f;
-			}
+			SINGLETON_INSTANCE(Lib::SoundManager)->GetSound(m_SoundIndex)->SoundOperation(Lib::SoundManager::PLAY_LOOP);
 		}
 		else
 		{
-			// 落下中でなければ波紋を出す
-			m_RainData[i].Time++;
-
-			m_RainData[i].Scale.x += 0.6f;
-			m_RainData[i].Scale.y += 0.6f;
-			m_RainData[i].Scale.z += 0.6f;
-
-			if (m_RainData[i].Time == 35)
-			{
-				m_RainData[i].Time = 0;
-				m_RainData[i].IsFall = true;
-
-				m_RainData[i].Scale.x = 1.0f;
-				m_RainData[i].Scale.y = 45.0f;
-				m_RainData[i].Scale.z = 1.0f;
-
-				int Data = m_MersenneTwister();
-				m_RainData[i].Pos.x = m_XRange.x + (Data % static_cast<int>(m_XRange.y));
-				Data = m_MersenneTwister();
-				m_RainData[i].Pos.y = m_YRange.x + (Data % static_cast<int>(m_YRange.y));
-				Data = m_MersenneTwister();
-				m_RainData[i].Pos.z = m_ZRange.x + (Data % static_cast<int>(m_ZRange.y));
-			}
+			SINGLETON_INSTANCE(Lib::SoundManager)->GetSound(m_SoundIndex)->SoundOperation(Lib::SoundManager::STOP_RESET);
 		}
 	}
 
-	WriteInstanceBuffer();
+	if (m_IsActive == true)
+	{
+		// 雨の操作
+		for (int i = 0; i < RAIN_NUM; i++)
+		{
+			if (m_RainData[i].IsFall == true)
+			{
+				// 落下中であれば座標移動を行う
+				m_RainData[i].Pos.y -= 3.5f;
+
+				if (m_RainData[i].Pos.y <= -4.5f)
+				{
+					m_RainData[i].Pos.y = 0.1f;
+					m_RainData[i].IsFall = false;
+
+					m_RainData[i].Scale.x = 2.0f;
+					m_RainData[i].Scale.y = 2.0f;
+					m_RainData[i].Scale.z = 2.0f;
+				}
+			}
+			else
+			{
+				// 落下中でなければ波紋を出す
+				m_RainData[i].Time++;
+
+				m_RainData[i].Scale.x += 0.4f;
+				m_RainData[i].Scale.y += 0.4f;
+				m_RainData[i].Scale.z += 0.4f;
+
+				if (m_RainData[i].Time == 35)
+				{
+					m_RainData[i].Time = 0;
+					m_RainData[i].IsFall = true;
+
+					m_RainData[i].Scale.x = 1.0f;
+					m_RainData[i].Scale.y = 45.0f;
+					m_RainData[i].Scale.z = 1.0f;
+
+					int Data = m_MersenneTwister();
+					m_RainData[i].Pos.x = m_XRange.x + (Data % static_cast<int>(m_XRange.y));
+					Data = m_MersenneTwister();
+					m_RainData[i].Pos.y = m_YRange.x + (Data % static_cast<int>(m_YRange.y));
+					Data = m_MersenneTwister();
+					m_RainData[i].Pos.z = m_ZRange.x + (Data % static_cast<int>(m_ZRange.y));
+				}
+			}
+		}
+
+		WriteInstanceBuffer();
+	}
 }
 
 void Rain::Draw()
 {
-	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	pContext->VSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), NULL, 0);
-	pContext->PSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), NULL, 0);
-	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	if (m_IsActive == true)
+	{
+		ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+		pContext->VSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), NULL, 0);
+		pContext->PSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), NULL, 0);
+		pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	pContext->IASetInputLayout(m_pVertexLayout);
+		pContext->IASetInputLayout(m_pVertexLayout);
 
-	pContext->OMSetDepthStencilState(m_pDepthStencilState, 0);
-	pContext->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
+		pContext->OMSetDepthStencilState(m_pDepthStencilState, 0);
+		pContext->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
 
-	ID3D11Buffer* pBuffer[2] = { m_pVertexBuffer , m_pInstanceBuffer};
-	UINT Stride[2] = { sizeof(VERTEX), sizeof(INSTANCE_DATA) };
-	UINT Offset[2] = { 0, 0 };
-	pContext->IASetVertexBuffers(0, 2, pBuffer, Stride, Offset);
+		ID3D11Buffer* pBuffer[2] = { m_pVertexBuffer, m_pInstanceBuffer };
+		UINT Stride[2] = { sizeof(VERTEX), sizeof(INSTANCE_DATA) };
+		UINT Offset[2] = { 0, 0 };
+		pContext->IASetVertexBuffers(0, 2, pBuffer, Stride, Offset);
 
-	ID3D11ShaderResourceView* pResource = SINGLETON_INSTANCE(Lib::TextureManager)->GetTexture(m_TextureIndex)->Get();
-	pContext->PSSetShaderResources(0, 1, &pResource);
+		ID3D11ShaderResourceView* pResource = SINGLETON_INSTANCE(Lib::TextureManager)->GetTexture(m_TextureIndex)->Get();
+		pContext->PSSetShaderResources(0, 1, &pResource);
 
-	pContext->DrawInstanced(VERTEX_NUM, RAIN_NUM, 0, 0);
+		pContext->DrawInstanced(VERTEX_NUM, RAIN_NUM, 0, 0);
+	}
 }
 
 
 //----------------------------------------------------------------------
 // Private Functions
 //----------------------------------------------------------------------
+bool Rain::CreateTask()
+{
+	// タスク生成処理
+	m_pDrawTask = new Lib::DrawTask();
+	m_pUpdateTask = new Lib::UpdateTask();
+
+	// タスクにオブジェクト設定
+	m_pDrawTask->SetDrawObject(this);
+	m_pUpdateTask->SetUpdateObject(this);
+
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
+
+	return true;
+}
+
 bool Rain::CreateVertexBuffer()
 {
 	VERTEX VertexData[VERTEX_NUM] =
 	{
-		VERTEX{ D3DXVECTOR3(-m_DefaultSize.x / 2, -m_DefaultSize.y / 2, 0), D3DXVECTOR2(0, 0), 0x10aaaaaa },
-		VERTEX{ D3DXVECTOR3(m_DefaultSize.x  / 2, -m_DefaultSize.y / 2, 0), D3DXVECTOR2(1, 0), 0x10aaaaaa },
-		VERTEX{ D3DXVECTOR3(-m_DefaultSize.x / 2,  m_DefaultSize.y / 2, 0), D3DXVECTOR2(0, 1), 0x0faaaaaa },
-		VERTEX{ D3DXVECTOR3(m_DefaultSize.x  / 2,  m_DefaultSize.y / 2, 0), D3DXVECTOR2(1, 1), 0x0faaaaaa }
+		VERTEX{ D3DXVECTOR3(-m_DefaultSize.x / 2, -m_DefaultSize.y / 2, 0), D3DXVECTOR2(0, 0), 0x24aaaaaa },
+		VERTEX{ D3DXVECTOR3(m_DefaultSize.x  / 2, -m_DefaultSize.y / 2, 0), D3DXVECTOR2(1, 0), 0x24aaaaaa },
+		VERTEX{ D3DXVECTOR3(-m_DefaultSize.x / 2,  m_DefaultSize.y / 2, 0), D3DXVECTOR2(0, 1), 0x20aaaaaa },
+		VERTEX{ D3DXVECTOR3(m_DefaultSize.x  / 2,  m_DefaultSize.y / 2, 0), D3DXVECTOR2(1, 1), 0x20aaaaaa }
 	};
 
 	for (int i = 0; i < VERTEX_NUM; i++)
@@ -288,7 +306,7 @@ bool Rain::CreateVertexBuffer()
 	return true;
 }
 
-bool Rain::CreateVertexShader()
+bool Rain::CreateShader()
 {
 	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\PointSprite.fx"),
@@ -296,6 +314,15 @@ bool Rain::CreateVertexShader()
 		&m_VertexShaderIndex))
 	{
 		OutputErrorLog("頂点シェーダーの読み込みに失敗しました");
+		return false;
+	}
+
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		TEXT("Resource\\Effect\\PointSprite.fx"),
+		"PS",
+		&m_PixelShaderIndex))
+	{
+		OutputErrorLog("ピクセルシェーダーの読み込みに失敗しました");
 		return false;
 	}
 
@@ -324,20 +351,6 @@ bool Rain::CreateVertexLayout()
 		&m_pVertexLayout)))
 	{
 		OutputErrorLog("入力レイアウトの生成に失敗しました");
-		return false;
-	}
-
-	return true;
-}
-
-bool Rain::CreatePixelShader()
-{
-	if(!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
-		TEXT("Resource\\Effect\\PointSprite.fx"),
-		"PS",
-		&m_PixelShaderIndex))
-	{
-		OutputErrorLog("ピクセルシェーダーの読み込みに失敗しました");
 		return false;
 	}
 
@@ -384,13 +397,23 @@ bool Rain::CreateState()
 	return true;
 }
 
+void Rain::ReleaseTask()
+{
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
+
+	delete m_pUpdateTask;
+	delete m_pDrawTask;
+}
+
 void Rain::ReleaseVertexBuffer()
 {
 	SafeRelease(m_pVertexBuffer);
 }
 
-void Rain::ReleaseVertexShader()
+void Rain::ReleaseShader()
 {
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
 	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
 }
 
@@ -399,29 +422,10 @@ void Rain::ReleaseVertexLayout()
 	SafeRelease(m_pVertexLayout);
 }
 
-void Rain::ReleasePixelShader()
-{
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
-}
-
 void Rain::ReleaseState()
 {
 	SafeRelease(m_pDepthStencilState);
 	SafeRelease(m_pBlendState);
-}
-
-
-///@todo 仮コード
-void GetBillBoardRotation(D3DXVECTOR3* _pBillPos, D3DXVECTOR3* _pTargetPos, D3DXMATRIX* _pRot)
-{
-	D3DXMatrixIdentity(_pRot);
-	D3DXMatrixLookAtLH(_pRot, _pTargetPos, _pBillPos, &D3DXVECTOR3(0, 1, 0));
-	D3DXMatrixInverse(_pRot, NULL, _pRot);
-
-	// 座標移動は消しておく
-	_pRot->_41 = 0.0f;
-	_pRot->_42 = 0.0f;
-	_pRot->_43 = 0.0f;
 }
 
 bool Rain::WriteInstanceBuffer()
@@ -443,24 +447,21 @@ bool Rain::WriteInstanceBuffer()
 
 			if (m_RainData[i].IsFall == true)
 			{
-				GetBillBoardRotation(&m_RainData[i].Pos, &m_pCamera->GetPos(), &MatRotate);
+				m_pCamera->GetBillBoardRotation(&m_RainData[i].Pos, &MatRotate);
 				D3DXMatrixScaling(&MatWorld, m_RainData[i].Scale.x, m_RainData[i].Scale.y, m_RainData[i].Scale.z);
 				D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
 				D3DXMatrixRotationY(&MatRotate, static_cast<float>(D3DXToRadian(180)));	// こっち側向くように反転
-				D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
-				D3DXMatrixTranslation(&MatTranslate, m_RainData[i].Pos.x, m_RainData[i].Pos.y, m_RainData[i].Pos.z);
-				D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatTranslate);
-				D3DXMatrixTranspose(&InstanceData[i].Mat, &MatWorld);
 			}
 			else
 			{
 				D3DXMatrixScaling(&MatWorld, m_RainData[i].Scale.x, m_RainData[i].Scale.y, m_RainData[i].Scale.z);
 				D3DXMatrixRotationX(&MatRotate, static_cast<float>(D3DXToRadian(-90)));	// 上を向くように反転
-				D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
-				D3DXMatrixTranslation(&MatTranslate, m_RainData[i].Pos.x, m_RainData[i].Pos.y, m_RainData[i].Pos.z);
-				D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatTranslate);
-				D3DXMatrixTranspose(&InstanceData[i].Mat, &MatWorld);
 			}
+
+			D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
+			D3DXMatrixTranslation(&MatTranslate, m_RainData[i].Pos.x, m_RainData[i].Pos.y, m_RainData[i].Pos.z);
+			D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatTranslate);
+			D3DXMatrixTranspose(&InstanceData[i].Mat, &MatWorld);
 
 			InstanceData[i].Pos = m_RainData[i].Pos;
 		}
@@ -472,5 +473,4 @@ bool Rain::WriteInstanceBuffer()
 
 	return false;
 }
-
 

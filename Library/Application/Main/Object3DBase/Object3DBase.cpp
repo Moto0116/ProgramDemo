@@ -12,6 +12,8 @@
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "DirectX11\ShaderManager\ShaderManager.h"
+#include "DirectX11\TextureManager\TextureManager.h"
+#include "DirectX11\TextureManager\ITexture\ITexture.h"
 
 
 Object3DBase::Object3DBase() : 
@@ -27,16 +29,19 @@ Object3DBase::Object3DBase() :
 	m_pUpdateTask = new Lib::UpdateTask();
 	m_pDepthDrawTask = new DepthDrawTask();
 	m_pMapDrawTask = new MapDrawTask();
+	m_pCubeMapDrawTask = new CubeMapDrawTask();
 
 	// タスクにオブジェクト設定
 	m_pDrawTask->SetDrawObject(this);
 	m_pUpdateTask->SetUpdateObject(this);
 	m_pDepthDrawTask->SetDrawObject(this);
 	m_pMapDrawTask->SetDrawObject(this);
+	m_pCubeMapDrawTask->SetDrawObject(this);
 }
 
 Object3DBase::~Object3DBase()
 {
+	delete m_pCubeMapDrawTask;
 	delete m_pMapDrawTask;
 	delete m_pDepthDrawTask;
 	delete m_pUpdateTask;
@@ -68,23 +73,38 @@ void Object3DBase::MapDraw()
 {
 }
 
+void Object3DBase::CubeMapDraw()
+{
+}
+
 void Object3DBase::ShaderSetup()
 {
-	// 頂点シェーダーとピクセルシェーダーの設定
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+
+	pContext->VSSetShader(
 		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), 
 		NULL, 
 		0);
 	
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShader(
+	pContext->PSSetShader(
 		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), 
 		NULL,
 		0);
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetShader(
+	pContext->GSSetShader(
 		NULL,
 		NULL,
 		0);
+}
+
+void Object3DBase::TextureSetup()
+{
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+
+	ID3D11ShaderResourceView* pResource =
+		SINGLETON_INSTANCE(Lib::TextureManager)->GetTexture(m_SkyCLUTIndex)->Get();
+
+	pContext->PSSetShaderResources(3, 1, &pResource);
 }
 
 void Object3DBase::VertexLayoutSetup()
@@ -111,14 +131,21 @@ bool Object3DBase::CreateShader()
 	return true;
 }
 
+bool Object3DBase::CreateTexture()
+{
+	SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(TEXT("Resource\\Texture\\MainLightCLUT.png"), &m_SkyCLUTIndex);
+
+	return true;
+}
+
 bool Object3DBase::CreateVertexLayout()
 {
 	// 入力レイアウトの設定
 	D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(D3DXVECTOR3), D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(D3DXVECTOR3) + sizeof(D3DXVECTOR3), D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                                         D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(D3DXVECTOR3),                       D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, sizeof(D3DXVECTOR3) + sizeof(D3DXVECTOR3), D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
 	// 入力レイアウトの生成
@@ -219,6 +246,11 @@ void Object3DBase::ReleaseShader()
 {
 	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
 	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
+}
+
+void Object3DBase::ReleaseTexture()
+{
+	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
 }
 
 void Object3DBase::ReleaseVertexLayout()

@@ -81,6 +81,13 @@ public:
 	{
 		return m_Pos;
 	}
+	
+	/**
+	 * ビルボード回転行列取得
+	 * @param[in] _pBillPos ビルボードオブジェクトの座標位置
+	 * @param[out] _pRotation 回転行列の出力先
+	 */
+	void GetBillBoardRotation(D3DXVECTOR3* _pBillPos, D3DXMATRIX* _pRotation);
 
 
 private:
@@ -93,6 +100,7 @@ private:
 		D3DXMATRIX Proj;
 		D3DXVECTOR4	CameraPos;
 		D3DXVECTOR4	CameraDir;
+		D3DXVECTOR4 Aspect;
 	};
 
 
@@ -173,6 +181,7 @@ private:
 	Lib::Camera*					m_pCamera;			//!< カメラオブジェクト
 	D3DXVECTOR3						m_Pos;				//!< カメラ座標
 	D3DXVECTOR3						m_LookPoint;		//!< カメラの注視点
+	D3DXVECTOR3						m_UpVec;			//!< カメラの上方向ベクトル
 	D3DXVECTOR2						m_CameraAngle;		//!< カメラの画角
 	ID3D11Buffer*					m_pConstantBuffer;	//!< 定数バッファ
 	Lib::MouseDevice::MOUSESTATE	m_MouseState;		//!< マウスの状態
@@ -181,6 +190,7 @@ private:
 	float							m_ZoomSpeed;		//!< カメラのズーム速度
 	float							m_CameraLength;		//!< カメラの注視点の距離
 	bool							m_IsCameraControl;	//!< カメラを操作したか
+	D3DXVECTOR2						m_Angle;
 
 };
 

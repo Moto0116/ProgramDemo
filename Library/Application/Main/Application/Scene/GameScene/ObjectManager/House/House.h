@@ -10,7 +10,7 @@
 // Include
 //----------------------------------------------------------------------
 #include "Main\Object3DBase\Object3DBase.h"
-#include "Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h"
+#include "Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
@@ -64,15 +64,55 @@ public:
 	 */
 	virtual void MapDraw();
 
+	/**
+	 * キューブマップへの描画
+	 */
+	virtual void CubeMapDraw();
+
 
 private:
-	static D3DXVECTOR3 m_DefaultScale;		//!< デフォルトスケーリング値
-	static int	m_ModelIndex;				//!< モデルのインデックス
-	static int	m_ShadowVertexShaderIndex;	//!< 深度値描画の頂点シェーダーインデックス
-	static int	m_ShadowPixelShaderIndex;	//!< 深度値描画のピクセルシェーダーインデックス
-	static int	m_MapVertexShaderIndex;		//!< マップ描画の頂点シェーダーインデックス
-	static int	m_MapPixelShaderIndex;		//!< マップ描画のピクセルシェーダーインデックス
+	static D3DXVECTOR3 m_DefaultScale;			//!< デフォルトスケーリング値
+	static int	m_ModelIndex;					//!< モデルのインデックス
+	static int	m_ShadowVertexShaderIndex;		//!< 深度値描画の頂点シェーダーインデックス
+	static int	m_ShadowPixelShaderIndex;		//!< 深度値描画のピクセルシェーダーインデックス
+	static int	m_MapVertexShaderIndex;			//!< マップ描画の頂点シェーダーインデックス
+	static int	m_MapPixelShaderIndex;			//!< マップ描画のピクセルシェーダーインデックス
+	static int	m_CubeMapVertexShaderIndex;		//!< キューブマップ描画の頂点シェーダーインデックス
+	static int	m_CubeMapGeometryShaderIndex;	//!< キューブマップ描画のジオメトリシェーダーインデックス
+	static int	m_CubeMapPixelShaderIndex;		//!< キューブマップ描画のピクセルシェーダーインデックス
 
+	/**
+	 * シャドウマップシェーダの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateShadowShader();
+
+	/**
+	 * マップシェーダの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateMapShader();
+
+	/**
+	 * キューブマップシェーダの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateCubeMapShader();
+
+	/**
+	 * シャドウマップシェーダの破棄
+	 */
+	void ReleaseShadowShader();
+
+	/**
+	 * マップシェーダの破棄
+	 */
+	void ReleaseMapShader();
+
+	/**
+	 * キューブマップシェーダの破棄
+	 */
+	void ReleaseCubeMapShader();
 
 };
 

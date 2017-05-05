@@ -32,13 +32,18 @@ namespace Lib
 		/**
 		 * デストラクタ
 		 */
-		~Animation();
+		virtual ~Animation();
+
+		/**
+		 * アニメーションの開始
+		 */
+		virtual void AnimationStart();
 
 		/**
 		 * アニメーションの更新
 		 * @return アニメーションが終了したらtrue 終了していなかったらfalse
 		 */
-		bool Update();
+		virtual bool Update();
 
 		/**
 		 * アニメーションのパターンを設定する(設定前のフレーム等は初期化される)
@@ -117,6 +122,7 @@ namespace Lib
 		float							m_AnimationSpeed;	//!< アニメーションを行うスピード.
 		ANIMATION_PATTERN				m_AnimationPattern;	//!< アニメーションのパターン.
 		bool							m_IsReverse;		//!< 反転しているか.
+		bool							m_IsAnimationEnd;	//!< アニメーションが終了しているか.
 		bool(Animation::*m_pAnimationFunc)();				//!< アニメーション更新関数ポインタ.
 
 	};

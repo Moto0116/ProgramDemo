@@ -30,7 +30,7 @@ namespace Lib
 
 		enum RENDER_TARGET
 		{
-			DEFAULT_TARGET = 0
+			BACKBUFFER_TARGET = 0
 		};
 
 		/**
@@ -50,6 +50,11 @@ namespace Lib
 		 * @param[in] _stage 初期化するステージ
 		 */
 		void BeginScene(int _stage);
+
+		/**
+		 * シーンの切り替えを行う
+		 */
+		void SetScene(int _stage);
 
 		/**
 		 * 描画後処理
@@ -126,6 +131,24 @@ namespace Lib
 		}
 
 		/**
+		 * バックバッファの取得
+		 * @return バックバッファ
+		 */
+		inline ID3D11Texture2D* GetBackBuffer()
+		{
+			return m_pBackBuffer;
+		}
+
+		/**
+		 * 深度バッファの取得
+		 * @return 深度バッファ
+		 */
+		inline ID3D11Texture2D* GetDepthStencil()
+		{
+			return m_pDepthStencilBuffer;
+		}
+
+		/**
 		 * フルスクリーン設定を行う
 		 * @param[in] _isFullScreenState フルスクリーンの設定
 		 */
@@ -175,11 +198,11 @@ namespace Lib
 		IDXGIAdapter*			m_pAdapter;				//!< DXGIのアダプタ.
 		IDXGIFactory*			m_pDXGIFactory;			//!< DXGIのファクトリ.
 		IDXGISwapChain*			m_pDXGISwapChain;		//!< スワップチェイン.
-		ID3D11Texture2D*		m_pBackBuffer;			//!< バックバッファ.
+		ID3D11Texture2D*		m_pBackBuffer;			//!< バックバッファテクスチャ.
 		
 		float					m_ClearColor[m_RenderTargetNum][4];		//!< バッファをクリアするときのカラー値.
 		ID3D11RenderTargetView* m_pRenderTargetView[m_RenderTargetNum];	//!< バックバッファのレンダーターゲットビュー.
-		ID3D11Texture2D*		m_pDepthStencilBuffer;					//!< 深度ステンシルバッファ.
+		ID3D11Texture2D*		m_pDepthStencilBuffer;					//!< 深度ステンシルバッファテクスチャ.
 		ID3D11DepthStencilView* m_pDepthStencilView[m_RenderTargetNum];	//!< 深度ステンシルビュー.
 		D3D11_VIEWPORT			m_ViewPort[m_RenderTargetNum];			//!< ビューポート.
 

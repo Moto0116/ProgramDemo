@@ -19,8 +19,9 @@
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
-#include "DepthDrawTask\DepthDrawTask.h"
-#include "MapDrawTask\MapDrawTask.h"
+#include "Task\DepthDrawTask\DepthDrawTask.h"
+#include "Task\MapDrawTask\MapDrawTask.h"
+#include "Task\CubeMapDrawTask\CubeMapDrawTask.h"
 
 
 //----------------------------------------------------------------------
@@ -43,6 +44,7 @@ bool GameScene::Initialize()
 {
 	SINGLETON_CREATE(Lib::UpdateTaskManager);
 	SINGLETON_CREATE(Lib::DrawTaskManager);
+	SINGLETON_CREATE(CubeMapDrawTaskManager);
 	SINGLETON_CREATE(DepthDrawTaskManager);
 	SINGLETON_CREATE(MapDrawTaskManager);
 
@@ -120,6 +122,7 @@ void GameScene::Finalize()
 
 	SINGLETON_DELETE(MapDrawTaskManager);
 	SINGLETON_DELETE(DepthDrawTaskManager);
+	SINGLETON_DELETE(CubeMapDrawTaskManager);
 	SINGLETON_DELETE(Lib::DrawTaskManager);
 	SINGLETON_DELETE(Lib::UpdateTaskManager);
 }
@@ -132,6 +135,7 @@ void GameScene::Update()
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_A);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_S);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_D);
+	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_R);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->MouseUpdate();
 
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
@@ -150,9 +154,13 @@ void GameScene::Update()
 	Lib::Debugger::EndTimer();
 	Lib::Debugger::OutputDebugLog("DepthDraw : %d\n\n", Lib::Debugger::GetTime());
 
+	Lib::Debugger::StartTimer();
+	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->Run();
+	Lib::Debugger::EndTimer();
+	Lib::Debugger::OutputDebugLog("CubeMapDraw : %d\n\n", Lib::Debugger::GetTime());
 
 	Lib::Debugger::StartTimer();
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(Lib::GraphicsDevice::DEFAULT_TARGET);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(Lib::GraphicsDevice::BACKBUFFER_TARGET);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->EndScene();
 	Lib::Debugger::EndTimer();

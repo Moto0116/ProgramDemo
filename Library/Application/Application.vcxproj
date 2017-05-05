@@ -74,12 +74,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\House.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Field\Field.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\FieldManager.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\GameScene.cpp" />
     <ClCompile Include="Main\Application\Application.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.cpp" />
@@ -89,18 +90,23 @@
     <ClCompile Include="Main\Object2DBase\Object2DBase.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\TessellationObject\TessellationObject.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\MapDrawTask\MapDrawTask.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Rain\Rain.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Smoke\Smoke.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Water\Water.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Snow\Snow.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\DepthDrawTask\DepthDrawTask.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\House.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Field\Field.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\FieldManager.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\GameScene.h" />
     <ClInclude Include="Main\Application\Application.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.h" />
@@ -109,12 +115,26 @@
     <ClInclude Include="Main\Object2DBase\Object2DBase.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\TessellationObject\TessellationObject.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\MapDrawTask\MapDrawTask.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Rain\Rain.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Smoke\Smoke.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Water\Water.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Snow\Snow.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resource\Effect\CubeMap.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+    </FxCompile>
     <FxCompile Include="Resource\Effect\DefaultEffect.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </EntryPointName>
@@ -145,7 +165,37 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Resource\Effect\GroundEffect.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\MainLight.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resource\Effect\MiniMap.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\MountainEffect.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
@@ -165,7 +215,27 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Resource\Effect\SkyEffect.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Resource\Effect\Tessellation.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\Water.fx">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>

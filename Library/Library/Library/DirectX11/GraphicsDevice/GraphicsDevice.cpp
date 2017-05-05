@@ -89,6 +89,12 @@ namespace Lib
 		m_pDeviceContext->RSSetViewports(1, &m_ViewPort[_stage]);
 	}
 
+	void GraphicsDevice::SetScene(int _stage)
+	{
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView[_stage], m_pDepthStencilView[_stage]);
+		m_pDeviceContext->RSSetViewports(1, &m_ViewPort[_stage]);
+	}
+
 	void GraphicsDevice::EndScene()
 	{
 		m_pDXGISwapChain->Present(1, 0);
@@ -141,7 +147,7 @@ namespace Lib
 
 		if (_pViewPort == NULL)
 		{
-			m_ViewPort[_stage] = m_ViewPort[DEFAULT_TARGET];
+			m_ViewPort[_stage] = m_ViewPort[BACKBUFFER_TARGET];
 		}
 		else
 		{
@@ -231,7 +237,7 @@ namespace Lib
 		SwapChainDesc.BufferDesc.Height = m_WindowRect.bottom - m_WindowRect.top;
 		SwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
 		SwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-		SwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		SwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		SwapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 		SwapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 		SwapChainDesc.SampleDesc.Count = 1;
@@ -263,7 +269,7 @@ namespace Lib
 
 
 		// レンダーターゲットビューの作成に失敗しました.
-		if (FAILED(m_pDevice->CreateRenderTargetView(m_pBackBuffer, NULL, &m_pRenderTargetView[DEFAULT_TARGET])))
+		if (FAILED(m_pDevice->CreateRenderTargetView(m_pBackBuffer, NULL, &m_pRenderTargetView[BACKBUFFER_TARGET])))
 		{
 			OutputErrorLog("レンダーターゲットビューの作成に失敗しました");
 			ReleaseDisplay();
@@ -293,25 +299,31 @@ namespace Lib
 		}
 
 		// 深度ステンシルビューの作成.
-		if (FAILED(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer, NULL, &m_pDepthStencilView[DEFAULT_TARGET])))
+		if (FAILED(m_pDevice->CreateDepthStencilView(
+			m_pDepthStencilBuffer, 
+			NULL, 
+			&m_pDepthStencilView[BACKBUFFER_TARGET])))
 		{
 			OutputErrorLog("深度ステンシルビューの作成に失敗しました");
 			ReleaseDisplay();
 			return false;
 		}
 
-		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView[DEFAULT_TARGET], m_pDepthStencilView[DEFAULT_TARGET]); // 描画先に設定.
+		m_pDeviceContext->OMSetRenderTargets(
+			1,
+			&m_pRenderTargetView[BACKBUFFER_TARGET],
+			m_pDepthStencilView[BACKBUFFER_TARGET]); // 描画先に設定.
 
 
 		// ビューポートの設定.
 		ZeroMemory(&m_ViewPort, sizeof(m_ViewPort));
-		m_ViewPort[DEFAULT_TARGET].TopLeftX = 0;
-		m_ViewPort[DEFAULT_TARGET].TopLeftY = 0;
-		m_ViewPort[DEFAULT_TARGET].Width = static_cast<float>(m_WindowRect.right - m_WindowRect.left);
-		m_ViewPort[DEFAULT_TARGET].Height = static_cast<float>(m_WindowRect.bottom - m_WindowRect.top);
-		m_ViewPort[DEFAULT_TARGET].MinDepth = 0.0f;
-		m_ViewPort[DEFAULT_TARGET].MaxDepth = 1.0f;
-		m_pDeviceContext->RSSetViewports(1, &m_ViewPort[DEFAULT_TARGET]);
+		m_ViewPort[BACKBUFFER_TARGET].TopLeftX = 0;
+		m_ViewPort[BACKBUFFER_TARGET].TopLeftY = 0;
+		m_ViewPort[BACKBUFFER_TARGET].Width = static_cast<float>(m_WindowRect.right - m_WindowRect.left);
+		m_ViewPort[BACKBUFFER_TARGET].Height = static_cast<float>(m_WindowRect.bottom - m_WindowRect.top);
+		m_ViewPort[BACKBUFFER_TARGET].MinDepth = 0.0f;
+		m_ViewPort[BACKBUFFER_TARGET].MaxDepth = 1.0f;
+		m_pDeviceContext->RSSetViewports(1, &m_ViewPort[BACKBUFFER_TARGET]);
 
 
 		// ラスタライザステートの設定.
@@ -349,9 +361,9 @@ namespace Lib
 	void GraphicsDevice::ReleaseDisplay()
 	{
 		SafeRelease(m_pRasterizerState);
-		SafeRelease(m_pDepthStencilView[DEFAULT_TARGET]);
+		SafeRelease(m_pDepthStencilView[BACKBUFFER_TARGET]);
 		SafeRelease(m_pDepthStencilBuffer);
-		SafeRelease(m_pRenderTargetView[DEFAULT_TARGET]);
+		SafeRelease(m_pRenderTargetView[BACKBUFFER_TARGET]);
 		SafeRelease(m_pBackBuffer);
 		SafeRelease(m_pDXGISwapChain);
 		SafeRelease(m_pDXGIFactory);

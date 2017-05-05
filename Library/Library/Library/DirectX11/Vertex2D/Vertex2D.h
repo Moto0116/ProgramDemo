@@ -133,7 +133,7 @@ namespace Lib
 
 		/**
 		 * 画像が反転しているのか設定
-		 * @param[in] _isInverse 画像が反転しているか
+		 * @param[in] _isInverse 画像が反転しているか(アニメーション使用時にしか影響しない)
 		 */
 		inline void SetInverse(bool _isInverse)
 		{

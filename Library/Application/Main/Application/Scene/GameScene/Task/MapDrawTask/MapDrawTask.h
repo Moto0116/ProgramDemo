@@ -1,6 +1,6 @@
 ﻿/**
- * @file	マップへの描画タスククラス定義
- * @brief	MadDrawTask.h
+ * @file	MadDrawTask.h
+ * @brief	マップへの描画タスククラス定義
  * @author	morimoto
  */
 #ifndef MAPDRAWTASK_H

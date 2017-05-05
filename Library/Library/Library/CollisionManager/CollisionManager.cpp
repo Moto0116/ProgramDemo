@@ -31,13 +31,13 @@ namespace Lib
 	//----------------------------------------------------------------------
 	void CollisionManager::Run()
 	{
-		for (auto itr = m_pQuadCollision.begin(); itr != m_pQuadCollision.end(); itr++)
+		for (unsigned int i = 0; i < m_pQuadCollision.size(); i++)
 		{
-			for (auto itr2 = itr++; itr2 != m_pQuadCollision.end(); itr2++)
+			for (unsigned int j = i + 1; j < m_pQuadCollision.size(); j++)
 			{
-				if ((*itr)->GetFilter() & (*itr2)->GetFilter())	///@todo 要チェック
+				if (m_pQuadCollision[i]->GetFilter() & m_pQuadCollision[j]->GetFilter())
 				{
-					CollisionCheck(*itr, *itr2);
+					CollisionCheck(m_pQuadCollision[i], m_pQuadCollision[j]);
 				}
 			}
 		}
@@ -72,14 +72,46 @@ namespace Lib
 		D3DXVECTOR2 Size1 = _pCollision1->GetSize();
 		D3DXVECTOR2 Size2 = _pCollision2->GetSize();
 
+		// 衝突しているかチェック
 		if ((Pos1.x - Size1.x / 2) < (Pos2.x + Size2.x / 2) &&
 			(Pos1.x + Size1.x / 2) > (Pos2.x - Size2.x / 2))
 		{
 			if ((Pos1.y - Size1.y / 2) < (Pos2.y + Size2.y / 2) &&
 				(Pos1.y + Size1.y / 2) > (Pos2.y - Size2.y / 2))
 			{
-				_pCollision1->AddCollisionName(_pCollision2->GetName());
-				_pCollision2->AddCollisionName(_pCollision1->GetName());
+				CollisionQuad2D::COLLISION_INFO Info1, Info2;
+
+				Info1.pName = _pCollision1->GetName();
+				Info2.pName = _pCollision2->GetName();
+				Info1.HitData = 0;
+				Info2.HitData = 0;
+
+				if ((Pos1.x - Size1.x / 2) < (Pos2.x - Size2.x / 2))
+				{
+					Info1.HitData |= CollisionQuad2D::RIGHT_HIT;
+					Info2.HitData |= CollisionQuad2D::LEFT_HIT;
+				}
+
+				if ((Pos1.x + Size1.x / 2) > (Pos2.x + Size2.x / 2))
+				{
+					Info1.HitData |= CollisionQuad2D::LEFT_HIT;
+					Info2.HitData |= CollisionQuad2D::RIGHT_HIT;
+				}
+
+				if ((Pos1.y - Size1.y / 2) < (Pos2.y - Size2.y / 2))
+				{
+					Info1.HitData |= CollisionQuad2D::BOTTOM_HIT;
+					Info2.HitData |= CollisionQuad2D::TOP_HIT;
+				}
+
+				if ((Pos1.y + Size1.y / 2) > (Pos2.y + Size2.y / 2))
+				{
+					Info1.HitData |= CollisionQuad2D::TOP_HIT;
+					Info2.HitData |= CollisionQuad2D::BOTTOM_HIT;
+				}
+
+				_pCollision1->AddCollisionInfo(&Info1);
+				_pCollision2->AddCollisionInfo(&Info2);
 			}
 		}
 	}

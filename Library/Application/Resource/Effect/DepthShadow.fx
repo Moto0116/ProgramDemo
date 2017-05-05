@@ -9,6 +9,7 @@ cbuffer camera : register(b1)
     matrix g_Proj;
 	float4 g_CameraPos;
 	float4 g_CameraDir;
+	float4 g_Aspect;
 };
 
 cbuffer light : register(b2)
@@ -17,6 +18,8 @@ cbuffer light : register(b2)
 	float4 g_LightDir;
 	matrix g_LightView;
 	matrix g_LightProj;
+	matrix g_LightMatrix;
+	float4 g_LightDot;
 };
 
 struct VS_INPUT

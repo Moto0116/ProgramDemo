@@ -82,6 +82,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Library\DirectX11\Billboard2D\Billboard2D.h" />
     <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.h" />
     <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionBase.h" />
     <ClInclude Include="Library\CollisionManager\CollisionManager.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="Library\ObjectManagerBase\ObjectManagerBase.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Library\DirectX11\Billboard2D\Billboard2D.cpp" />
     <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.cpp" />
     <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionBase.cpp" />
     <ClCompile Include="Library\CollisionManager\CollisionManager.cpp" />

@@ -9,6 +9,8 @@
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
+#include <D3DX11.h>
+#include <D3DX10.h>
 #include <vector>
 
 #include "..\SingletonBase\SingletonBase.h"
@@ -54,7 +56,7 @@ namespace Lib
 		/**
 		 * デストラクタ
 		 */
-		~CollisionManager();
+		virtual ~CollisionManager();
 
 		/**
 		 * オブジェクト同士のあたり判定を行う
@@ -62,7 +64,6 @@ namespace Lib
 		 * @param[in] _pCollision2 あたり判定を行うオブジェクト
 		 */
 		void CollisionCheck(CollisionQuad2D* _pCollision1, CollisionQuad2D* _pCollision2);
-
 
 		std::vector<CollisionQuad2D*> m_pQuadCollision;	//!< あたり判定を行うオブジェクトを格納するコンテナ
 

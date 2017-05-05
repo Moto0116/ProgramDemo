@@ -13,6 +13,7 @@ cbuffer camera : register(b1)
 	matrix g_Proj;
 	float4 g_CameraPos;
 	float4 g_CameraDir;
+	float4 g_Aspect;
 };
 
 cbuffer light : register(b2)
@@ -22,6 +23,8 @@ cbuffer light : register(b2)
 	matrix g_LightView;
 	matrix g_LightProj;
 	float4 g_FrameTime;
+	matrix g_LightMatrix;
+	float4 g_LightDot;
 };
 
 cbuffer Material : register(b3)
@@ -63,7 +66,7 @@ VS_OUTPUT VS(VS_INPUT In)
 	Out.LightUV = mul(float4(In.Pos, 1.0f), LightMat);
 
 	// 法線とライトからカラー値を計算
-	float3 InvLightDir = -normalize(g_LightDir.xyz);
+	float3 InvLightDir = normalize(g_LightDir.xyz);
 	float3 Normal = normalize(In.Normal.xyz);
 	Out.Color = max(g_Ambient, dot(Normal, InvLightDir));
 

@@ -37,11 +37,16 @@ namespace Lib
 
 		/**
 		 * 座標変換用行列作成
-		 * @param[in] _eyePos カメラの座標
-		 * @param[in] _lookPos カメラの注視座標
+		 * @param[in] _pEyePos カメラの座標
+		 * @param[in] _pLookPos カメラの注視座標
+		 * @param[in] _pUpVec カメラの上方向ベクトル
 		 * @param[in] _viewAngle カメラの視野角
 		 */
-		void TransformView(const D3DXVECTOR3* _pEyePos, const D3DXVECTOR3* _pLookPos, float _viewAngle);
+		void TransformView(
+			const D3DXVECTOR3* _pEyePos, 
+			const D3DXVECTOR3* _pLookPos, 
+			const D3DXVECTOR3* _pUpVec,
+			float _viewAngle);
 
 		/**
 		 * ビュー座標変換用行列の取得
