@@ -18,6 +18,7 @@
 #include "Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h"
 #include "Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.h"
 #include "Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.h"
+#include "Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.h"
 
 
 /**
@@ -71,6 +72,12 @@ public:
 	 * キューブマップへの描画
 	 */
 	virtual void CubeMapDraw();
+
+	/**
+	 * 反射マップへの描画
+	 */
+	virtual void ReflectMapDraw();
+
 
 protected:
 	/**
@@ -169,22 +176,23 @@ protected:
 
 
 
-	Lib::DrawTask*				m_pDrawTask;		//!< 描画タスクオブジェクト
-	Lib::UpdateTask*			m_pUpdateTask;		//!< 更新タスクオブジェクト
-	DepthDrawTask*				m_pDepthDrawTask;	//!< 深度バッファ描画タスクオブジェクト
-	MapDrawTask*				m_pMapDrawTask;		//!< マップ描画タスクオブジェクト
-	CubeMapDrawTask*			m_pCubeMapDrawTask;	//!< キューブマップ描画タスク
+	Lib::DrawTask*				m_pDrawTask;			//!< 描画タスクオブジェクト.
+	Lib::UpdateTask*			m_pUpdateTask;			//!< 更新タスクオブジェクト.
+	DepthDrawTask*				m_pDepthDrawTask;		//!< 深度バッファ描画タスクオブジェクト.
+	MapDrawTask*				m_pMapDrawTask;			//!< マップ描画タスクオブジェクト.
+	CubeMapDrawTask*			m_pCubeMapDrawTask;		//!< キューブマップ描画タスク.
+	ReflectMapDrawTask*			m_pReflectMapDrawTask;	//!< 反射マップ描画タスク.
 
-	int							m_VertexShaderIndex;	//!< 頂点シェーダーインデックス
-	int							m_PixelShaderIndex;		//!< ピクセルシェーダーインデックス
-	int							m_SkyCLUTIndex;			//!< 空の色テーブルテクスチャインデックス
-	ID3D11InputLayout*			m_pVertexLayout;		//!< 頂点入力レイアウト
-	ID3D11DepthStencilState*	m_pDepthStencilState;	//!< 深度ステンシルステート
-	ID3D11Buffer*				m_pConstantBuffer;		//!< 定数バッファ
+	int							m_VertexShaderIndex;	//!< 頂点シェーダーインデックス.
+	int							m_PixelShaderIndex;		//!< ピクセルシェーダーインデックス.
+	int							m_SkyCLUTIndex;			//!< 空の色テーブルテクスチャインデックス.
+	ID3D11InputLayout*			m_pVertexLayout;		//!< 頂点入力レイアウト.
+	ID3D11DepthStencilState*	m_pDepthStencilState;	//!< 深度ステンシルステート.
+	ID3D11Buffer*				m_pConstantBuffer;		//!< 定数バッファ.
 
-	D3DXVECTOR3					m_Pos;		//!< 座標
-	D3DXVECTOR3					m_Scale;	//!< スケール
-	D3DXVECTOR3					m_Rotate;	//!< 回転
+	D3DXVECTOR3					m_Pos;		//!< 座標.
+	D3DXVECTOR3					m_Scale;	//!< スケール.
+	D3DXVECTOR3					m_Rotate;	//!< 回転.
 
 };
 

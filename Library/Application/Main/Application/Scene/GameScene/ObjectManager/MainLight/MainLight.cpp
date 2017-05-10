@@ -123,14 +123,13 @@ void MainLight::Finalize()
 
 void MainLight::Update()
 {
-	m_LightState.Time += 0.1f;
+	m_LightState.Time += 0.03f;
 	if (m_LightState.Time >= 360 || m_LightState.Pos.y <= 10)
 	{
-		// 時間が一定に達するまたは太陽が落ちたら初期化
-		m_LightState.Time = -40;	
+		m_LightState.Time = -40;	// 時間が一定に達するまたは太陽が落ちたら初期化.
 	}
 
-	// 現在の時間からライトの位置を更新
+	// 現在の時間からライトの位置を更新.
 	float Radian = static_cast<float>(D3DXToRadian(m_LightState.Time));
 	m_LightState.Pos.x = m_DefaultLightPos.x * cos(Radian) - m_DefaultLightPos.y * sin(Radian);
 	m_LightState.Pos.y = m_DefaultLightPos.y * sin(Radian) + m_DefaultLightPos.y * cos(Radian);
@@ -171,7 +170,7 @@ void MainLight::Draw()
 //----------------------------------------------------------------------
 bool MainLight::CreateTask()
 {
-	// タスクオブジェクトの生成初期化処理
+	// タスクオブジェクトの生成初期化処理.
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 	m_pDrawBeginTask = new DrawBeginTask(this);
@@ -180,7 +179,7 @@ bool MainLight::CreateTask()
 	m_pDrawTask->SetDrawObject(this);
 	m_pUpdateTask->SetUpdateObject(this);
 
-	// タスクオブジェクトを管理クラスに追加
+	// タスクオブジェクトを管理クラスに追加.
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddBeginTask(m_pDrawBeginTask);
@@ -191,13 +190,13 @@ bool MainLight::CreateTask()
 
 bool MainLight::CreateLight()
 {
-	// ライトオブジェクトの生成 初期化
+	// ライトオブジェクトの生成 初期化.
 	m_pLight = new Lib::Light();
 	m_pLight->SetPos(&m_LightState.Pos);
 	m_pLight->SetDirectionPos(&m_DefaultLightDirPos);
 
 
-	// ライト視点の行列生成
+	// ライト視点の行列生成.
 	D3DXMatrixLookAtLH(&m_LightView, &m_LightState.Pos, &m_DefaultLightDirPos, &D3DXVECTOR3(0, 1, 0));
 
 	const RECT* pWindowRect = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowRect();
@@ -217,7 +216,7 @@ bool MainLight::CreateLight()
 
 bool MainLight::CreateConstantBuffer()
 {
-	// 定数バッファ生成初期化処理
+	// 定数バッファ生成初期化処理.
 	D3D11_BUFFER_DESC ConstantBufferDesc;
 	ConstantBufferDesc.ByteWidth = sizeof(LIGHT_CONSTANT_BUFFER);
 	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -237,7 +236,7 @@ bool MainLight::CreateConstantBuffer()
 
 bool MainLight::CreateDepthTexture()
 {
-	// 深度テクスチャ生成初期化処理
+	// 深度テクスチャ生成初期化処理.
 	D3D11_TEXTURE2D_DESC DepthTextureDesc;
 	ZeroMemory(&DepthTextureDesc, sizeof(DepthTextureDesc));
 	DepthTextureDesc.Width = static_cast<UINT>(m_DepthTextureWidth);
@@ -280,7 +279,7 @@ bool MainLight::CreateDepthTexture()
 	}
 
 
-	// 深度ステンシルテクスチャ生成初期化処理
+	// 深度ステンシルテクスチャ生成初期化処理.
 	D3D11_TEXTURE2D_DESC DepthStencilDesc;
 	DepthStencilDesc.Width = static_cast<UINT>(m_DepthTextureWidth);
 	DepthStencilDesc.Height = static_cast<UINT>(m_DepthTextureHeight);
@@ -312,7 +311,7 @@ bool MainLight::CreateDepthTexture()
 		return false;
 	}
 
-	// ビューポート設定
+	// ビューポート設定.
 	m_ViewPort.TopLeftX = 0;
 	m_ViewPort.TopLeftY = 0;
 	m_ViewPort.Width = m_DepthTextureWidth;
@@ -320,7 +319,7 @@ bool MainLight::CreateDepthTexture()
 	m_ViewPort.MinDepth = 0.0f;
 	m_ViewPort.MaxDepth = 1.0f;
 
-	// グラフィックデバイスに描画先として深度テクスチャを設定
+	// グラフィックデバイスに描画先として深度テクスチャを設定.
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(&m_pRenderTarget, m_RenderTargetStage);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(&m_pDepthStencilView, m_RenderTargetStage);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(m_ClearColor, m_RenderTargetStage);
@@ -463,6 +462,7 @@ bool MainLight::CreateLightTexture()
 		"Resource\\Texture\\Light.png",
 		&m_LightTextureIndex))
 	{
+		OutputErrorLog("テクスチャの生成に失敗しました");
 		return false;
 	}
 
@@ -470,6 +470,7 @@ bool MainLight::CreateLightTexture()
 		"Resource\\Texture\\Bloom.png",
 		&m_BloomTextureIndex))
 	{
+		OutputErrorLog("テクスチャの生成に失敗しました");
 		return false;
 	}
 
@@ -557,10 +558,6 @@ bool MainLight::WriteConstantBuffer()
 		D3DXMATRIX MatWorld, MatRotate, MatTranslate;
 		D3DXMatrixIdentity(&MatWorld);
 		m_pCamera->GetBillBoardRotation(&m_LightState.Pos, &MatRotate);
-		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
-		D3DXMatrixRotationX(&MatRotate, static_cast<float>(D3DXToRadian(90)));
-		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
-		D3DXMatrixRotationY(&MatRotate, static_cast<float>(D3DXToRadian(180)));
 		D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
 	
 		D3DXMatrixTranslation(&MatTranslate, m_LightState.Pos.x, m_LightState.Pos.y, m_LightState.Pos.z);

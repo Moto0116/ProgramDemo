@@ -95,7 +95,10 @@ void MiniMap::Update()
 
 void MiniMap::Draw()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(0, 1, &m_pShaderResourceView);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(
+		0, 
+		1, 
+		&m_pShaderResourceView);
 	m_pVertex->ShaderSetup();
 	m_pVertex->Draw();
 }
@@ -198,7 +201,7 @@ bool MiniMap::CreateTexture()
 		return false;
 	}
 
-	// ビューポート設定
+	// ビューポート設定.
 	m_ViewPort.TopLeftX = 0;
 	m_ViewPort.TopLeftY = 0;
 	m_ViewPort.Width = static_cast<float>(m_TextureWidth);

@@ -1,10 +1,10 @@
 ﻿/**
- * @file	CubeMapDrawTask.h
- * @brief	キューブマップテクスチャへの描画タスククラス定義
+ * @file	ReflectMapDrawTask.h
+ * @brief	反射マップテクスチャへの描画タスククラス定義
  * @author	morimoto
  */
-#ifndef CUBEMAPDRAWTASK_H
-#define CUBEMAPDRAWTASK_H
+#ifndef REFLECTMAPDRAWTASK_H
+#define REFLECTMAPDRAWTASK_H
 
 //----------------------------------------------------------------------
 // Include
@@ -17,20 +17,20 @@ class Object3DBase;
 
 
 /**
- * 波テクスチャへの描画タスク
+ * 反射マップテクスチャへの描画タスク
  */
-class CubeMapDrawTask : public Lib::TaskBase<>
+class ReflectMapDrawTask : public Lib::TaskBase<>
 {
 public:
 	/**
 	 * コンストラクタ
 	 */
-	CubeMapDrawTask();
+	ReflectMapDrawTask();
 
 	/**
 	 * デストラクタ
 	 */
-	virtual ~CubeMapDrawTask();
+	virtual ~ReflectMapDrawTask();
 
 	/**
 	 * タスクの実行
@@ -50,7 +50,8 @@ private:
 };
 
 
-typedef Lib::TaskManager<CubeMapDrawTask> CubeMapDrawTaskManager;
+typedef Lib::TaskManager<ReflectMapDrawTask> ReflectMapDrawTaskManager;
 
 
-#endif // CUBEMAPDRAWTASK_H
+
+#endif // REFLECTMAPDRAWTASK_H

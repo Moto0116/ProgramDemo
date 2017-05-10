@@ -45,7 +45,9 @@ bool Mountain::Initialize()
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddTask(m_pCubeMapDrawTask);
 
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(TEXT("Resource\\Model\\mountain.fbx"), &m_MountainModelIndex);
+	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
+		TEXT("Resource\\Model\\mountain.fbx"), 
+		&m_MountainModelIndex);
 
 	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\MountainEffect.fx"),

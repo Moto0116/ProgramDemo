@@ -28,6 +28,11 @@ namespace Lib
 	public:
 		/**
 		 * コンストラクタ
+		 */
+		Texture();
+
+		/**
+		 * コンストラクタ
 		 * @param[in] _pGraphicsDevice グラフィックデバイス
 		 * @param[in] _pTexturePath テクスチャのパス
 		 */
@@ -37,6 +42,12 @@ namespace Lib
 		 * デストラクタ
 		 */
 		virtual ~Texture();
+
+		/**
+		 * テクスチャの設定
+		 * @param[in] _pTexture テクスチャリソースビュー
+		 */
+		virtual void Set(ID3D11ShaderResourceView* _pTexture);
 
 		/**
 		 * テクスチャの取得

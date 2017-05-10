@@ -20,6 +20,7 @@
 const float MainCamera::m_NearPoint = 1.f;
 const float MainCamera::m_FarPoint = 700;
 const float MainCamera::m_ViewAngle = 50.f;
+const float MainCamera::m_ReflectViewAngle = 80.f;
 const float MainCamera::m_MaxAngle = 70.f;
 const float MainCamera::m_MinAngle = -20.f;
 const float MainCamera::m_MaxLength = 170.f;
@@ -33,15 +34,14 @@ const float MainCamera::m_RotateSpeedWeight = 0.22f;
 // Constructor	Destructor
 //----------------------------------------------------------------------
 MainCamera::MainCamera() :
-	m_Pos(D3DXVECTOR3(0, 60, -50)),
+	m_Pos(D3DXVECTOR3(0, 80, -70)),
 	m_LookPoint(D3DXVECTOR3(0.f, 0.f, 0.f)),
 	m_UpVec(D3DXVECTOR3(0.f, 1.f, 0.f)),
 	m_MoveSpeed(0.f),
 	m_ZoomSpeed(0.f),
 	m_CameraAngle(0.f, 50.f),
 	m_CameraLength(70.f),
-	m_IsCameraControl(false),
-	m_Angle(D3DXVECTOR2(0, 0))
+	m_IsCameraControl(false)
 {
 }
 
@@ -73,7 +73,7 @@ bool MainCamera::Initialize()
 		return false;
 	}
 
-	RotateCalculate();	// 初期値で座標を計算する
+	RotateCalculate();	// 初期値で座標を計算する.
 	Transform();
 
 	return true;
@@ -103,7 +103,7 @@ void MainCamera::Update()
 	
 	if (m_IsCameraControl)
 	{
-		Transform();	// カメラが動いたら定数バッファを更新する
+		Transform();	// カメラが動いたら定数バッファを更新する.
 	}
 }
 
@@ -117,7 +117,7 @@ void MainCamera::GetBillBoardRotation(D3DXVECTOR3* _pBillPos, D3DXMATRIX* _pRota
 	D3DXMatrixLookAtLH(_pRotation, &m_Pos, _pBillPos, &D3DXVECTOR3(0, 1, 0));
 	D3DXMatrixInverse(_pRotation, NULL, _pRotation);
 
-	// 座標移動部分は消しておく
+	// 座標移動部分は消しておく.
 	_pRotation->_41 = 0.0f;
 	_pRotation->_42 = 0.0f;
 	_pRotation->_43 = 0.0f;
@@ -158,13 +158,13 @@ void MainCamera::Rotate()
 		m_CameraAngle.x += static_cast<float>(m_MouseState.lX * m_RotateSpeedWeight);
 		m_CameraAngle.y += static_cast<float>(m_MouseState.lY * m_RotateSpeedWeight);
 
-		// 360を超えたら0に戻す(差分は気にならないレベルなので無視)
+		// 360を超えたら0に戻す(差分は気にならないレベルなので無視).
 		if (fabs(m_CameraAngle.x) >= 360)
 		{
 			m_CameraAngle.x = 0;
 		}
 		
-		// カメラの角度制限
+		// カメラの角度制限.
 		if (m_CameraAngle.y >= m_MaxAngle)
 		{
 			m_CameraAngle.y = m_MaxAngle;
@@ -303,11 +303,16 @@ void MainCamera::ReleaseConstantBuffer()
 
 void MainCamera::WriteConstantBuffer()
 {
-	m_pCamera->TransformView(&m_Pos, &m_LookPoint, &m_UpVec, m_ViewAngle);
-
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResourceData)))
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+		m_pConstantBuffer,
+		0,
+		D3D11_MAP_WRITE_DISCARD,
+		0, 
+		&SubResourceData)))
 	{
+		m_pCamera->TransformView(&m_Pos, &m_LookPoint, &m_UpVec, m_ViewAngle);
+
 		CAMERA_CONSTANT_BUFFER ConstantBuffer;
 		ConstantBuffer.Proj = m_pCamera->GetProjectionMatrix();
 		ConstantBuffer.View = m_pCamera->GetViewMatrix();
@@ -319,8 +324,18 @@ void MainCamera::WriteConstantBuffer()
 
 		ConstantBuffer.Aspect = D3DXVECTOR4(1600, 900, 0, 0);
 
+		m_pCamera->TransformView(
+			&D3DXVECTOR3(m_Pos.x , -m_Pos.y, m_Pos.z),
+			&D3DXVECTOR3(m_LookPoint.x, -m_LookPoint.y, m_LookPoint.z),
+			&D3DXVECTOR3(m_UpVec.x, m_UpVec.y, m_UpVec.z),
+			m_ReflectViewAngle);
+		ConstantBuffer.ReflectView = m_pCamera->GetViewMatrix();
+		ConstantBuffer.ReflectProj = m_pCamera->GetProjectionMatrix();
+
 		D3DXMatrixTranspose(&ConstantBuffer.View, &ConstantBuffer.View);
 		D3DXMatrixTranspose(&ConstantBuffer.Proj, &ConstantBuffer.Proj);
+		D3DXMatrixTranspose(&ConstantBuffer.ReflectView, &ConstantBuffer.ReflectView);
+		D3DXMatrixTranspose(&ConstantBuffer.ReflectProj, &ConstantBuffer.ReflectProj);
 
 		memcpy_s(
 			SubResourceData.pData, 

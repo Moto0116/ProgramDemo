@@ -30,6 +30,7 @@ Object3DBase::Object3DBase() :
 	m_pDepthDrawTask = new DepthDrawTask();
 	m_pMapDrawTask = new MapDrawTask();
 	m_pCubeMapDrawTask = new CubeMapDrawTask();
+	m_pReflectMapDrawTask = new ReflectMapDrawTask();
 
 	// タスクにオブジェクト設定
 	m_pDrawTask->SetDrawObject(this);
@@ -37,10 +38,12 @@ Object3DBase::Object3DBase() :
 	m_pDepthDrawTask->SetDrawObject(this);
 	m_pMapDrawTask->SetDrawObject(this);
 	m_pCubeMapDrawTask->SetDrawObject(this);
+	m_pReflectMapDrawTask->SetDrawObject(this);
 }
 
 Object3DBase::~Object3DBase()
 {
+	delete m_pReflectMapDrawTask;
 	delete m_pCubeMapDrawTask;
 	delete m_pMapDrawTask;
 	delete m_pDepthDrawTask;
@@ -74,6 +77,10 @@ void Object3DBase::MapDraw()
 }
 
 void Object3DBase::CubeMapDraw()
+{
+}
+
+void Object3DBase::ReflectMapDraw()
 {
 }
 

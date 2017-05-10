@@ -22,6 +22,9 @@
 // Static Private Variables
 //----------------------------------------------------------------------
 const D3DXVECTOR2 Rain::m_DefaultSize = D3DXVECTOR2(0.2f, 0.2f);
+const D3DXVECTOR2 Rain::m_DefaultFontPos = D3DXVECTOR2(25, 80);
+const D3DXVECTOR2 Rain::m_DefaultFontSize = D3DXVECTOR2(16, 32);
+const D3DXCOLOR Rain::m_DefaultFontColor = 0xffffffff;
 const D3DXVECTOR2 Rain::m_XRange = D3DXVECTOR2(-55, 180);
 const D3DXVECTOR2 Rain::m_YRange = D3DXVECTOR2(80, 100);
 const D3DXVECTOR2 Rain::m_ZRange = D3DXVECTOR2(-55, 180);
@@ -94,20 +97,29 @@ bool Rain::Initialize()
 		return false;
 	}
 
-	SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture("Resource\\Texture\\Ring.png", &m_TextureIndex);
+	if (!CreateTexture())
+	{
+		return false;
+	}
 
-	SINGLETON_INSTANCE(Lib::SoundManager)->LoadSound("Resource\\Sound\\Rain.wav", &m_SoundIndex);
+	if (!CreateSound())
+	{
+		return false;
+	}
+
+	if (!CreateFontObject())
+	{
+		return false;
+	}
 
 	return true;
 }
 
 void Rain::Finalize()
 {
-	SINGLETON_INSTANCE(Lib::SoundManager)->GetSound(m_SoundIndex)->SoundOperation(Lib::SoundManager::STOP);
-	SINGLETON_INSTANCE(Lib::SoundManager)->ReleaseSound(m_SoundIndex);
-
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_TextureIndex);
-
+	ReleaseFontObject();
+	ReleaseSound();
+	ReleaseTexture();
 	ReleaseState();
 	ReleaseVertexLayout();
 	ReleaseShader();
@@ -158,11 +170,11 @@ void Rain::Update()
 				// 落下中でなければ波紋を出す
 				m_RainData[i].Time++;
 
-				m_RainData[i].Scale.x += 0.4f;
-				m_RainData[i].Scale.y += 0.4f;
-				m_RainData[i].Scale.z += 0.4f;
+				m_RainData[i].Scale.x += 0.3f;
+				m_RainData[i].Scale.y += 0.3f;
+				m_RainData[i].Scale.z += 0.3f;
 
-				if (m_RainData[i].Time == 35)
+				if (m_RainData[i].Time == 32)
 				{
 					m_RainData[i].Time = 0;
 					m_RainData[i].IsFall = true;
@@ -187,7 +199,7 @@ void Rain::Update()
 
 void Rain::Draw()
 {
-	if (m_IsActive == true)
+	if (m_IsActive)
 	{
 		ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 		pContext->VSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), NULL, 0);
@@ -208,6 +220,14 @@ void Rain::Draw()
 		pContext->PSSetShaderResources(0, 1, &pResource);
 
 		pContext->DrawInstanced(VERTEX_NUM, RAIN_NUM, 0, 0);
+
+		m_pFont->Draw(&m_DefaultFontPos, "Rain  : ON");
+		m_pFont->Draw(&D3DXVECTOR2(m_DefaultFontPos.x + 320, m_DefaultFontPos.y), "R key");
+	}
+	else
+	{
+		m_pFont->Draw(&m_DefaultFontPos, "Rain  : OFF");
+		m_pFont->Draw(&D3DXVECTOR2(m_DefaultFontPos.x + 320, m_DefaultFontPos.y), "R key");
 	}
 }
 
@@ -276,6 +296,7 @@ bool Rain::CreateVertexBuffer()
 	for (int i = 0; i < RAIN_NUM; i++)
 	{
 		D3DXMatrixIdentity(&m_pInstanceData[i].Mat);
+		D3DXMatrixTranspose(&m_pInstanceData[i].Mat, &m_pInstanceData[i].Mat);
 		m_pInstanceData[i].Pos = D3DXVECTOR3(0, 0, 0);
 	}
 
@@ -309,7 +330,7 @@ bool Rain::CreateVertexBuffer()
 bool Rain::CreateShader()
 {
 	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
-		TEXT("Resource\\Effect\\PointSprite.fx"),
+		TEXT("Resource\\Effect\\Rain.fx"),
 		"VS",
 		&m_VertexShaderIndex))
 	{
@@ -318,7 +339,7 @@ bool Rain::CreateShader()
 	}
 
 	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
-		TEXT("Resource\\Effect\\PointSprite.fx"),
+		TEXT("Resource\\Effect\\Rain.fx"),
 		"PS",
 		&m_PixelShaderIndex))
 	{
@@ -397,6 +418,50 @@ bool Rain::CreateState()
 	return true;
 }
 
+bool Rain::CreateTexture()
+{
+	if (!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+		TEXT("Resource\\Texture\\Ring.png"),
+		&m_TextureIndex))
+	{
+		OutputErrorLog("テクスチャの読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
+bool Rain::CreateSound()
+{
+	if (!SINGLETON_INSTANCE(Lib::SoundManager)->LoadSound(
+		TEXT("Resource\\Sound\\Rain.wav"),
+		&m_SoundIndex))
+	{
+		OutputErrorLog("テクスチャの読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
+bool Rain::CreateFontObject()
+{
+	m_pFont = new Lib::Font();
+	if (!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
+	{
+		OutputErrorLog("フォントオブジェクトの初期化に失敗しました");
+		return false;
+	}
+
+	if (!m_pFont->CreateVertexBuffer(&m_DefaultFontSize, &m_DefaultFontColor))
+	{
+		OutputErrorLog("フォントオブジェクトの頂点バッファの生成に失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
 void Rain::ReleaseTask()
 {
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
@@ -408,6 +473,7 @@ void Rain::ReleaseTask()
 
 void Rain::ReleaseVertexBuffer()
 {
+	SafeRelease(m_pInstanceBuffer);
 	SafeRelease(m_pVertexBuffer);
 }
 
@@ -428,6 +494,24 @@ void Rain::ReleaseState()
 	SafeRelease(m_pBlendState);
 }
 
+void Rain::ReleaseTexture()
+{
+	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_TextureIndex);
+}
+
+void Rain::ReleaseSound()
+{
+	SINGLETON_INSTANCE(Lib::SoundManager)->GetSound(m_SoundIndex)->SoundOperation(Lib::SoundManager::STOP);
+	SINGLETON_INSTANCE(Lib::SoundManager)->ReleaseSound(m_SoundIndex);
+}
+
+void Rain::ReleaseFontObject()
+{
+	m_pFont->ReleaseVertexBuffer();
+	m_pFont->Finalize();
+	delete m_pFont;
+}
+
 bool Rain::WriteInstanceBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
@@ -438,7 +522,7 @@ bool Rain::WriteInstanceBuffer()
 		0,
 		&MappedResource)))
 	{
-		INSTANCE_DATA* InstanceData = reinterpret_cast<INSTANCE_DATA*>(MappedResource.pData);
+		INSTANCE_DATA* pInstanceData = reinterpret_cast<INSTANCE_DATA*>(MappedResource.pData);
 
 		for (int i = 0; i < RAIN_NUM; i++)
 		{
@@ -450,20 +534,19 @@ bool Rain::WriteInstanceBuffer()
 				m_pCamera->GetBillBoardRotation(&m_RainData[i].Pos, &MatRotate);
 				D3DXMatrixScaling(&MatWorld, m_RainData[i].Scale.x, m_RainData[i].Scale.y, m_RainData[i].Scale.z);
 				D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
-				D3DXMatrixRotationY(&MatRotate, static_cast<float>(D3DXToRadian(180)));	// こっち側向くように反転
 			}
 			else
 			{
 				D3DXMatrixScaling(&MatWorld, m_RainData[i].Scale.x, m_RainData[i].Scale.y, m_RainData[i].Scale.z);
 				D3DXMatrixRotationX(&MatRotate, static_cast<float>(D3DXToRadian(-90)));	// 上を向くように反転
+				D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
 			}
 
-			D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
 			D3DXMatrixTranslation(&MatTranslate, m_RainData[i].Pos.x, m_RainData[i].Pos.y, m_RainData[i].Pos.z);
 			D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatTranslate);
-			D3DXMatrixTranspose(&InstanceData[i].Mat, &MatWorld);
+			D3DXMatrixTranspose(&pInstanceData[i].Mat, &MatWorld);
 
-			InstanceData[i].Pos = m_RainData[i].Pos;
+			pInstanceData[i].Pos = m_RainData[i].Pos;
 		}
 
 		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pInstanceBuffer, 0);

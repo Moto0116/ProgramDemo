@@ -44,13 +44,30 @@ bool Ground::Initialize()
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
 
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(TEXT("Resource\\Model\\map.fbx"), &m_GroundModelIndex);
+	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
+		TEXT("Resource\\Model\\map.fbx"), 
+		&m_GroundModelIndex);
 
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(TEXT("Resource\\Effect\\DepthShadow.fx"), "VS", &m_ShadowVertexShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(TEXT("Resource\\Effect\\DepthShadow.fx"), "PS", &m_ShadowPixelShaderIndex);
 
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(TEXT("Resource\\Effect\\MiniMap.fx"), "VS", &m_MapVertexShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(TEXT("Resource\\Effect\\MiniMap.fx"), "PS", &m_MapPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		TEXT("Resource\\Effect\\DepthShadow.fx"), 
+		"VS",
+		&m_ShadowVertexShaderIndex);
+
+	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		TEXT("Resource\\Effect\\DepthShadow.fx"), 
+		"PS",
+		&m_ShadowPixelShaderIndex);
+
+	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		TEXT("Resource\\Effect\\MiniMap.fx"), 
+		"VS", 
+		&m_MapVertexShaderIndex);
+
+	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		TEXT("Resource\\Effect\\MiniMap.fx"), 
+		"PS",
+		&m_MapPixelShaderIndex);
 
 
 	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(

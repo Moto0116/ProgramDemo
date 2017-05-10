@@ -33,15 +33,10 @@
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\House.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.cpp" />
     <ClCompile Include="Main\Object2DBase\Object2DBase.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\TessellationObject\TessellationObject.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Rain\Rain.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Smoke\Smoke.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Water\Water.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Snow\Snow.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.cpp" />
@@ -49,6 +44,8 @@
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\FieldManager.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Smoke\Smoke.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\Application\Application.h">
@@ -62,15 +59,10 @@
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\House.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\GeometryObject\GeometryObject.h" />
     <ClInclude Include="Main\Object2DBase\Object2DBase.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\TessellationObject\TessellationObject.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\LightUI\LightUI.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Rain\Rain.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Smoke\Smoke.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Water\Water.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Snow\Snow.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.h" />
@@ -78,19 +70,24 @@
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\FieldManager.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Smoke\Smoke.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.h" />
+    <ClInclude Include="Main\Application\MyDefine.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\Effect\DefaultEffect.fx" />
     <FxCompile Include="Resource\Effect\DepthShadow.fx" />
-    <FxCompile Include="Resource\Effect\Geometry.fx" />
-    <FxCompile Include="Resource\Effect\Tessellation.fx" />
     <FxCompile Include="Resource\Effect\MiniMap.fx" />
-    <FxCompile Include="Resource\Effect\PointSprite.fx" />
-    <FxCompile Include="Resource\Effect\Water.fx" />
     <FxCompile Include="Resource\Effect\GroundEffect.fx" />
     <FxCompile Include="Resource\Effect\MountainEffect.fx" />
     <FxCompile Include="Resource\Effect\SkyEffect.fx" />
     <FxCompile Include="Resource\Effect\MainLight.fx" />
     <FxCompile Include="Resource\Effect\CubeMap.fx" />
+    <FxCompile Include="Resource\Effect\Rain.fx" />
+    <FxCompile Include="Resource\Effect\Smoke.fx" />
+    <FxCompile Include="Resource\Effect\Wave.fx" />
+    <FxCompile Include="Resource\Effect\WaterCube.fx" />
+    <FxCompile Include="Resource\Effect\WaterReflect.fx" />
+    <FxCompile Include="Resource\Effect\ReflectMap.fx" />
   </ItemGroup>
 </Project>

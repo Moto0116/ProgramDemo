@@ -96,24 +96,27 @@ private:
 	 */
 	struct CAMERA_CONSTANT_BUFFER
 	{
-		D3DXMATRIX View;
-		D3DXMATRIX Proj;
-		D3DXVECTOR4	CameraPos;
-		D3DXVECTOR4	CameraDir;
-		D3DXVECTOR4 Aspect;
+		D3DXMATRIX	View;			//!< メインカメラのビュー行列.
+		D3DXMATRIX	Proj;			//!< メインカメラのプロジェクション行列.
+		D3DXVECTOR4	CameraPos;		//!< メインカメラ座標.
+		D3DXVECTOR4	CameraDir;		//!< メインカメラの向き.
+		D3DXVECTOR4 Aspect;			//!< アスペクト比.
+		D3DXMATRIX	ReflectView;	//!< 反射カメラのビュー行列.
+		D3DXMATRIX	ReflectProj;	//!< 反射カメラのプロジェクション行列.
 	};
 
 
-	static const float	m_NearPoint;	//!< 最近点
-	static const float	m_FarPoint;		//!< 最遠点
-	static const float	m_ViewAngle;	//!< 視野角
-	static const float	m_MaxAngle;		//!< カメラの最大傾き
-	static const float	m_MinAngle;		//!< カメラの最小傾き
-	static const float	m_MaxLength;	  //!< カメラと注視点の最大距離
-	static const float	m_MinLength;	  //!< カメラと注視点の最小距離
-	static const float	m_MoveSpeedWeight; //!< 移動速度を計算する際の重み
-	static const float	m_ZoomSpeedWeight; //!< ズーム速度を計算する際の重み
-	static const float	m_RotateSpeedWeight; //!< ズーム速度を計算する際の重み
+	static const float	m_NearPoint;			//!< 最近点.
+	static const float	m_FarPoint;				//!< 最遠点.
+	static const float	m_ViewAngle;			//!< 視野角.
+	static const float	m_ReflectViewAngle;		//!< 反射カメラの視野角.
+	static const float	m_MaxAngle;				//!< カメラの最大傾き.
+	static const float	m_MinAngle;				//!< カメラの最小傾き.
+	static const float	m_MaxLength;			//!< カメラと注視点の最大距離.
+	static const float	m_MinLength;			//!< カメラと注視点の最小距離.
+	static const float	m_MoveSpeedWeight;		//!< 移動速度を計算する際の重み.
+	static const float	m_ZoomSpeedWeight;		//!< ズーム速度を計算する際の重み.
+	static const float	m_RotateSpeedWeight;	//!< ズーム速度を計算する際の重み.
 
 
 	/**
@@ -190,7 +193,6 @@ private:
 	float							m_ZoomSpeed;		//!< カメラのズーム速度
 	float							m_CameraLength;		//!< カメラの注視点の距離
 	bool							m_IsCameraControl;	//!< カメラを操作したか
-	D3DXVECTOR2						m_Angle;
 
 };
 

@@ -178,6 +178,23 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool GraphicsDevice::CreateDevice()
 	{
+#ifdef _DEBUG
+		if (FAILED(D3D11CreateDevice(
+			NULL,
+			D3D_DRIVER_TYPE_HARDWARE,
+			NULL,
+			D3D11_CREATE_DEVICE_DEBUG,
+			NULL,
+			0,
+			D3D11_SDK_VERSION,
+			&m_pDevice,
+			NULL,
+			&m_pDeviceContext)))
+		{
+			OutputErrorLog("DirectX11デバイスの生成に失敗しました");
+			return false;
+		}
+#else
 		if (FAILED(D3D11CreateDevice(
 			NULL,
 			D3D_DRIVER_TYPE_HARDWARE,
@@ -193,6 +210,8 @@ namespace Lib
 			OutputErrorLog("DirectX11デバイスの生成に失敗しました");
 			return false;
 		}
+#endif
+
 
 		return true;
 	}
@@ -329,7 +348,7 @@ namespace Lib
 		// ラスタライザステートの設定.
 		D3D11_RASTERIZER_DESC RasterizerDesc;
 		RasterizerDesc.FillMode = D3D11_FILL_SOLID;
-		RasterizerDesc.CullMode = D3D11_CULL_BACK;
+		RasterizerDesc.CullMode = D3D11_CULL_NONE;	// カリングをオフ
 		RasterizerDesc.FrontCounterClockwise = FALSE;
 		RasterizerDesc.DepthBias = 0;
 		RasterizerDesc.DepthBiasClamp = 0.0f;

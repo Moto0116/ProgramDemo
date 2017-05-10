@@ -47,7 +47,9 @@ bool Sky::Initialize()
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddTask(m_pCubeMapDrawTask);
 
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(TEXT("Resource\\Model\\sky.fbx"), &m_SkyModelIndex);
+	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
+		TEXT("Resource\\Model\\sky.fbx"),
+		&m_SkyModelIndex);
 
 	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\SkyEffect.fx"),

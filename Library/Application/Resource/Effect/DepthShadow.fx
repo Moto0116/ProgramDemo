@@ -10,6 +10,8 @@ cbuffer camera : register(b1)
 	float4 g_CameraPos;
 	float4 g_CameraDir;
 	float4 g_Aspect;
+	matrix g_ReflectView;
+	matrix g_ReflectProj;
 };
 
 cbuffer light : register(b2)

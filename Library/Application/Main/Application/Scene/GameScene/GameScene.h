@@ -12,6 +12,7 @@
 #include "SceneManager\SceneBase\SceneBase.h"
 
 #include "ObjectManager\ObjectManager.h"
+#include "DirectX11\Font\Font.h"
 
 
 /**
@@ -49,7 +50,13 @@ public:
 
 
 private:
-	ObjectManager* m_pObjectManager;	//!< シーン内オブジェクト管理クラス
+	static const D3DXVECTOR2	m_DefaultFontSize;	//!< フォントサイズ.
+	static const D3DXCOLOR		m_DefaultFontColor;	//!< フォントカラー.
+
+	ObjectManager*	m_pObjectManager;	//!< シーン内オブジェクト管理クラス.
+	Lib::Font*		m_pFont;			//!< フォントオブジェクト.
+	int				m_UpdateTime;
+	int				m_DrawTime;
 
 
 };

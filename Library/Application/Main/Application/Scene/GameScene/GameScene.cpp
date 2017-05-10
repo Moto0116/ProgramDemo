@@ -22,13 +22,23 @@
 #include "Task\DepthDrawTask\DepthDrawTask.h"
 #include "Task\MapDrawTask\MapDrawTask.h"
 #include "Task\CubeMapDrawTask\CubeMapDrawTask.h"
+#include "Task\ReflectMapDrawTask\ReflectMapDrawTask.h"
+
+
+//----------------------------------------------------------------------
+// Private Functions
+//----------------------------------------------------------------------
+const D3DXVECTOR2 GameScene::m_DefaultFontSize = D3DXVECTOR2(16, 32);
+const D3DXCOLOR	GameScene::m_DefaultFontColor = 0xffffffff;
 
 
 //----------------------------------------------------------------------
 // Constructor	Destructor
 //----------------------------------------------------------------------
-GameScene::GameScene(int _sceneId) : 
-	SceneBase(_sceneId)
+GameScene::GameScene(int _sceneId) :
+	SceneBase(_sceneId),
+	m_UpdateTime(0),
+	m_DrawTime(0)
 {
 }
 
@@ -45,6 +55,7 @@ bool GameScene::Initialize()
 	SINGLETON_CREATE(Lib::UpdateTaskManager);
 	SINGLETON_CREATE(Lib::DrawTaskManager);
 	SINGLETON_CREATE(CubeMapDrawTaskManager);
+	SINGLETON_CREATE(ReflectMapDrawTaskManager);
 	SINGLETON_CREATE(DepthDrawTaskManager);
 	SINGLETON_CREATE(MapDrawTaskManager);
 
@@ -77,7 +88,7 @@ bool GameScene::Initialize()
 		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowHandle()))
 	{
 		OutputErrorLog("サウンドデバイスの生成に失敗しました")
-		return false;
+			return false;
 	}
 
 	SINGLETON_CREATE(Lib::SoundManager);
@@ -94,6 +105,18 @@ bool GameScene::Initialize()
 		return false;
 	}
 
+	m_pFont = new Lib::Font();
+	if(!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
+	{
+		OutputErrorLog("フォントオブジェクトの生成に失敗しました");
+		return false;
+	}
+
+	if (!m_pFont->CreateVertexBuffer(&m_DefaultFontSize, &m_DefaultFontColor))
+	{
+		OutputErrorLog("フォントオブジェクトの頂点バッファの生成に失敗しました");
+		return false;
+	}
 
 	m_State = UPDATE_STATE;
 
@@ -102,6 +125,10 @@ bool GameScene::Initialize()
 
 void GameScene::Finalize()
 {
+	m_pFont->ReleaseVertexBuffer();
+	m_pFont->Finalize();
+	delete m_pFont;
+
 	m_pObjectManager->Finalize();
 	delete m_pObjectManager;
 
@@ -122,6 +149,7 @@ void GameScene::Finalize()
 
 	SINGLETON_DELETE(MapDrawTaskManager);
 	SINGLETON_DELETE(DepthDrawTaskManager);
+	SINGLETON_DELETE(ReflectMapDrawTaskManager);
 	SINGLETON_DELETE(CubeMapDrawTaskManager);
 	SINGLETON_DELETE(Lib::DrawTaskManager);
 	SINGLETON_DELETE(Lib::UpdateTaskManager);
@@ -129,41 +157,59 @@ void GameScene::Finalize()
 
 void GameScene::Update()
 {
-	Lib::Debugger::StartTimer();
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyUpdate();
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_W);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_A);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_S);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_D);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_R);
+	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_T);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->MouseUpdate();
 
+
+#ifdef _DEBUG
+
+	Lib::Debugger::StartTimer();
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
 	Lib::Debugger::EndTimer();
-	Lib::Debugger::OutputDebugLog("Update : %d\n\n", Lib::Debugger::GetTime());
-
+	m_UpdateTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した更新時間を取得
 
 
 	Lib::Debugger::StartTimer();
 	SINGLETON_INSTANCE(MapDrawTaskManager)->Run();
-	Lib::Debugger::EndTimer();
-	Lib::Debugger::OutputDebugLog("MapDraw : %d\n\n", Lib::Debugger::GetTime());
-
-	Lib::Debugger::StartTimer();
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->Run();
-	Lib::Debugger::EndTimer();
-	Lib::Debugger::OutputDebugLog("DepthDraw : %d\n\n", Lib::Debugger::GetTime());
-
-	Lib::Debugger::StartTimer();
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->Run();
-	Lib::Debugger::EndTimer();
-	Lib::Debugger::OutputDebugLog("CubeMapDraw : %d\n\n", Lib::Debugger::GetTime());
+	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->Run();
 
-	Lib::Debugger::StartTimer();
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(Lib::GraphicsDevice::BACKBUFFER_TARGET);
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
+
+	// 計測時間の描画
+	char UpdateStr[32];
+	char DrawStr[32];
+	sprintf_s(UpdateStr, 32, "Update : %dms", m_UpdateTime);
+	sprintf_s(DrawStr, 32, "Draw   : %dms", m_DrawTime);
+
+	m_pFont->Draw(&D3DXVECTOR2(1000, 50), UpdateStr);
+	m_pFont->Draw(&D3DXVECTOR2(1000, 80), DrawStr);
+
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->EndScene();
+	Lib::Debugger::EndTimer();
+	m_DrawTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した描画時間を取得
+
+#else
+
+	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
+
+	SINGLETON_INSTANCE(MapDrawTaskManager)->Run();
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->Run();
+	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->Run();
+	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->Run();
+
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(Lib::GraphicsDevice::BACKBUFFER_TARGET);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->EndScene();
-	Lib::Debugger::EndTimer();
-	Lib::Debugger::OutputDebugLog("Draw : %d\n\n", Lib::Debugger::GetTime());
+
+#endif
 
 }

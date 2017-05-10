@@ -18,6 +18,7 @@
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "..\MainCamera\MainCamera.h"
+#include "DirectX11\Font\Font.h"
 
 
 /**
@@ -62,8 +63,8 @@ public:
 private:
 	enum
 	{
-		VERTEX_NUM = 4,	//!< 頂点数
-		RAIN_NUM = 2500	//!< 雨の数
+		VERTEX_NUM = 4,	//!< 頂点数.
+		RAIN_NUM = 2500	//!< 雨の数.
 	};
 
 
@@ -82,8 +83,8 @@ private:
 	 */
 	struct INSTANCE_DATA
 	{
-		D3DXMATRIX Mat;		//!< 変換行列
-		D3DXVECTOR3 Pos;	//!< 位置座標
+		D3DXMATRIX Mat;		//!< 変換行列.
+		D3DXVECTOR3 Pos;	//!< 位置座標.
 	};
 
 	/**
@@ -91,17 +92,20 @@ private:
 	 */
 	struct RAIN_DATA
 	{
-		D3DXVECTOR3 Pos;	//!< 雨の座標
-		D3DXVECTOR3	Scale;	//!< 雨のスケーリング値
-		bool IsFall;		//!< 雨が落下中か
-		int Time;			//!< 落下してからの時間
+		D3DXVECTOR3 Pos;	//!< 雨の座標.
+		D3DXVECTOR3	Scale;	//!< 雨のスケーリング値.
+		bool IsFall;		//!< 雨が落下中か.
+		int Time;			//!< 落下してからの時間.
 	};
 
 
-	static const D3DXVECTOR2 m_DefaultSize;			//!< デフォルトの頂点サイズ.
-	static const D3DXVECTOR2 m_XRange;				//!< xの範囲
-	static const D3DXVECTOR2 m_YRange;				//!< yの範囲
-	static const D3DXVECTOR2 m_ZRange;				//!< zの範囲
+	static const D3DXVECTOR2	m_DefaultSize;		//!< デフォルトの頂点サイズ.
+	static const D3DXVECTOR2	m_DefaultFontPos;	//!< フォントの座標.
+	static const D3DXVECTOR2	m_DefaultFontSize;	//!< フォントのサイズ.
+	static const D3DXCOLOR		m_DefaultFontColor;	//!< フォントのカラー値.
+	static const D3DXVECTOR2	m_XRange;			//!< xの範囲.
+	static const D3DXVECTOR2	m_YRange;			//!< yの範囲.
+	static const D3DXVECTOR2	m_ZRange;			//!< zの範囲.
 
 
 	//----------------------------------------------------------------------
@@ -110,7 +114,7 @@ private:
 
 	/**
 	 * タスクオブジェクト初期化
-	 * @return 初期化に成功したらtrue
+	 * @return 初期化に成功したらtrue 失敗したらfalse
 	 */
 	bool CreateTask();
 
@@ -137,7 +141,25 @@ private:
 	 * @return 初期化に成功したらtrue 失敗したらfalse
 	 */
 	bool CreateState();
+
+	/**
+	 * テクスチャの初期化
+	 * @return 初期化に成功したらtrue 失敗したらfalse
+	 */
+	bool CreateTexture();
 	
+	/**
+	 * サウンドの初期化
+	 * @return 初期化に成功したらtrue 失敗したらfalse
+	 */
+	bool CreateSound();
+
+	/**
+	 * フォントオブジェクトの初期化
+	 * @return 初期化に成功したらtrue 失敗したらfalse
+	 */
+	bool CreateFontObject();
+
 
 	//----------------------------------------------------------------------
 	// 解放処理
@@ -168,6 +190,21 @@ private:
 	 */
 	void ReleaseState();
 
+	/**
+	 * テクスチャの解放
+	 */
+	void ReleaseTexture();
+
+	/**
+	 * サウンドの解放 
+	 */
+	void ReleaseSound();
+
+	/**
+	 * フォントオブジェクトの解放
+	 */
+	void ReleaseFontObject();
+
 
 	//----------------------------------------------------------------------
 	// その他処理
@@ -192,19 +229,19 @@ private:
 	VERTEX						m_pVertexData[VERTEX_NUM];	//!< 頂点データ.
 	INSTANCE_DATA				m_pInstanceData[RAIN_NUM];	//!< インスタンスデータ.
 
-	RAIN_DATA					m_RainData[RAIN_NUM];
+	RAIN_DATA					m_RainData[RAIN_NUM];		//!< 雨粒のデータ配列.
+	MainCamera*					m_pCamera;					//!< カメラオブジェクト.
+	std::random_device			m_RandDevice;				//!< 乱数生成デバイス.
+	std::mt19937				m_MersenneTwister;			//!< 乱数生成オブジェクト.
 
-	D3DXMATRIX					m_CameraInverse;
-	MainCamera*					m_pCamera;
+	int							m_TextureIndex;				//!< テクスチャインデックス.
+	int							m_SoundIndex;				//!< サウンドインデックス.
 
-	std::random_device			m_RandDevice;
-	std::mt19937				m_MersenneTwister;
+	const Lib::KeyDevice::KEYSTATE* m_pKeyState;			//!< キーの状態.
+	bool							m_IsActive;				//!< このオブジェクトの活動状態.
 
-	int							m_TextureIndex;				//!< テクスチャインデックス
-	int							m_SoundIndex;				//!< サウンドインデックス
+	Lib::Font*					m_pFont;
 
-	const Lib::KeyDevice::KEYSTATE* m_pKeyState;			//!< キーの状態
-	bool							m_IsActive;
 };
 
 

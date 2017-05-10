@@ -66,16 +66,16 @@ public:
 
 
 private:
-	static D3DXVECTOR3 m_DefaultScale;	//!< デフォルトスケーリング値
+	static D3DXVECTOR3 m_DefaultScale;	//!< デフォルトスケーリング値.
 
-	int m_MountainModelIndex;			//!< 山のモデルインデックス
-	int	m_ShadowVertexShaderIndex;		//!< 深度値描画の頂点シェーダーインデックス
-	int	m_ShadowPixelShaderIndex;		//!< 深度値描画のピクセルシェーダーインデックス
-	int	m_MapVertexShaderIndex;			//!< マップ描画の頂点シェーダーインデックス
-	int	m_MapPixelShaderIndex;			//!< マップ描画のピクセルシェーダーインデックス
-	int	m_CubeMapVertexShaderIndex;		//!< キューブマップ描画の頂点シェーダーインデックス
-	int	m_CubeMapGeometryShaderIndex;	//!< キューブマップ描画のジオメトリシェーダーインデックス
-	int	m_CubeMapPixelShaderIndex;		//!< キューブマップ描画のピクセルシェーダーインデックス
+	int m_MountainModelIndex;			//!< 山のモデルインデックス.
+	int	m_ShadowVertexShaderIndex;		//!< 深度値描画の頂点シェーダーインデックス.
+	int	m_ShadowPixelShaderIndex;		//!< 深度値描画のピクセルシェーダーインデックス.
+	int	m_MapVertexShaderIndex;			//!< マップ描画の頂点シェーダーインデックス.
+	int	m_MapPixelShaderIndex;			//!< マップ描画のピクセルシェーダーインデックス.
+	int	m_CubeMapVertexShaderIndex;		//!< キューブマップ描画の頂点シェーダーインデックス.
+	int	m_CubeMapGeometryShaderIndex;	//!< キューブマップ描画のジオメトリシェーダーインデックス.
+	int	m_CubeMapPixelShaderIndex;		//!< キューブマップ描画のピクセルシェーダーインデックス.
 
 	/**
 	 * シャドウマップシェーダの生成

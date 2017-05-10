@@ -18,6 +18,12 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
+	Texture::Texture() : 
+		m_pGraphicsDevice(NULL),
+		m_pTexture(NULL)
+	{
+	}
+
 	Texture::Texture(GraphicsDevice* _pGraphicsDevice, LPCTSTR _pTexturePath) :
 		m_pGraphicsDevice(_pGraphicsDevice),
 		m_pTexture(NULL)
@@ -34,6 +40,12 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------
+	void Texture::Set(ID3D11ShaderResourceView* _pTexture)
+	{
+		m_pTexture = _pTexture;
+		m_pTexture->AddRef();
+	}
+
 	ID3D11ShaderResourceView* Texture::Get() const
 	{
 		return m_pTexture;

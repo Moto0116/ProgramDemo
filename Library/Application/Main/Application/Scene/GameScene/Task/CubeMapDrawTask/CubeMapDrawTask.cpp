@@ -1,6 +1,6 @@
 ﻿/**
  * @file	CubeMapDrawTask.cpp
- * @brief	波テクスチャへの描画タスク
+ * @brief	波テクスチャへの描画タスククラス実装
  * @author	morimoto
  */
 
@@ -15,7 +15,8 @@
 //----------------------------------------------------------------------
 // Constructor	Destructor
 //----------------------------------------------------------------------
-CubeMapDrawTask::CubeMapDrawTask()
+CubeMapDrawTask::CubeMapDrawTask() : 
+	m_pObject(NULL)
 {
 }
 

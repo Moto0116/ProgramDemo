@@ -34,6 +34,12 @@ namespace Lib
 		virtual ~ITexture() = 0;
 
 		/**
+		 * テクスチャの設定
+		 * @param[in] _pTexture テクスチャリソースビュー
+		 */
+		virtual void Set(ID3D11ShaderResourceView* _pTexture) = 0;
+
+		/**
 		 * テクスチャの取得
 		 * @return テクスチャ
 		 */

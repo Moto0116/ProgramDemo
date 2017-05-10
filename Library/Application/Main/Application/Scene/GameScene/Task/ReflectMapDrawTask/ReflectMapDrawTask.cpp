@@ -1,25 +1,26 @@
 ﻿/**
- * @file	LightUI.cpp
- * @brief	ライトUIクラス実装
+ * @file	ReflectMapDrawTask.cpp
+ * @brief	反射マップテクスチャへの描画タスククラス実装
  * @author	morimoto
  */
 
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
-#include "LightUI.h"
+#include "ReflectMapDrawTask.h"
 
-#include "Debugger\Debugger.h"
+#include "Main\Object3DBase\Object3DBase.h"
 
 
 //----------------------------------------------------------------------
 // Constructor	Destructor
 //----------------------------------------------------------------------
-LightUI::LightUI()
+ReflectMapDrawTask::ReflectMapDrawTask() :
+	m_pObject(NULL)
 {
 }
 
-LightUI::~LightUI()
+ReflectMapDrawTask::~ReflectMapDrawTask()
 {
 }
 
@@ -27,28 +28,13 @@ LightUI::~LightUI()
 //----------------------------------------------------------------------
 // Public Functions
 //----------------------------------------------------------------------
-bool LightUI::Initialize()
+void ReflectMapDrawTask::Run()
 {
-	if (!CreateVertex2D())
-	{
-		OutputErrorLog("2D描画オブジェクトの生成に失敗しました");
-		return false;
-	}
-
-	return true;
+	m_pObject->ReflectMapDraw();
 }
 
-void LightUI::Finalize()
+void ReflectMapDrawTask::SetDrawObject(Object3DBase* _pObject)
 {
-	ReleaseVertex2D();
-}
-
-void LightUI::Update()
-{
-}
-
-void LightUI::Draw()
-{
-	Object2DBase::Draw();
+	m_pObject = _pObject;
 }
 
