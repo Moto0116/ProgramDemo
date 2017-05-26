@@ -11,7 +11,12 @@
 //----------------------------------------------------------------------
 #include "Main\Object2DBase\Object2DBase.h"
 #include "TaskManager\TaskBase\TaskBase.h"
-#include "DirectX11\Camera\Camera.h"
+
+
+namespace Lib
+{
+	class Camera;
+}
 
 
 /**
@@ -125,8 +130,9 @@ private:
 
 	/**
 	 * 定数バッファへの書き込み
+	 * @return 書き込みに成功したらtrue 失敗したらfalse
 	 */
-	void WriteConstantBuffer();
+	bool WriteConstantBuffer();
 
 	/**
 	 * ミニマップ描画前処理

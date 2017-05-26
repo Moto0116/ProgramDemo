@@ -70,6 +70,72 @@ private:
 	int	m_MapPixelShaderIndex;		//!< マップ描画のピクセルシェーダーインデックス.
 
 
+	//----------------------------------------------------------------------
+	// 生成処理
+	//----------------------------------------------------------------------
+
+	/**
+	 * タスクの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateTask();
+
+	/**
+	 * モデルの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateModel();
+
+	/**
+	 * 通常描画時のシェーダー生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateDefaultShader();
+
+	/**
+	 * シャドウマップシェーダの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateShadowShader();
+
+	/**
+	 * マップシェーダの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateMapShader();
+
+
+	//----------------------------------------------------------------------
+	// 解放処理
+	//----------------------------------------------------------------------
+
+	/**
+	 * タスクの解放
+	 */
+	void ReleaseTask();
+
+	/**
+	 * モデルの解放
+	 */
+	void ReleaseModel();
+
+	/**
+	 * 通常描画時シェーダの解放
+	 */
+	void ReleaseDefaultShader();
+
+	/**
+	 * シャドウマップシェーダの破棄
+	 */
+	void ReleaseShadowShader();
+
+	/**
+	 * マップシェーダの破棄
+	 */
+	void ReleaseMapShader();
+
+
+
 };
 
 

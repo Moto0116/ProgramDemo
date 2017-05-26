@@ -10,11 +10,16 @@
 // Include
 //----------------------------------------------------------------------
 #include "DirectX11\Light\Light.h"
-#include "DirectX11\Vertex2D\Vertex2D.h"
+#include "TaskManager\TaskBase\TaskBase.h"
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
-#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
-#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
+
+namespace Lib
+{
+	class UpdateTask;
+	class DrawTask;
+	class Vertex2D;
+}
 
 class MainCamera;
 

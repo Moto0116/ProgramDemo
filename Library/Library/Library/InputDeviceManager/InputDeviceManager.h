@@ -83,10 +83,23 @@ namespace Lib
 		void MouseUpdate();
 
 		/**
+		 * GamePadの状態を更新する
+		 */
+		void GamePadUpdate(GamePad::XINPUTPAD _pad);
+
+		/**
 		 * キーの状態を更新する
 		 * @param[in] 更新したいキーのDIK
 		 */
 		void KeyCheck(int _dik);
+
+		/**
+		 * 指定のボタンの状態を更新する
+		 * @param[in] _pad チェックするGamePad
+		 * @param[in] _buttonId チェックするボタン
+		 * @param[in] _xinputButton 更新するXINPUT_GAMEPADのボタン
+		 */
+		void CheckButton(GamePad::XINPUTPAD _pad, GamePad::XINPUT_ID _buttonId, WORD _button);
 
 		/**
 		 * キーの状態が格納されている配列を取得する
@@ -99,6 +112,29 @@ namespace Lib
 		 * @return マウスの状態が格納されている構造体
 		 */
 		const MouseDevice::MOUSESTATE GetMouseState() const;
+		
+		/**
+		 * GamePadのボタンの状態を取得する
+		 * @param[in] id チェックするボタン
+		 * @param[in] pad チェックするGamePad
+		 */
+		GamePad::PADSTATE GetButtonState(GamePad::XINPUT_ID _buttonId, GamePad::XINPUTPAD _pad);
+
+		/**
+		 * Lスティックの状態を取得する関数
+		 * @param[in] id チェックするスティック
+		 * @param[in] pad チェックするGamePad
+		 * @return スティックの状態
+		 */
+		bool GetLAnalogState(GamePad::ANALOGPAD _analogId, GamePad::XINPUTPAD _pad);
+
+		/**
+		 * Rスティックの状態を取得する関数
+		 * @param[in] id チェックするスティック
+		 * @param[in] pad チェックするGamePad
+		 * @return スティックの状態
+		 */
+		bool GetRAnalogState(GamePad::ANALOGPAD _analogId, GamePad::XINPUTPAD _pad);
 
 	private:
 		/**

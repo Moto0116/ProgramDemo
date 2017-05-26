@@ -14,13 +14,19 @@
 #include <random>
 
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
-#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
-#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
+#include "TaskManager\TaskBase\TaskBase.h"
 #include "InputDeviceManager\InputDeviceManager.h"
-#include "DirectX11\TextureManager\Texture\Texture.h"
-#include "DirectX11\Camera\Camera.h"
-#include "DirectX11\Vertex2D\Vertex2D.h"
-#include "DirectX11\Font\Font.h"
+
+
+namespace Lib
+{
+	class DrawTask;
+	class UpdateTask;
+	class Camera;
+	class Texture;
+	class Vertex2D;
+	class Font;
+}
 
 
 /**
@@ -407,7 +413,7 @@ private:
 	int							m_WaveVertexShaderIndex;		//!< 頂点シェーダーインデックス.
 	int							m_WavePixelShaderIndex;			//!< ピクセルシェーダーインデックス.
 	int							m_BumpPixelShaderIndex;			//!< ピクセルシェーダーインデックス.
-	int							m_WaveTextureRenderIndex;		//!< 描画する波テクスチャ.
+	int							m_WaveRenderIndex;				//!< 描画する波テクスチャのインデックス.
 
 	ID3D11Buffer*				m_pWaveVertexBuffer;			//!< 頂点バッファ.
 	ID3D11InputLayout*			m_pWaveVertexLayout;			//!< 頂点入力レイアウト.
@@ -432,9 +438,6 @@ private:
 	Lib::Font*					m_pFont;
 
 	const Lib::KeyDevice::KEYSTATE* m_pKeyState;			//!< キーの状態.
-
-	Lib::Vertex2D*				m_pNormalVertex;
-	Lib::Texture*				m_pNormalTextureInterface;
 
 };
 

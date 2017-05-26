@@ -154,6 +154,13 @@ bool Application::CreateInputDevice()
 		return false;
 	}
 
+	if (!SINGLETON_INSTANCE(Lib::InputDeviceManager)->CreateDevice(Lib::InputDeviceManager::GAMEPAD_TYPE))
+	{
+		OutputErrorLog("ゲームパッド生成に失敗しました");
+		SINGLETON_DELETE(Lib::InputDeviceManager);
+		return false;
+	}
+
 	return true;
 }
 
@@ -196,6 +203,7 @@ void Application::ReleaseInputDevice()
 {
 	if (SINGLETON_INSTANCE(Lib::InputDeviceManager) != NULL)
 	{
+		SINGLETON_INSTANCE(Lib::InputDeviceManager)->ReleaseDevice(Lib::InputDeviceManager::GAMEPAD_TYPE);
 		SINGLETON_INSTANCE(Lib::InputDeviceManager)->ReleaseDevice(Lib::InputDeviceManager::MOUSEDEVICE_TYPE);
 		SINGLETON_INSTANCE(Lib::InputDeviceManager)->ReleaseDevice(Lib::InputDeviceManager::KEYDEVICE_TYPE);
 

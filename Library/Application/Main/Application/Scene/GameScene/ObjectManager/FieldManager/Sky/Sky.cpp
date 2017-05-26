@@ -41,65 +41,17 @@ Sky::~Sky()
 //----------------------------------------------------------------------
 bool Sky::Initialize()
 {
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
-	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
-	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddTask(m_pCubeMapDrawTask);
-
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
-		TEXT("Resource\\Model\\sky.fbx"),
-		&m_SkyModelIndex);
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
-		TEXT("Resource\\Effect\\SkyEffect.fx"),
-		"VS",
-		&m_VertexShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
-		TEXT("Resource\\Effect\\SkyEffect.fx"), 
-		"PS",
-		&m_PixelShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
-		"Resource\\Texture\\SkyCLUT.png", 
-		&m_SkyCLUTIndex);
-
-
-	if (!CreateShadowShader())
-	{
-		return false;
-	}
-
-	if (!CreateMapShader())
-	{
-		return false;
-	}
-
-	if (!CreateCubeMapShader())
-	{
-		return false;
-	}
-
-	if (!CreateVertexLayout())
-	{
-		return false;
-	}
-
-	if (!CreateDepthStencilState())
-	{
-		return false;
-	}
-
-	if (!CreateConstantBuffer())
-	{
-		return false;
-	}
-
-	if (!WriteConstantBuffer())
-	{
-		return false;
-	}
+	if (!CreateTask())					return false;
+	if (!CreateModel())					return false;
+	if (!CreateTexture())				return false;
+	if (!CreateDefaultShader())			return false;
+	if (!CreateShadowShader())			return false;
+	if (!CreateMapShader())				return false;
+	if (!CreateCubeMapShader())			return false;
+	if (!CreateVertexLayout())			return false;
+	if (!CreateDepthStencilState())		return false;
+	if (!CreateConstantBuffer())		return false;
+	if (!WriteConstantBuffer())			return false;
 
 	return true;
 }
@@ -112,18 +64,10 @@ void Sky::Finalize()
 	ReleaseCubeMapShader();
 	ReleaseMapShader();
 	ReleaseShadowShader();
-
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->ReleaseFbxModel(m_SkyModelIndex);
-
-	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
-	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+	ReleaseDefaultShader();
+	ReleaseTexture();
+	ReleaseModel();
+	ReleaseTask();
 }
 
 void Sky::Update()
@@ -132,12 +76,13 @@ void Sky::Update()
 
 void Sky::Draw()
 {
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::TextureManager* pTextureManager = SINGLETON_INSTANCE(Lib::TextureManager);
+
 	ShaderSetup();
 
-	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	ID3D11ShaderResourceView* pResource =
-		SINGLETON_INSTANCE(Lib::TextureManager)->GetTexture(m_SkyCLUTIndex)->Get();
-	pContext->PSSetShaderResources(4, 1, &pResource);
+	ID3D11ShaderResourceView* pResource = pTextureManager->GetTexture(m_SkyCLUTIndex)->Get();
+	pDeviceContext->PSSetShaderResources(4, 1, &pResource);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
@@ -156,32 +101,85 @@ void Sky::MapDraw()
 
 void Sky::CubeMapDraw()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_CubeMapVertexShaderIndex),
-		NULL,
-		0);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetGeometryShader(m_CubeMapGeometryShaderIndex),
-		NULL,
-		0);
-
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_CubeMapPixelShaderIndex),
-		NULL,
-		0);
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_CubeMapVertexShaderIndex), NULL, 0);
+	pDeviceContext->GSSetShader(pShaderManager->GetGeometryShader(m_CubeMapGeometryShaderIndex), NULL, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_CubeMapPixelShaderIndex), NULL, 0);
 
 	TextureSetup();
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
 	ConstantBufferSetup();
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_SkyModelIndex)->Draw();
+	pFbxFileManager->GetFbxModel(m_SkyModelIndex)->Draw();
 }
 
 
 //----------------------------------------------------------------------
 // Private Functions
 //----------------------------------------------------------------------
+bool Sky::CreateTask()
+{
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
+	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
+	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddTask(m_pCubeMapDrawTask);
+
+	return true;
+}
+
+bool Sky::CreateModel()
+{
+	if (!SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
+		TEXT("Resource\\Model\\sky.fbx"),
+		&m_SkyModelIndex))
+	{
+		OutputErrorLog("空モデルの読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
+bool Sky::CreateTexture()
+{
+	if (!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+		"Resource\\Texture\\SkyCLUT.png",
+		&m_SkyCLUTIndex))
+	{
+		OutputErrorLog("空のカラーテーブル読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
+bool Sky::CreateDefaultShader()
+{
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		TEXT("Resource\\Effect\\SkyEffect.fx"),
+		"VS",
+		&m_VertexShaderIndex))
+	{
+		OutputErrorLog("頂点シェーダの読み込みに失敗しました");
+		return false;
+	}
+
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		TEXT("Resource\\Effect\\SkyEffect.fx"),
+		"PS",
+		&m_PixelShaderIndex))
+	{
+		OutputErrorLog("ピクセルシェーダの読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
 bool Sky::CreateShadowShader()
 {
 	if (FAILED(SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
@@ -189,6 +187,7 @@ bool Sky::CreateShadowShader()
 		"VS",
 		&m_ShadowVertexShaderIndex)))
 	{
+		OutputErrorLog("影の頂点シェーダの読み込みに失敗しました");
 		return false;
 	}
 
@@ -197,6 +196,7 @@ bool Sky::CreateShadowShader()
 		"PS",
 		&m_ShadowPixelShaderIndex)))
 	{
+		OutputErrorLog("影のピクセルシェーダの読み込みに失敗しました");
 		return false;
 	}
 
@@ -210,6 +210,7 @@ bool Sky::CreateMapShader()
 		"VS",
 		&m_MapVertexShaderIndex)))
 	{
+		OutputErrorLog("マップの頂点シェーダの読み込みに失敗しました");
 		return false;
 	}
 	
@@ -218,6 +219,7 @@ bool Sky::CreateMapShader()
 		"PS",
 		&m_MapPixelShaderIndex)))
 	{
+		OutputErrorLog("マップのピクセルシェーダの読み込みに失敗しました");
 		return false;
 	}
 
@@ -231,6 +233,7 @@ bool Sky::CreateCubeMapShader()
 		"VS",
 		&m_CubeMapVertexShaderIndex))
 	{
+		OutputErrorLog("キューブマップの頂点シェーダの読み込みに失敗しました");
 		return false;
 	}
 
@@ -239,6 +242,7 @@ bool Sky::CreateCubeMapShader()
 		"GS",
 		&m_CubeMapGeometryShaderIndex))
 	{
+		OutputErrorLog("キューブマップのジオメトリシェーダの読み込みに失敗しました");
 		return false;
 	}
 
@@ -247,10 +251,35 @@ bool Sky::CreateCubeMapShader()
 		"PS",
 		&m_CubeMapPixelShaderIndex))
 	{
+		OutputErrorLog("キューブマップのピクセルシェーダの読み込みに失敗しました");
 		return false;
 	}
 
 	return true;
+}
+
+void Sky::ReleaseTask()
+{
+	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
+	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+}
+
+void Sky::ReleaseModel()
+{
+	SINGLETON_INSTANCE(Lib::FbxFileManager)->ReleaseFbxModel(m_SkyModelIndex);
+}
+
+void Sky::ReleaseTexture()
+{
+	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
+}
+
+void Sky::ReleaseDefaultShader()
+{
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
 }
 
 void Sky::ReleaseShadowShader()

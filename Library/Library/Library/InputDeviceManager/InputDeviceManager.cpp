@@ -118,9 +118,19 @@ namespace Lib
 		m_pMouseDevice->Update();
 	}
 
+	void InputDeviceManager::GamePadUpdate(GamePad::XINPUTPAD _pad)
+	{
+		m_pGamePad->Update(_pad);
+	}
+
 	void InputDeviceManager::KeyCheck(int _dik)
 	{
 		m_pKeyDevice->KeyCheck(_dik);
+	}
+
+	void InputDeviceManager::CheckButton(GamePad::XINPUTPAD _pad, GamePad::XINPUT_ID _buttonId, WORD _button)
+	{
+		m_pGamePad->CheckButton(_pad, _buttonId, _button);
 	}
 
 	const KeyDevice::KEYSTATE* InputDeviceManager::GetKeyState() const
@@ -131,6 +141,21 @@ namespace Lib
 	const MouseDevice::MOUSESTATE InputDeviceManager::GetMouseState() const
 	{
 		return m_pMouseDevice->GetMouseState();
+	}
+
+	GamePad::PADSTATE InputDeviceManager::GetButtonState(GamePad::XINPUT_ID _buttonId, GamePad::XINPUTPAD _pad)
+	{
+		return m_pGamePad->GetButtonState(_buttonId, _pad);
+	}
+
+	bool InputDeviceManager::GetLAnalogState(GamePad::ANALOGPAD _analogId, GamePad::XINPUTPAD _pad)
+	{
+		return m_pGamePad->GetLAnalogState(_analogId, _pad);
+	}
+
+	bool InputDeviceManager::GetRAnalogState(GamePad::ANALOGPAD _analogId, GamePad::XINPUTPAD _pad)
+	{
+		return m_pGamePad->GetRAnalogState(_analogId, _pad);
 	}
 
 

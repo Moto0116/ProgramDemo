@@ -39,72 +39,16 @@ Ground::~Ground()
 //----------------------------------------------------------------------
 bool Ground::Initialize()
 {
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
-	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
-
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
-		TEXT("Resource\\Model\\map.fbx"), 
-		&m_GroundModelIndex);
-
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
-		TEXT("Resource\\Effect\\DepthShadow.fx"), 
-		"VS",
-		&m_ShadowVertexShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
-		TEXT("Resource\\Effect\\DepthShadow.fx"), 
-		"PS",
-		&m_ShadowPixelShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
-		TEXT("Resource\\Effect\\MiniMap.fx"), 
-		"VS", 
-		&m_MapVertexShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
-		TEXT("Resource\\Effect\\MiniMap.fx"), 
-		"PS",
-		&m_MapPixelShaderIndex);
-
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
-		TEXT("Resource\\Effect\\GroundEffect.fx"),
-		"VS",
-		&m_VertexShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
-		TEXT("Resource\\Effect\\GroundEffect.fx"),
-		"PS",
-		&m_PixelShaderIndex);
-
-	
-	if (!CreateTexture())
-	{
-		return false;
-	}
-
-	if (!CreateVertexLayout())
-	{
-		return false;
-	}
-
-	if (!CreateDepthStencilState())
-	{
-		return false;
-	}
-
-	if (!CreateConstantBuffer())
-	{
-		return false;
-	}
-
-	if (!WriteConstantBuffer())
-	{
-		return false;
-	}
+	if (!CreateTask())				return false;
+	if (!CreateModel())				return false;
+	if (!CreateDefaultShader())		return false;
+	if (!CreateShadowShader())		return false;
+	if (!CreateMapShader())			return false;
+	if (!CreateTexture())			return false;
+	if (!CreateVertexLayout())		return false;
+	if (!CreateDepthStencilState())	return false;
+	if (!CreateConstantBuffer())	return false;
+	if (!WriteConstantBuffer())		return false;
 
 	return true;
 }
@@ -115,22 +59,11 @@ void Ground::Finalize()
 	ReleaseDepthStencilState();
 	ReleaseVertexLayout();
 	ReleaseTexture();
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_MapPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_MapVertexShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_ShadowPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_ShadowVertexShaderIndex);
-
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->ReleaseFbxModel(m_GroundModelIndex);
-
-	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
-	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+	ReleaseMapShader();
+	ReleaseShadowShader();
+	ReleaseDefaultShader();
+	ReleaseModel();
+	ReleaseTask();
 }
 
 void Ground::Update()
@@ -139,13 +72,15 @@ void Ground::Update()
 
 void Ground::Draw()
 {
+	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
+
 	ShaderSetup();
 	TextureSetup();
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
 	ConstantBufferSetup();
 
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_GroundModelIndex)->Draw();
+	pFbxFileManager->GetFbxModel(m_GroundModelIndex)->Draw();
 }
 
 void Ground::DepthDraw()
@@ -154,20 +89,141 @@ void Ground::DepthDraw()
 
 void Ground::MapDraw()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_MapVertexShaderIndex),
-		NULL,
-		0);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_MapPixelShaderIndex),
-		NULL,
-		0);
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), NULL, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_MapPixelShaderIndex), NULL, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
 	WriteConstantBuffer();
 	ConstantBufferSetup();
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_GroundModelIndex)->Draw();
+	pFbxFileManager->GetFbxModel(m_GroundModelIndex)->Draw();
+}
+
+bool Ground::CreateTask()
+{
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
+	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
+
+	return true;
+}
+
+bool Ground::CreateModel()
+{
+	if(!SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
+		TEXT("Resource\\Model\\map.fbx"),
+		&m_GroundModelIndex))
+	{
+
+		OutputErrorLog("モデルの読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
+bool Ground::CreateDefaultShader()
+{
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		TEXT("Resource\\Effect\\GroundEffect.fx"),
+		"VS",
+		&m_VertexShaderIndex))
+	{
+		OutputErrorLog("デフォルト頂点シェーダの読み込みに失敗しました");
+		return false;
+	}
+
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		TEXT("Resource\\Effect\\GroundEffect.fx"),
+		"PS",
+		&m_PixelShaderIndex))
+	{
+		OutputErrorLog("デフォルトピクセルシェーダの読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
+bool Ground::CreateShadowShader()
+{
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		TEXT("Resource\\Effect\\DepthShadow.fx"),
+		"VS",
+		&m_ShadowVertexShaderIndex))
+	{
+		OutputErrorLog("深度シャドウ頂点シェーダの読み込みに失敗しました");
+		return false;
+	}
+
+	if(!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		TEXT("Resource\\Effect\\DepthShadow.fx"),
+		"PS",
+		&m_ShadowPixelShaderIndex))
+	{
+		OutputErrorLog("深度シャドウピクセルシェーダの読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
+bool Ground::CreateMapShader()
+{
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		TEXT("Resource\\Effect\\MiniMap.fx"),
+		"VS",
+		&m_MapVertexShaderIndex))
+	{
+		OutputErrorLog("ミニマップ頂点シェーダの読み込みに失敗しました");
+		return false;
+	}
+
+	if(!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		TEXT("Resource\\Effect\\MiniMap.fx"),
+		"PS",
+		&m_MapPixelShaderIndex))
+	{
+		OutputErrorLog("ミニマップピクセルシェーダの読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
+void Ground::ReleaseTask()
+{
+	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
+	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+}
+
+void Ground::ReleaseModel()
+{
+	SINGLETON_INSTANCE(Lib::FbxFileManager)->ReleaseFbxModel(m_GroundModelIndex);
+}
+
+void Ground::ReleaseDefaultShader()
+{
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
+}
+
+void Ground::ReleaseShadowShader()
+{
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_ShadowPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_ShadowVertexShaderIndex);
+}
+
+void Ground::ReleaseMapShader()
+{
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_MapPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_MapVertexShaderIndex);
 }
 

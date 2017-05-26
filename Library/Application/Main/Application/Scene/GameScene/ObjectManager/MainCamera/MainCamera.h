@@ -15,7 +15,12 @@
 #include "DirectX11\Camera\Camera.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
-#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
+
+
+namespace Lib
+{
+	class UpdateTask;
+}
 
 
 /**
@@ -176,8 +181,9 @@ private:
 
 	/**
 	 * 定数バッファへの書き込み関数
+	 * @return 書き込みに成功したらtrue 失敗したらfalse
 	 */
-	void WriteConstantBuffer();
+	bool WriteConstantBuffer();
 
 
 	Lib::UpdateTask*				m_pUpdateTask;		//!< 更新タスクオブジェクト

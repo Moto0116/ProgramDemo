@@ -28,9 +28,12 @@ namespace Lib
 		static const int m_RenderTargetNum = D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT;
 
 
+		/**
+		 * レンダーターゲットの識別子
+		 */
 		enum RENDER_TARGET
 		{
-			BACKBUFFER_TARGET = 0
+			BACKBUFFER_TARGET = 0	//!< バックバッファ.
 		};
 
 		/**

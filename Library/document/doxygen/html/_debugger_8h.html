@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>Library: C:/Users/cupkb/Desktop/ProgramDemo/Library/Library/Library/Debugger/Debugger.h ファイル</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Library
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li><a href="pages.html"><span>諸情報</span></a></li>
+      <li><a href="namespaces.html"><span>名前空間</span></a></li>
+      <li><a href="annotated.html"><span>クラス</span></a></li>
+      <li class="current"><a href="files.html"><span>ファイル</span></a></li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>ファイル一覧</span></a></li>
+      <li><a href="globals.html"><span>ファイルメンバ</span></a></li>
+    </ul>
+  </div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_5ad7f572bbca03234e8e621e192fc099.html">Library</a></li><li class="navelem"><a class="el" href="dir_4f44549f292b0e0f7e54b2a422bb98b2.html">Library</a></li><li class="navelem"><a class="el" href="dir_61ae7f1b650e9aa9c2a412e2882f4355.html">Debugger</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#namespaces">名前空間</a> &#124;
+<a href="#define-members">マクロ定義</a> &#124;
+<a href="#func-members">関数</a>  </div>
+  <div class="headertitle">
+<div class="title">Debugger.h ファイル</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>デバッグ機能定義  
+<a href="#details">[詳解]</a></p>
+<div class="textblock"><code>#include &lt;chrono&gt;</code><br />
+<code>#include &lt;crtdbg.h&gt;</code><br />
+<code>#include &lt;Windows.h&gt;</code><br />
+</div>
+<p><a href="_debugger_8h_source.html">[ソースコード]</a></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+名前空間</h2></td></tr>
+<tr class="memitem:namespace_lib"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib.html">Lib</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespace_lib_1_1_debugger"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib_1_1_debugger.html">Lib::Debugger</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+マクロ定義</h2></td></tr>
+<tr class="memitem:a741c3a6b23d52227c10b46a577f5dd4f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_debugger_8h.html#a741c3a6b23d52227c10b46a577f5dd4f">MyAssert</a>(_expression,  _str)</td></tr>
+<tr class="separator:a741c3a6b23d52227c10b46a577f5dd4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a706f3fa6ccd208b5338b78b2c1d40607"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_debugger_8h.html#a706f3fa6ccd208b5338b78b2c1d40607">OutputErrorLog</a>(_str)</td></tr>
+<tr class="separator:a706f3fa6ccd208b5338b78b2c1d40607"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+関数</h2></td></tr>
+<tr class="memitem:a0284cb71ff685d47b3c389f96605cd1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib_1_1_debugger.html#a0284cb71ff685d47b3c389f96605cd1a">Lib::Debugger::CheckMemoryLeak</a> ()</td></tr>
+<tr class="memdesc:a0284cb71ff685d47b3c389f96605cd1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">メモリリークをチェックする  <a href="namespace_lib_1_1_debugger.html#a0284cb71ff685d47b3c389f96605cd1a">[詳解]</a><br /></td></tr>
+<tr class="separator:a0284cb71ff685d47b3c389f96605cd1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37dceb8db1cbeb821271b71a9f3e4f18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib_1_1_debugger.html#a37dceb8db1cbeb821271b71a9f3e4f18">Lib::Debugger::OutputDebugLog</a> (TCHAR *_pStr,...)</td></tr>
+<tr class="memdesc:a37dceb8db1cbeb821271b71a9f3e4f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">デバッグログの出力関数  <a href="namespace_lib_1_1_debugger.html#a37dceb8db1cbeb821271b71a9f3e4f18">[詳解]</a><br /></td></tr>
+<tr class="separator:a37dceb8db1cbeb821271b71a9f3e4f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28ec9d839588992e2b95e130ce0fb6b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib_1_1_debugger.html#a28ec9d839588992e2b95e130ce0fb6b8">Lib::Debugger::OpenLogFile</a> (TCHAR *_pFilePath)</td></tr>
+<tr class="memdesc:a28ec9d839588992e2b95e130ce0fb6b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">ファイルを開く(ファイルがなければ作成する)  <a href="namespace_lib_1_1_debugger.html#a28ec9d839588992e2b95e130ce0fb6b8">[詳解]</a><br /></td></tr>
+<tr class="separator:a28ec9d839588992e2b95e130ce0fb6b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7daf850d4143f295642d23b265e40294"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib_1_1_debugger.html#a7daf850d4143f295642d23b265e40294">Lib::Debugger::WriteLogFile</a> (TCHAR *_pStr,...)</td></tr>
+<tr class="memdesc:a7daf850d4143f295642d23b265e40294"><td class="mdescLeft">&#160;</td><td class="mdescRight">デバッグ情報をファイルに書き込む  <a href="namespace_lib_1_1_debugger.html#a7daf850d4143f295642d23b265e40294">[詳解]</a><br /></td></tr>
+<tr class="separator:a7daf850d4143f295642d23b265e40294"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae0baaafada65ae3e429ef1c1cecb71b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib_1_1_debugger.html#aae0baaafada65ae3e429ef1c1cecb71b">Lib::Debugger::CloseLogFile</a> ()</td></tr>
+<tr class="memdesc:aae0baaafada65ae3e429ef1c1cecb71b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ファイルを閉じる  <a href="namespace_lib_1_1_debugger.html#aae0baaafada65ae3e429ef1c1cecb71b">[詳解]</a><br /></td></tr>
+<tr class="separator:aae0baaafada65ae3e429ef1c1cecb71b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f66088e8b8f37c63cb0750a95dc73c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib_1_1_debugger.html#a7f66088e8b8f37c63cb0750a95dc73c3">Lib::Debugger::StartTimer</a> ()</td></tr>
+<tr class="memdesc:a7f66088e8b8f37c63cb0750a95dc73c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">計測開始  <a href="namespace_lib_1_1_debugger.html#a7f66088e8b8f37c63cb0750a95dc73c3">[詳解]</a><br /></td></tr>
+<tr class="separator:a7f66088e8b8f37c63cb0750a95dc73c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2d8590166ed482b685c2b44c8a3559d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib_1_1_debugger.html#af2d8590166ed482b685c2b44c8a3559d">Lib::Debugger::EndTimer</a> ()</td></tr>
+<tr class="memdesc:af2d8590166ed482b685c2b44c8a3559d"><td class="mdescLeft">&#160;</td><td class="mdescRight">計測終了  <a href="namespace_lib_1_1_debugger.html#af2d8590166ed482b685c2b44c8a3559d">[詳解]</a><br /></td></tr>
+<tr class="separator:af2d8590166ed482b685c2b44c8a3559d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2284f0cc672d439284ccbb7a68e0885"><td class="memItemLeft" align="right" valign="top">LONGLONG&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_lib_1_1_debugger.html#ad2284f0cc672d439284ccbb7a68e0885">Lib::Debugger::GetTime</a> ()</td></tr>
+<tr class="memdesc:ad2284f0cc672d439284ccbb7a68e0885"><td class="mdescLeft">&#160;</td><td class="mdescRight">計測時間取得  <a href="namespace_lib_1_1_debugger.html#ad2284f0cc672d439284ccbb7a68e0885">[詳解]</a><br /></td></tr>
+<tr class="separator:ad2284f0cc672d439284ccbb7a68e0885"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
+<div class="textblock"><p>デバッグ機能定義 </p>
+<dl class="section author"><dt>著者</dt><dd>morimoto </dd></dl>
+
+<p> <a class="el" href="_debugger_8h_source.html">Debugger.h</a> に定義があります。</p>
+</div><h2 class="groupheader">マクロ定義詳解</h2>
+<a class="anchor" id="a741c3a6b23d52227c10b46a577f5dd4f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MyAssert</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">_expression, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">_str&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p> <a class="el" href="_debugger_8h_source.html">Debugger.h</a> の <a class="el" href="_debugger_8h_source.html#l00092">92</a> 行目に定義があります。</p>
+
+</div>
+</div>
+<a class="anchor" id="a706f3fa6ccd208b5338b78b2c1d40607"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define OutputErrorLog</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">_str</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p> <a class="el" href="_debugger_8h_source.html">Debugger.h</a> の <a class="el" href="_debugger_8h_source.html#l00094">94</a> 行目に定義があります。</p>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+2017年05月21日(日) 18時15分32秒作成 - Library / 構成:  &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

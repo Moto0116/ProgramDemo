@@ -11,6 +11,7 @@
 
 #include "Debugger\Debugger.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
+#include "DirectX11\Camera\Camera.h"
 #include "Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.h"
 
 
@@ -58,14 +59,10 @@ bool MiniMap::Initialize()
 		m_NearPoint,
 		m_FarPoint);
 
-	CreateTexture();
-	CreateConstantBuffer();
-	WriteConstantBuffer();
-
-	if (!CreateVertex2D())
-	{
-		return false;
-	}
+	if (!CreateTexture())			return false;
+	if (!CreateConstantBuffer())	return false;
+	if (!WriteConstantBuffer())		return false;
+	if (!CreateVertex2D())			return false;
 
 	m_pVertex->WriteConstantBuffer(&m_Pos);
 	m_pVertex->SetInverse(false);
@@ -76,7 +73,6 @@ bool MiniMap::Initialize()
 void MiniMap::Finalize()
 {
 	ReleaseVertex2D();
-
 	ReleaseTexture();
 	ReleaseConstantBuffer();
 
@@ -95,10 +91,9 @@ void MiniMap::Update()
 
 void MiniMap::Draw()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(
-		0, 
-		1, 
-		&m_pShaderResourceView);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+
+	pDeviceContext->PSSetShaderResources(0, 1, &m_pShaderResourceView);
 	m_pVertex->ShaderSetup();
 	m_pVertex->Draw();
 }
@@ -109,6 +104,9 @@ void MiniMap::Draw()
 //----------------------------------------------------------------------
 bool MiniMap::CreateConstantBuffer()
 {
+	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+
+	// マップ描画の定数バッファ.
 	D3D11_BUFFER_DESC ConstantBufferDesc;
 	ConstantBufferDesc.ByteWidth = sizeof(MINIMAP_CONSTANT_BUFFER);
 	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -117,7 +115,7 @@ bool MiniMap::CreateConstantBuffer()
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
+	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
 	{
 		OutputErrorLog("定数バッファ生成に失敗しました");
 		return false;
@@ -128,6 +126,9 @@ bool MiniMap::CreateConstantBuffer()
 
 bool MiniMap::CreateTexture()
 {
+	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+
+	// マップテクスチャの生成.
 	D3D11_TEXTURE2D_DESC MapTextureDesc;
 	ZeroMemory(&MapTextureDesc, sizeof(MapTextureDesc));
 	MapTextureDesc.Width = static_cast<UINT>(m_TextureWidth);
@@ -142,7 +143,7 @@ bool MiniMap::CreateTexture()
 	MapTextureDesc.CPUAccessFlags = 0;
 	MapTextureDesc.MiscFlags = 0;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateTexture2D(
+	if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
 		&MapTextureDesc,
 		NULL,
 		&m_pMapTexture)))
@@ -151,7 +152,7 @@ bool MiniMap::CreateTexture()
 		return false;
 	}
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateRenderTargetView(
+	if (FAILED(pGraphicdDevice->GetDevice()->CreateRenderTargetView(
 		m_pMapTexture,
 		NULL,
 		&m_pRenderTarget)))
@@ -160,7 +161,7 @@ bool MiniMap::CreateTexture()
 		return false;
 	}
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateShaderResourceView(
+	if (FAILED(pGraphicdDevice->GetDevice()->CreateShaderResourceView(
 		m_pMapTexture,
 		NULL,
 		&m_pShaderResourceView)))
@@ -183,7 +184,7 @@ bool MiniMap::CreateTexture()
 	DepthStencilDesc.CPUAccessFlags = 0;
 	DepthStencilDesc.MiscFlags = 0;
 
-	if (FAILED(FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateTexture2D(
+	if (FAILED(FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
 		&DepthStencilDesc,
 		NULL,
 		&m_pDepthStencilTexture))))
@@ -192,7 +193,7 @@ bool MiniMap::CreateTexture()
 		return false;
 	}
 
-	if (FAILED(FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilView(
+	if (FAILED(FAILED(pGraphicdDevice->GetDevice()->CreateDepthStencilView(
 		m_pDepthStencilTexture,
 		NULL,
 		&m_pDepthStencilView))))
@@ -201,7 +202,7 @@ bool MiniMap::CreateTexture()
 		return false;
 	}
 
-	// ビューポート設定.
+	// マップテクスチャのビューポート設定.
 	m_ViewPort.TopLeftX = 0;
 	m_ViewPort.TopLeftY = 0;
 	m_ViewPort.Width = static_cast<float>(m_TextureWidth);
@@ -209,10 +210,10 @@ bool MiniMap::CreateTexture()
 	m_ViewPort.MinDepth = 0.0f;
 	m_ViewPort.MaxDepth = 1.0f;
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(&m_pRenderTarget, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(&m_pDepthStencilView, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(m_ClearColor, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(&m_ViewPort, m_RenderTargetStage);
+	pGraphicdDevice->SetRenderTarget(&m_pRenderTarget, m_RenderTargetStage);
+	pGraphicdDevice->SetDepthStencil(&m_pDepthStencilView, m_RenderTargetStage);
+	pGraphicdDevice->SetClearColor(m_ClearColor, m_RenderTargetStage);
+	pGraphicdDevice->SetViewPort(&m_ViewPort, m_RenderTargetStage);
 
 	return true;
 }
@@ -238,13 +239,13 @@ void MiniMap::ReleaseTexture()
 	SafeRelease(m_pMapTexture);
 }
 
-void MiniMap::WriteConstantBuffer()
+bool MiniMap::WriteConstantBuffer()
 {
-	m_pCamera->TransformView(&m_DefaultPos, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 1, 0), m_ViewAngle);
-
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
 	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResourceData)))
 	{
+		m_pCamera->TransformView(&m_DefaultPos, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 1, 0), m_ViewAngle);
+
 		MINIMAP_CONSTANT_BUFFER ConstantBuffer;
 		ConstantBuffer.Proj = m_pCamera->GetProjectionMatrix();
 		ConstantBuffer.View = m_pCamera->GetViewMatrix();
@@ -259,20 +260,26 @@ void MiniMap::WriteConstantBuffer()
 			sizeof(ConstantBuffer));
 
 		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
+
+		return true;
 	}
+
+	return false;
 }
 
 void MiniMap::MiniMapBeginScene()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(m_RenderTargetStage);
+	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+
+	pGraphicdDevice->BeginScene(m_RenderTargetStage);
 
 	WriteConstantBuffer();
-
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(4, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetConstantBuffers(4, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->HSSetConstantBuffers(4, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->DSSetConstantBuffers(4, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(4, 1, &m_pConstantBuffer);
+	pDeviceContext->VSSetConstantBuffers(4, 1, &m_pConstantBuffer);
+	pDeviceContext->GSSetConstantBuffers(4, 1, &m_pConstantBuffer);
+	pDeviceContext->HSSetConstantBuffers(4, 1, &m_pConstantBuffer);
+	pDeviceContext->DSSetConstantBuffers(4, 1, &m_pConstantBuffer);
+	pDeviceContext->PSSetConstantBuffers(4, 1, &m_pConstantBuffer);
 }
 
 

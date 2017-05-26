@@ -10,9 +10,6 @@
 // Include
 //----------------------------------------------------------------------
 #include "Main\Object3DBase\Object3DBase.h"
-#include "Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h"
-#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
-#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
 
 class MainCamera;
@@ -93,6 +90,23 @@ private:
 	static int	m_ReflectMapVertexShaderIndex;	//!< 反射マップ描画の頂点シェーダーインデックス.
 	static int	m_ReflectMapPixelShaderIndex;	//!< 反射マップ描画のピクセルシェーダーインデックス.
 
+
+	//----------------------------------------------------------------------
+	// 生成処理
+	//----------------------------------------------------------------------
+
+	/**
+	 * タスクの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateTask();
+
+	/**
+	 * モデルの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateModel();
+
 	/**
 	 * シャドウマップシェーダの生成
 	 * @return 成功したらtrue 失敗しましたfalse
@@ -117,28 +131,44 @@ private:
 	 */
 	bool CreateReflectMapShader();
 
+	
+	//----------------------------------------------------------------------
+	// 解放処理
+	//----------------------------------------------------------------------	
+
 	/**
-	 * シャドウマップシェーダの破棄
+	 * タスクの解放
+	 */
+	void ReleaseTask();
+
+	/**
+	 * モデルの解放
+	 */
+	void ReleaseModel();
+
+	/**
+	 * シャドウマップシェーダの解放
 	 */
 	void ReleaseShadowShader();
 
 	/**
-	 * マップシェーダの破棄
+	 * マップシェーダの解放
 	 */
 	void ReleaseMapShader();
 
 	/**
-	 * キューブマップシェーダの破棄
+	 * キューブマップシェーダの解放
 	 */
 	void ReleaseCubeMapShader();
 
 	/**
-	 * 反射マップシェーダの破棄
+	 * 反射マップシェーダの解放
 	 */
 	void ReleaseReflectMapShader();
 
 
-	Smoke*	m_pSmoke;
+	Smoke*	m_pSmoke;	//!< スモーク管理オブジェクト.
+
 
 };
 

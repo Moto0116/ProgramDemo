@@ -10,9 +10,12 @@
 #include "MainLight.h"
 
 #include "Debugger\Debugger.h"
+#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "DirectX11\TextureManager\TextureManager.h"
 #include "DirectX11\ShaderManager\ShaderManager.h"
+#include "DirectX11\Vertex2D\Vertex2D.h"
 #include "Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h"
 #include "..\MainCamera\MainCamera.h"
 

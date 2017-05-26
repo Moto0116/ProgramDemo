@@ -10,6 +10,7 @@
 #include "MainCamera.h"
 
 #include "Debugger\Debugger.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 
@@ -67,11 +68,7 @@ bool MainCamera::Initialize()
 		m_NearPoint,
 		m_FarPoint);
 
-	if (!CreateConstantBuffer())
-	{
-		OutputErrorLog("定数バッファ生成に失敗しました");
-		return false;
-	}
+	if (!CreateConstantBuffer()) return false;
 
 	RotateCalculate();	// 初期値で座標を計算する.
 	Transform();
@@ -264,17 +261,22 @@ void MainCamera::MoveRight()
 
 void MainCamera::Transform()
 {
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+
 	WriteConstantBuffer();
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(1, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetConstantBuffers(1, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->HSSetConstantBuffers(1, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->DSSetConstantBuffers(1, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	pDeviceContext->VSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	pDeviceContext->GSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	pDeviceContext->HSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	pDeviceContext->DSSetConstantBuffers(1, 1, &m_pConstantBuffer);
+	pDeviceContext->PSSetConstantBuffers(1, 1, &m_pConstantBuffer);
 }
 
 bool MainCamera::CreateConstantBuffer()
 {
+	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+
+	// カメラの定数バッファ生成.
 	D3D11_BUFFER_DESC ConstantBufferDesc;
 	ConstantBufferDesc.ByteWidth = sizeof(CAMERA_CONSTANT_BUFFER);
 	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -283,7 +285,10 @@ bool MainCamera::CreateConstantBuffer()
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
+	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
+		&ConstantBufferDesc, 
+		NULL, 
+		&m_pConstantBuffer)))
 	{
 		OutputErrorLog("定数バッファ生成に失敗しました");
 		return false;
@@ -301,7 +306,7 @@ void MainCamera::ReleaseConstantBuffer()
 	}
 }
 
-void MainCamera::WriteConstantBuffer()
+bool MainCamera::WriteConstantBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
 	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
@@ -344,5 +349,9 @@ void MainCamera::WriteConstantBuffer()
 			sizeof(ConstantBuffer));
 
 		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
+
+		return true;
 	}
+
+	return false;
 }

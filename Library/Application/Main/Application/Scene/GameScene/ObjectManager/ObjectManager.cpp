@@ -15,7 +15,6 @@
 #include "House\House.h"
 #include "MiniMap\MiniMap.h"
 #include "Rain\Rain.h"
-#include "Smoke\Smoke.h"
 #include "Water\Water.h"
 
 
@@ -58,6 +57,7 @@ ObjectManager::~ObjectManager()
 		delete (*itr);
 	}
 }
+
 
 //----------------------------------------------------------------------
 // Public Functions

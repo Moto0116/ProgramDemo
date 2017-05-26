@@ -10,12 +10,15 @@
 #include "Rain.h"
 
 #include "Debugger\Debugger.h"
+#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "DirectX11\ShaderManager\ShaderManager.h"
 #include "DirectX11\SoundManager\SoundManager.h"
 #include "DirectX11\SoundManager\ISound\ISound.h"
 #include "DirectX11\TextureManager\TextureManager.h"
 #include "DirectX11\TextureManager\ITexture\ITexture.h"
+#include "DirectX11\Font\Font.h"
 
 
 //----------------------------------------------------------------------
@@ -67,50 +70,15 @@ Rain::~Rain()
 //----------------------------------------------------------------------
 bool Rain::Initialize()
 {
-	if (!CreateTask())
-	{
-		return false;
-	}
-
-	if (!CreateVertexBuffer())
-	{
-		return false;
-	}
-
-	if (!WriteInstanceBuffer())
-	{
-		return false;
-	}
-
-	if (!CreateShader())
-	{
-		return false;
-	}
-
-	if (!CreateVertexLayout())
-	{
-		return false;
-	}
-
-	if (!CreateState())
-	{
-		return false;
-	}
-
-	if (!CreateTexture())
-	{
-		return false;
-	}
-
-	if (!CreateSound())
-	{
-		return false;
-	}
-
-	if (!CreateFontObject())
-	{
-		return false;
-	}
+	if (!CreateTask())			return false;
+	if (!CreateVertexBuffer())	return false;
+	if (!WriteInstanceBuffer()) return false;
+	if (!CreateShader())		return false;
+	if (!CreateVertexLayout())	return false;
+	if (!CreateState())			return false;
+	if (!CreateTexture())		return false;
+	if (!CreateSound())			return false;
+	if (!CreateFontObject())	return false;
 
 	return true;
 }

@@ -78,6 +78,35 @@ private:
 	int	m_CubeMapGeometryShaderIndex;	//!< キューブマップ描画のジオメトリシェーダーインデックス.
 	int	m_CubeMapPixelShaderIndex;		//!< キューブマップ描画のピクセルシェーダーインデックス.
 
+
+	//----------------------------------------------------------------------
+	// 生成処理
+	//----------------------------------------------------------------------
+
+	/**
+	 * タスクの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateTask();
+
+	/**
+	 * モデルの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateModel();
+
+	/**
+	 * テクスチャの生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateTexture();
+
+	/**
+	 * 通常描画時のシェーダー生成
+	 * @return 成功したらtrue 失敗しましたfalse
+	 */
+	bool CreateDefaultShader();
+
 	/**
 	 * シャドウマップシェーダの生成
 	 * @return 成功したらtrue 失敗しましたfalse
@@ -95,6 +124,31 @@ private:
 	 * @return 成功したらtrue 失敗しましたfalse
 	 */
 	bool CreateCubeMapShader();
+
+
+	//----------------------------------------------------------------------
+	// 解放処理
+	//----------------------------------------------------------------------
+
+	/**
+	 * タスクの解放
+	 */
+	void ReleaseTask();
+
+	/**
+	 * モデルの解放
+	 */
+	void ReleaseModel();
+
+	/**
+	 * テクスチャの解放
+	 */
+	void ReleaseTexture();
+
+	/**
+	 * 通常描画時シェーダの解放
+	 */
+	void ReleaseDefaultShader();
 
 	/**
 	 * シャドウマップシェーダの破棄

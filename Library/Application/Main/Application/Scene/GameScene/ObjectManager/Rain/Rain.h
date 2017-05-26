@@ -14,11 +14,16 @@
 #include <random>
 
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
-#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
-#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "..\MainCamera\MainCamera.h"
-#include "DirectX11\Font\Font.h"
+
+
+namespace Lib
+{
+	class DrawTask;
+	class UpdateTask;
+	class Font;
+}
 
 
 /**

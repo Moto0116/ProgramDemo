@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>Library: C:/Users/cupkb/Desktop/ProgramDemo/Library/Library/Library/DirectX11/VertexManager/VertexManager.h ソースファイル</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">Library
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li><a href="pages.html"><span>諸情報</span></a></li>
+      <li><a href="namespaces.html"><span>名前空間</span></a></li>
+      <li><a href="annotated.html"><span>クラス</span></a></li>
+      <li class="current"><a href="files.html"><span>ファイル</span></a></li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>ファイル一覧</span></a></li>
+      <li><a href="globals.html"><span>ファイルメンバ</span></a></li>
+    </ul>
+  </div>
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_5ad7f572bbca03234e8e621e192fc099.html">Library</a></li><li class="navelem"><a class="el" href="dir_4f44549f292b0e0f7e54b2a422bb98b2.html">Library</a></li><li class="navelem"><a class="el" href="dir_76e78d5529840778fa93c443b7e8ad68.html">DirectX11</a></li><li class="navelem"><a class="el" href="dir_a557cd1a3fe4bf92e87edbfa03eb56cd.html">VertexManager</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">VertexManager.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="_vertex_manager_8h.html">[詳解]</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;</div><div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#ifndef LIB_VERTEXMANAGER_H</span></div><div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#define LIB_VERTEXMANAGER_H</span></div><div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div><div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">//----------------------------------------------------------------------</span></div><div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="comment">// Include</span></div><div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="comment">//----------------------------------------------------------------------</span></div><div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div><div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div><div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;..\..\SingletonBase\SingletonBase.h&quot;</span></div><div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;</div><div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div><div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespace_lib.html">Lib</a></div><div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div><div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">class </span>GraphicsDevice;</div><div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">interface </span>IVertex;</div><div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div><div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="class_lib_1_1_vertex_manager.html">   25</a></span>&#160;    <span class="keyword">class </span><a class="code" href="class_lib_1_1_vertex_manager.html">VertexManager</a></div><div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    {</div><div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">public</span>:</div><div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <a class="code" href="class_lib_1_1_vertex_manager.html#adf7979c23927dcf106f1e6e0b64d4a36">VertexManager</a>();</div><div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div><div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <a class="code" href="class_lib_1_1_vertex_manager.html#ae0f4a60eb30dfbf8515ad92f38173b78">~VertexManager</a>();</div><div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordtype">bool</span> <a class="code" href="class_lib_1_1_vertex_manager.html#ab268e18a909607d12dfd8205a0389fcb">Initialize</a>(<a class="code" href="class_lib_1_1_graphics_device.html">GraphicsDevice</a>* _pGraphicsDevice);</div><div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div><div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordtype">void</span> <a class="code" href="class_lib_1_1_vertex_manager.html#a5f671e3c38efca379b1e3deeece31b64">Finalize</a>();</div><div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div><div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">private</span>:</div><div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="class_lib_1_1_vertex_manager.html#a446d4ed56180866995e9bba8bb1d3269">   51</a></span>&#160;        <a class="code" href="class_lib_1_1_graphics_device.html">GraphicsDevice</a>*         <a class="code" href="class_lib_1_1_vertex_manager.html#a446d4ed56180866995e9bba8bb1d3269">m_pGraphicDevice</a>;   </div><div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="class_lib_1_1_vertex_manager.html#a2a3c32be9300a54f0b7bf0c045bf2dd5">   52</a></span>&#160;        std::vector&lt;IVertex*&gt;   <a class="code" href="class_lib_1_1_vertex_manager.html#a2a3c32be9300a54f0b7bf0c045bf2dd5">m_pVertexs</a>;         </div><div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    };</div><div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div><div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div><div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#endif // LIB_VERTEXMANAGER_H</span></div><div class="ttc" id="class_lib_1_1_vertex_manager_html_ae0f4a60eb30dfbf8515ad92f38173b78"><div class="ttname"><a href="class_lib_1_1_vertex_manager.html#ae0f4a60eb30dfbf8515ad92f38173b78">Lib::VertexManager::~VertexManager</a></div><div class="ttdeci">~VertexManager()</div><div class="ttdoc">デストラクタ </div><div class="ttdef"><b>Definition:</b> <a href="_vertex_manager_8cpp_source.html#l00025">VertexManager.cpp:25</a></div></div>
+<div class="ttc" id="class_lib_1_1_graphics_device_html"><div class="ttname"><a href="class_lib_1_1_graphics_device.html">Lib::GraphicsDevice</a></div><div class="ttdoc">グラフィックデバイスの管理クラス定義 </div><div class="ttdef"><b>Definition:</b> <a href="_graphics_device_8h_source.html#l00023">GraphicsDevice.h:23</a></div></div>
+<div class="ttc" id="class_lib_1_1_vertex_manager_html_a446d4ed56180866995e9bba8bb1d3269"><div class="ttname"><a href="class_lib_1_1_vertex_manager.html#a446d4ed56180866995e9bba8bb1d3269">Lib::VertexManager::m_pGraphicDevice</a></div><div class="ttdeci">GraphicsDevice * m_pGraphicDevice</div><div class="ttdoc">グラフィックデバイス. </div><div class="ttdef"><b>Definition:</b> <a href="_vertex_manager_8h_source.html#l00051">VertexManager.h:51</a></div></div>
+<div class="ttc" id="class_lib_1_1_vertex_manager_html_a5f671e3c38efca379b1e3deeece31b64"><div class="ttname"><a href="class_lib_1_1_vertex_manager.html#a5f671e3c38efca379b1e3deeece31b64">Lib::VertexManager::Finalize</a></div><div class="ttdeci">void Finalize()</div><div class="ttdoc">終了処理 </div><div class="ttdef"><b>Definition:</b> <a href="_vertex_manager_8cpp_source.html#l00039">VertexManager.cpp:39</a></div></div>
+<div class="ttc" id="class_lib_1_1_vertex_manager_html"><div class="ttname"><a href="class_lib_1_1_vertex_manager.html">Lib::VertexManager</a></div><div class="ttdoc">頂点管理クラス </div><div class="ttdef"><b>Definition:</b> <a href="_vertex_manager_8h_source.html#l00025">VertexManager.h:25</a></div></div>
+<div class="ttc" id="class_lib_1_1_vertex_manager_html_adf7979c23927dcf106f1e6e0b64d4a36"><div class="ttname"><a href="class_lib_1_1_vertex_manager.html#adf7979c23927dcf106f1e6e0b64d4a36">Lib::VertexManager::VertexManager</a></div><div class="ttdeci">VertexManager()</div><div class="ttdoc">コンストラクタ </div><div class="ttdef"><b>Definition:</b> <a href="_vertex_manager_8cpp_source.html#l00021">VertexManager.cpp:21</a></div></div>
+<div class="ttc" id="namespace_lib_html"><div class="ttname"><a href="namespace_lib.html">Lib</a></div><div class="ttdef"><b>Definition:</b> <a href="_collision_base_8cpp_source.html#l00013">CollisionBase.cpp:13</a></div></div>
+<div class="ttc" id="class_lib_1_1_vertex_manager_html_a2a3c32be9300a54f0b7bf0c045bf2dd5"><div class="ttname"><a href="class_lib_1_1_vertex_manager.html#a2a3c32be9300a54f0b7bf0c045bf2dd5">Lib::VertexManager::m_pVertexs</a></div><div class="ttdeci">std::vector&lt; IVertex * &gt; m_pVertexs</div><div class="ttdoc">頂点オブジェクトを格納するコンテナ. </div><div class="ttdef"><b>Definition:</b> <a href="_vertex_manager_8h_source.html#l00052">VertexManager.h:52</a></div></div>
+<div class="ttc" id="class_lib_1_1_vertex_manager_html_ab268e18a909607d12dfd8205a0389fcb"><div class="ttname"><a href="class_lib_1_1_vertex_manager.html#ab268e18a909607d12dfd8205a0389fcb">Lib::VertexManager::Initialize</a></div><div class="ttdeci">bool Initialize(GraphicsDevice *_pGraphicsDevice)</div><div class="ttdoc">初期化処理 </div><div class="ttdef"><b>Definition:</b> <a href="_vertex_manager_8cpp_source.html#l00033">VertexManager.cpp:33</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+2017年05月21日(日) 18時15分32秒作成 - Library / 構成:  &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

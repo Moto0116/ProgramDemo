@@ -13,7 +13,7 @@
 #include "DirectX11\FbxFileManager\FbxFileManager.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "DirectX11\ShaderManager\ShaderManager.h"
-#include "..\Smoke\Smoke.h"
+#include "Smoke\Smoke.h"
 
 
 //----------------------------------------------------------------------
@@ -40,12 +40,12 @@ House::House(MainCamera* _pCamera, D3DXVECTOR3 _Pos, float _rotate)
 	D3DXVECTOR3 Pos = D3DXVECTOR3(4.5f, 25, 4.0f);
 	D3DXVECTOR3 TempPos = Pos;
 
-	Pos.x = 
-		TempPos.x * cos(static_cast<float>(D3DXToRadian(-_rotate))) - 
+	Pos.x =
+		TempPos.x * cos(static_cast<float>(D3DXToRadian(-_rotate))) -
 		TempPos.z * sin(static_cast<float>(D3DXToRadian(-_rotate)));
 
-	Pos.z = 
-		TempPos.x * sin(static_cast<float>(D3DXToRadian(-_rotate))) + 
+	Pos.z =
+		TempPos.x * sin(static_cast<float>(D3DXToRadian(-_rotate))) +
 		TempPos.z * cos(static_cast<float>(D3DXToRadian(-_rotate)));
 
 	Pos += _Pos;
@@ -68,78 +68,20 @@ House::~House()
 //----------------------------------------------------------------------
 bool House::Initialize()
 {
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
-	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
-	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddTask(m_pCubeMapDrawTask);
-	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->AddTask(m_pReflectMapDrawTask);
+	if (!CreateTask())				return false;
+	if (!CreateModel())				return false;
+	if (!CreateShader())			return false;
+	if (!CreateShadowShader())		return false;
+	if (!CreateMapShader())			return false;
+	if (!CreateCubeMapShader())		return false;
+	if (!CreateReflectMapShader())	return false;
+	if (!CreateTexture())			return false;
+	if (!CreateVertexLayout())		return false;
+	if (!CreateDepthStencilState())	return false;
+	if (!CreateConstantBuffer())	return false;
+	if (!WriteConstantBuffer())		return false;
+	if (!m_pSmoke->Initialize())	return false;
 
-	if (m_ModelIndex == Lib::FbxFileManager::m_InvalidIndex)
-	{
-		if (!SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
-			TEXT("Resource\\Model\\house_red.fbx"),
-			&m_ModelIndex))
-		{
-			OutputErrorLog("家オブジェクトのfbxモデル読み込みに失敗しました");
-			return false;
-		}
-	}
-
-	if (!CreateShader())
-	{
-		return false;
-	}
-
-	if (!CreateShadowShader())
-	{
-		return false;
-	}
-
-	if (!CreateMapShader())
-	{
-		return false;
-	}
-
-	if (!CreateCubeMapShader())
-	{
-		return false;
-	}
-
-	if (!CreateReflectMapShader())
-	{
-		return false;
-	}
-
-	if (!CreateTexture())
-	{
-		return false;
-	}
-
-	if (!CreateVertexLayout())
-	{
-		return false;
-	}
-
-	if (!CreateDepthStencilState())
-	{
-		return false;
-	}
-
-	if (!CreateConstantBuffer())
-	{
-		return false;
-	}
-
-	if (!WriteConstantBuffer())
-	{
-		return false;
-	}
-
-	if (!m_pSmoke->Initialize())
-	{
-		return false;
-	}
 
 	return true;
 }
@@ -147,7 +89,6 @@ bool House::Initialize()
 void House::Finalize()
 {
 	m_pSmoke->Finalize();
-
 	ReleaseConstantBuffer();
 	ReleaseDepthStencilState();
 	ReleaseVertexLayout();
@@ -157,15 +98,8 @@ void House::Finalize()
 	ReleaseMapShader();
 	ReleaseShadowShader();
 	ReleaseShader();
-
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->ReleaseFbxModel(m_ModelIndex);
-
-	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->RemoveTask(m_pReflectMapDrawTask);
-	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->RemoveTask(m_pCubeMapDrawTask);
-	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
-	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+	ReleaseModel();
+	ReleaseTask();
 }
 
 void House::Update()
@@ -185,85 +119,101 @@ void House::Draw()
 
 void House::DepthDraw()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_ShadowVertexShaderIndex),
-		NULL,
-		0);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_ShadowPixelShaderIndex),
-		NULL,
-		0);
+	// シェーダーの設定.
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ShadowVertexShaderIndex), NULL, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_ShadowPixelShaderIndex), NULL, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
 	ConstantBufferSetup();
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
+	pFbxFileManager->GetFbxModel(m_ModelIndex)->Draw();
 }
 
 void House::MapDraw()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_MapVertexShaderIndex),
-		NULL,
-		0);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_MapPixelShaderIndex),
-		NULL,
-		0);
+	// シェーダーの設定.
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), NULL, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_MapPixelShaderIndex), NULL, 0);
 
 	TextureSetup();
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
 	ConstantBufferSetup();
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
+	pFbxFileManager->GetFbxModel(m_ModelIndex)->Draw();
 }
 
 void House::CubeMapDraw()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_CubeMapVertexShaderIndex),
-		NULL,
-		0);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetGeometryShader(m_CubeMapGeometryShaderIndex),
-		NULL,
-		0);
-
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_CubeMapPixelShaderIndex),
-		NULL,
-		0);
+	// シェーダーの設定.
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_CubeMapVertexShaderIndex), NULL, 0);
+	pDeviceContext->GSSetShader(pShaderManager->GetGeometryShader(m_CubeMapGeometryShaderIndex), NULL, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_CubeMapPixelShaderIndex), NULL, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
 	ConstantBufferSetup();
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
+	pFbxFileManager->GetFbxModel(m_ModelIndex)->Draw();
 }
 
 void House::ReflectMapDraw()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_ReflectMapVertexShaderIndex),
-		NULL,
-		0);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetShader(
-		NULL,
-		NULL,
-		0);
-
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_ReflectMapPixelShaderIndex),
-		NULL,
-		0);
+	// シェーダーの設定.
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ReflectMapVertexShaderIndex), NULL, 0);
+	pDeviceContext->GSSetShader(NULL, NULL, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_ReflectMapPixelShaderIndex), NULL, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
 	ConstantBufferSetup();
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
+	pFbxFileManager->GetFbxModel(m_ModelIndex)->Draw();
+}
+
+
+//----------------------------------------------------------------------
+// Private Functions
+//----------------------------------------------------------------------
+bool House::CreateTask()
+{
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
+	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
+	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddTask(m_pCubeMapDrawTask);
+	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->AddTask(m_pReflectMapDrawTask);
+
+	return true;
+}
+
+bool House::CreateModel()
+{
+	if (m_ModelIndex == Lib::FbxFileManager::m_InvalidIndex)
+	{
+		if (!SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
+			TEXT("Resource\\Model\\house_red.fbx"),
+			&m_ModelIndex))
+		{
+			OutputErrorLog("家オブジェクトのfbxモデル読み込みに失敗しました");
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool House::CreateShadowShader()
@@ -392,6 +342,21 @@ bool House::CreateReflectMapShader()
 	}
 
 	return true;
+}
+
+void House::ReleaseTask()
+{
+	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->RemoveTask(m_pReflectMapDrawTask);
+	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->RemoveTask(m_pCubeMapDrawTask);
+	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
+	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+}
+
+void House::ReleaseModel()
+{
+	SINGLETON_INSTANCE(Lib::FbxFileManager)->ReleaseFbxModel(m_ModelIndex);
 }
 
 void House::ReleaseShadowShader()
