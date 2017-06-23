@@ -1099,6 +1099,7 @@ void Water::ReleaseShader()
 
 void Water::ReleaseVertexLayout()
 {
+	SafeRelease(m_pWaveVertexLayout);
 	SafeRelease(m_pVertexLayout);
 }
 

@@ -37,7 +37,7 @@ int	House::m_ReflectMapPixelShaderIndex = Lib::ShaderManager::m_InvalidIndex;
 //----------------------------------------------------------------------
 House::House(MainCamera* _pCamera, D3DXVECTOR3 _Pos, float _rotate)
 {
-	D3DXVECTOR3 Pos = D3DXVECTOR3(4.5f, 25, 4.0f);
+	D3DXVECTOR3 Pos = D3DXVECTOR3(4.6f, 25, 4.0f);
 	D3DXVECTOR3 TempPos = Pos;
 
 	Pos.x =

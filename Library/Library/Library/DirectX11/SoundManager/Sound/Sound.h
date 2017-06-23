@@ -78,6 +78,7 @@ namespace Lib
 		SoundDevice*			m_pSoundDevice;	//!< サウンドデバイス.
 		LPDIRECTSOUNDBUFFER8	m_pSound;		//!< サウンドバッファ.
 
+
 		DISALLOW_COPY_AND_ASSIGN(Sound);
 
 	};

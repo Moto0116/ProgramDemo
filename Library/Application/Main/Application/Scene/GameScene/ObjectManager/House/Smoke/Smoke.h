@@ -98,7 +98,6 @@ private:
 	{
 		D3DXVECTOR3 Pos;		//!< 煙の座標.
 		D3DXVECTOR3	Scale;		//!< 煙のスケーリング値.
-		float		AlphaColor;	//!< 煙のアルファ値.
 		D3DXCOLOR	Color;		//!< 煙のカラー値.
 		D3DXVECTOR3 Vec;		//!< 移動速度.
 		int			Life;		//!< 消滅するまで寿命.
@@ -113,7 +112,17 @@ private:
 		D3DXVECTOR3 Pos;		//!< エミッタの座標.
 		D3DXVECTOR3 Vec;		//!< パーティクルの初速.
 		float AngleRange;		//!< 範囲.
-		float Frequency;		//!< パーティクルの生成頻度.
+	};
+
+	/**
+	 * コンピュートシェーダーバッファ
+	 */
+	struct COMPUTESHADER_BUFFER
+	{
+		D3DXVECTOR4 Pos;
+		D3DXVECTOR4 Scale;
+		D3DXCOLOR Color;
+		D3DXVECTOR4 Life;
 	};
 
 
@@ -161,6 +170,12 @@ private:
 	 */
 	bool CreateTexture();
 
+	/**
+	 * コンピュートシェーダーバッファの初期化
+	 * @return 初期化に成功したらtrue 失敗したらfalse
+	 */
+	bool CreateComputeShaderBuffer();
+
 
 	//----------------------------------------------------------------------
 	// 解放処理
@@ -196,6 +211,11 @@ private:
 	 */
 	void ReleaseTexture();
 
+	/**
+	 * コンピュートシェーダバッファの解放 
+	 */
+	void ReleaseComputeShaderBuffer();
+
 
 	//----------------------------------------------------------------------
 	// その他処理
@@ -212,8 +232,11 @@ private:
 	Lib::UpdateTask*			m_pUpdateTask;					//!< 更新タスクオブジェクト.
 	int							m_VertexShaderIndex;			//!< 頂点シェーダーインデックス.
 	int							m_PixelShaderIndex;				//!< ピクセルシェーダーインデックス.
+	int							m_ComputeShaderIndex;			//!< コンピュートシェーダーインデックス.
 	ID3D11Buffer*				m_pVertexBuffer;				//!< 頂点バッファ.
 	ID3D11Buffer*				m_pInstanceBuffer;				//!< インスタンシングバッファ.
+	ID3D11Buffer*				m_pComputeShaderBuffer;			//!< コンピュートシェーダーで使用するバッファ.
+	ID3D11UnorderedAccessView*	m_pComputeShaderBufferAccess;	//!< コンピュートシェーダーバッファのアクセスビュー.
 	ID3D11InputLayout*			m_pVertexLayout;				//!< 頂点入力レイアウト.
 	ID3D11DepthStencilState*	m_pDepthStencilState;			//!< 深度ステンシルステート.
 	ID3D11BlendState*			m_pBlendState;					//!< ブレンドステート.
@@ -224,6 +247,9 @@ private:
 	EMITTER_DATA				m_EmitterData;					//!< エミッタデータ構造体.
 	SMOKE_DATA					m_SmokeData[PARTICLE_NUM];		//!< 煙のデータ配列.
 	bool						m_IsActive;						//!< このオブジェクトの活動状態.
+	bool						m_IsComputeShader;				//!< コンピュートシェーダを使用するか.
+
+	COMPUTESHADER_BUFFER		m_ComputeData[PARTICLE_NUM];	//!< コンピュートシェーダで使用するデータ.
 
 	int							m_SmokeTextureIndex;			//!< 煙のテクスチャインデックス.
 

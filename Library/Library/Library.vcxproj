@@ -81,6 +81,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Library\BinaryFile\BinaryFile.h" />
     <ClInclude Include="Library\DirectX11\Billboard2D\Billboard2D.h" />
     <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.h" />
     <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionBase.h" />
@@ -132,8 +133,10 @@
     <ClInclude Include="Library\DirectX11\VertexManager\Vertex\Vertex.h" />
     <ClInclude Include="Library\DirectX11\Light\Light.h" />
     <ClInclude Include="Library\ObjectManagerBase\ObjectManagerBase.h" />
+    <ClInclude Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Library\BinaryFile\BinaryFile.cpp" />
     <ClCompile Include="Library\DirectX11\Billboard2D\Billboard2D.cpp" />
     <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.cpp" />
     <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionBase.cpp" />
@@ -179,6 +182,7 @@
     <ClCompile Include="Library\DirectX11\VertexManager\Vertex\Vertex.cpp" />
     <ClCompile Include="Library\DirectX11\Light\Light.cpp" />
     <ClCompile Include="Library\ObjectManagerBase\ObjectManagerBase.cpp" />
+    <ClCompile Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Font\Effect\Font.fx">

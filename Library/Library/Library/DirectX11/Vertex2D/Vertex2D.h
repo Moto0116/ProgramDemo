@@ -79,6 +79,13 @@ namespace Lib
 		void SetVertex(const D3DXVECTOR2* _pSize);
 
 		/**
+		 * 頂点座標をセットする(回転も行う)
+		 * @param[in] _pSize 描画する2Dポリゴンの矩形サイズ
+		 * @param[in] _angle 矩形の角度
+		 */
+		void SetVertex(const D3DXVECTOR2* _pSize, float _angle);
+
+		/**
 		 * テクスチャ座標をセットする
 		 * @param[in] _pMinUV UVの最小値
 		 * @param[in] _pMaxUV UVの最大値

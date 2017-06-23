@@ -78,8 +78,10 @@ namespace Lib
 		 */
 		virtual ~TextureManager();
 
+
 		GraphicsDevice*			m_pGraphicsDevice;	//!< グラフィックデバイス.
 		std::vector<ITexture*>	m_pTextures;		//!< テクスチャを格納するコンテナ.
+
 
 		DISALLOW_COPY_AND_ASSIGN(TextureManager);
 

@@ -42,6 +42,8 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	bool FbxLoader::Initialize()
 	{
+		MyAssert(m_pFbxManager == NULL, "FbxLoaderオブジェクトは既に初期化されています");
+
 		if (!InitFbxManager())
 		{
 			return false;
@@ -598,7 +600,7 @@ namespace Lib
 		m_pFbxManager = fbxsdk::FbxManager::Create();
 		if (m_pFbxManager == NULL)
 		{
-			OutputErrorLog("FbxManagerクラスの生成に失敗");
+			OutputErrorLog("FbxManagerクラスの生成に失敗しました");
 			return false;
 		}
 
@@ -610,7 +612,7 @@ namespace Lib
 		m_pFbxScene = fbxsdk::FbxScene::Create(m_pFbxManager, "");
 		if (m_pFbxScene == NULL)
 		{
-			OutputErrorLog("FbxSceneクラスの生成に失敗");
+			OutputErrorLog("FbxSceneクラスの生成に失敗しました");
 			return false;
 		}
 
@@ -622,7 +624,7 @@ namespace Lib
 		m_pFbxImporter = fbxsdk::FbxImporter::Create(m_pFbxManager, "");
 		if (m_pFbxImporter == NULL)
 		{
-			OutputErrorLog("FbxImporterクラスの生成に失敗");
+			OutputErrorLog("FbxImporterクラスの生成に失敗しました");
 			return false;
 		}
 
@@ -634,7 +636,7 @@ namespace Lib
 		m_pFbxIOSettings = fbxsdk::FbxIOSettings::Create(m_pFbxManager, IOSROOT);
 		if (m_pFbxIOSettings == NULL)
 		{
-			OutputErrorLog("FbxIOSettingsクラスの生成に失敗");
+			OutputErrorLog("FbxIOSettingsクラスの生成に失敗しました");
 			return false;
 		}
 		m_pFbxManager->SetIOSettings(m_pFbxIOSettings);

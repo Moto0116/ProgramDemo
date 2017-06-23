@@ -35,6 +35,7 @@ Application::Application() :
 
 Application::~Application()
 {
+	Finalize();
 }
 
 

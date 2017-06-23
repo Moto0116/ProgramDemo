@@ -89,5 +89,6 @@
     <FxCompile Include="Resource\Effect\WaterCube.fx" />
     <FxCompile Include="Resource\Effect\WaterReflect.fx" />
     <FxCompile Include="Resource\Effect\ReflectMap.fx" />
+    <FxCompile Include="Resource\Effect\Compute.fx" />
   </ItemGroup>
 </Project>

@@ -185,6 +185,28 @@ namespace Lib
 		m_pVertexData[3].Pos.y = _pSize->y / 2;
 	}
 
+	void Vertex2D::SetVertex(const D3DXVECTOR2* _pSize, float _angle)
+	{
+		m_pVertexData[0].Pos.x = -_pSize->x / 2;
+		m_pVertexData[0].Pos.y = -_pSize->y / 2;
+		m_pVertexData[1].Pos.x = _pSize->x / 2;
+		m_pVertexData[1].Pos.y = -_pSize->y / 2;
+		m_pVertexData[2].Pos.x = -_pSize->x / 2;
+		m_pVertexData[2].Pos.y = _pSize->y / 2;
+		m_pVertexData[3].Pos.x = _pSize->x / 2;
+		m_pVertexData[3].Pos.y = _pSize->y / 2;
+
+		float rad = static_cast<float>(D3DXToRadian(_angle));
+		for (int i = 0; i < VERTEX_NUM; i++)
+		{
+			float X = m_pVertexData[i].Pos.x;
+			float Y = m_pVertexData[i].Pos.y;
+
+			m_pVertexData[i].Pos.x = static_cast<float>(X * cos(rad) - Y * sin(rad));
+			m_pVertexData[i].Pos.y = static_cast<float>(Y * cos(rad) + X * sin(rad));
+		}
+	}
+
 	void Vertex2D::SetUV(const D3DXVECTOR2* _pMinUV, const D3DXVECTOR2* _pMaxUV)
 	{
 		m_pVertexData[0].UV.x = _pMinUV->x;
@@ -295,6 +317,13 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool Vertex2D::CreateVertexShader()
 	{
+		UINT Flag1 = D3D10_SHADER_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+#else
+		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
+#endif
+
 		ID3DBlob* pShaderErrors = NULL;
 		if (FAILED(D3DX11CompileFromFile(
 			TEXT("Library\\DirectX11\\Vertex2D\\Effect\\Vertex2D.fx"),
@@ -302,7 +331,7 @@ namespace Lib
 			NULL,
 			"VS",
 			"vs_5_0",
-			D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION,
+			Flag1,
 			0,
 			NULL,
 			&m_pVertexCompiledShader,
@@ -355,6 +384,13 @@ namespace Lib
 
 	bool Vertex2D::CreatePixelShader()
 	{
+		UINT Flag1 = D3D10_SHADER_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+#else
+		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
+#endif
+
 		ID3DBlob* pShaderErrors = NULL;
 		if (FAILED(D3DX11CompileFromFile(
 			TEXT("Library\\DirectX11\\Vertex2D\\Effect\\Vertex2D.fx"),
@@ -362,7 +398,7 @@ namespace Lib
 			NULL,
 			"PS",
 			"ps_5_0",
-			D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION,
+			Flag1,
 			0,
 			NULL,
 			&m_pPixelCompiledShader,

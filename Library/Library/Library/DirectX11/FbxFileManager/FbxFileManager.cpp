@@ -40,11 +40,7 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	bool FbxFileManager::Initialize(GraphicsDevice* _pGraphicsDevice)
 	{
-		if (m_pFbxLoader != NULL)
-		{
-			OutputErrorLog("FbxFileManagerクラスはすでに生成されています");
-			return false;
-		}
+		MyAssert(m_pFbxLoader == NULL, "FbxFileManagerオブジェクトは既に初期化されています");
 
 		m_pGraphicsDevice = _pGraphicsDevice;
 		m_pFbxLoader = new FbxLoader(m_pGraphicsDevice);

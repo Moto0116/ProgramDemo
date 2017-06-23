@@ -33,22 +33,46 @@ const D3DXVECTOR2 Smoke::m_LifeRange = D3DXVECTOR2(180, 240);
 Smoke::Smoke(MainCamera* _pCamera, D3DXVECTOR3* _pPos) :
 	m_pCamera(_pCamera),
 	m_IsActive(true),
+	m_IsComputeShader(false),
 	m_RandDevice(),
 	m_MersenneTwister(m_RandDevice())
 {
-	m_EmitterData.Frequency = 1;					//!< パーティクル発生頻度.
-	m_EmitterData.Pos = *_pPos;						//!< パーティクル発生座標.
-	m_EmitterData.Vec = D3DXVECTOR3(0.1f, 0.5f, 0);	//!< パーティクルの初速.
-	m_EmitterData.AngleRange = 6;					//!< パーティクルの移動範囲.
+	m_EmitterData.Pos = *_pPos;							//!< パーティクル発生座標.
+	m_EmitterData.Vec = D3DXVECTOR3(0.08f, 0.5f, 0.08f);//!< パーティクルの初速.
+	m_EmitterData.AngleRange = 6;						//!< パーティクルの移動範囲.
 
 	for (int i = 0; i < PARTICLE_NUM; i++)
 	{
+		double DegX = m_MersenneTwister() %
+			(static_cast<int>(m_EmitterData.AngleRange) * 2) -
+			m_EmitterData.AngleRange - 90;
+		float RadX = static_cast<float>(D3DXToRadian(DegX));
+
+		double DegY = m_MersenneTwister() %
+			(static_cast<int>(m_EmitterData.AngleRange) * 2) -
+			m_EmitterData.AngleRange;
+		float RadY = static_cast<float>(D3DXToRadian(DegY));
+
+		double DegZ = m_MersenneTwister() %
+			(static_cast<int>(m_EmitterData.AngleRange) * 2) -
+			m_EmitterData.AngleRange - 90;
+		float RadZ = static_cast<float>(D3DXToRadian(DegZ));
+
+		m_SmokeData[i].Vec.x = cos(RadX) * m_EmitterData.Vec.x;
+		m_SmokeData[i].Vec.y = fabs(sin(RadY) * m_EmitterData.Vec.y);
+		m_SmokeData[i].Vec.z = cos(RadZ) * m_EmitterData.Vec.z;
+
+
 		m_SmokeData[i].Pos = D3DXVECTOR3(0, -1, 0);				//!< パーティクルの座標.
 		m_SmokeData[i].Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);	//!< パーティクルのスケーリング.
-		m_SmokeData[i].AlphaColor = 1;							//!< パーティクルのアルファ値.
 		m_SmokeData[i].Color = 0xffffffff;						//!< パーティクルのカラー.
 		m_SmokeData[i].Life = 300 - i;							//!< パーティクルの寿命.
 		m_SmokeData[i].IsActive = false;						//!< パーティクルの活動状態.
+
+		m_ComputeData[i].Pos = D3DXVECTOR4(m_SmokeData[i].Pos, 0);
+		m_ComputeData[i].Scale = D3DXVECTOR4(m_SmokeData[i].Scale, 0);
+		m_ComputeData[i].Color = m_SmokeData[i].Color;
+		m_ComputeData[i].Life = D3DXVECTOR4(static_cast<float>(m_SmokeData[i].Life), 0, 0, 0);
 	}
 }
 
@@ -62,19 +86,21 @@ Smoke::~Smoke()
 //----------------------------------------------------------------------
 bool Smoke::Initialize()
 {
-	if (!CreateTask())			return false;
-	if (!CreateVertexBuffer())	return false;
-	if (!WriteInstanceBuffer())	return false;
-	if (!CreateShader())		return false;
-	if (!CreateVertexLayout())	return false;
-	if (!CreateState())			return false;
-	if (!CreateTexture())		return false;
+	if (!CreateTask())					return false;
+	if (!CreateVertexBuffer())			return false;
+	if (!WriteInstanceBuffer())			return false;
+	if (!CreateShader())				return false;
+	if (!CreateVertexLayout())			return false;
+	if (!CreateState())					return false;
+	if (!CreateTexture())				return false;
+	if (!CreateComputeShaderBuffer())	return false;
 
 	return true;
 }
 
 void Smoke::Finalize()
 {
+	ReleaseComputeShaderBuffer();
 	ReleaseTexture();
 	ReleaseState();
 	ReleaseVertexLayout();
@@ -85,7 +111,13 @@ void Smoke::Finalize()
 
 void Smoke::Update()
 {
-	if (m_IsActive)
+	if (!m_IsActive)
+	{
+		return;
+	}
+
+
+	if (!m_IsComputeShader)
 	{
 		for (int i = 0; i < PARTICLE_NUM; i++)
 		{
@@ -95,41 +127,31 @@ void Smoke::Update()
 				if (m_SmokeData[i].Life <= 0)
 				{
 					m_SmokeData[i].IsActive = false;
-					m_SmokeData[i].Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
-					m_SmokeData[i].Color = 0xffffffff;
-					m_SmokeData[i].AlphaColor = 1;
-					m_SmokeData[i].Pos = D3DXVECTOR3(0, -1, 0);
 				}
 
 				m_SmokeData[i].Pos += m_SmokeData[i].Vec;				// 座標更新.
 				m_SmokeData[i].Scale += D3DXVECTOR3(0.01f, 0.01f, 0);	// サイズ更新.
 				m_SmokeData[i].Color -= 0x01000000;						// カラー更新.
-				m_SmokeData[i].AlphaColor -= 0.001f;
 			}
 			else
 			{
+				//@todo アクティブでなくなった瞬間に初期化してアクティブにするようにしたらうまくいきそう
+
 				m_SmokeData[i].Life++;
-				if (m_SmokeData[i].Life >= 300)	// 生成する条件は発生頻度を利用して実装する.
+				if (m_SmokeData[i].Life == 300)
 				{
-					double DegX = m_MersenneTwister() %
-						(static_cast<int>(m_EmitterData.AngleRange) * 2) -
-						m_EmitterData.AngleRange - 90;
-					float RadX = static_cast<float>(D3DXToRadian(DegX));
-
-					double DegY = m_MersenneTwister() %
-						(static_cast<int>(m_EmitterData.AngleRange) * 2) - 
-						m_EmitterData.AngleRange;
-					float RadY = static_cast<float>(D3DXToRadian(DegY));
-
 					m_SmokeData[i].Pos = m_EmitterData.Pos;
+					m_SmokeData[i].Color = 0xffffffff;
+					m_SmokeData[i].Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 					m_SmokeData[i].IsActive = true;
-					m_SmokeData[i].Vec.x = cos(RadX) * m_EmitterData.Vec.x;
-					m_SmokeData[i].Vec.y = fabs(sin(RadY) * m_EmitterData.Vec.y);
-					m_SmokeData[i].Vec.z = 0;
 				}
 			}
 		}
 		WriteInstanceBuffer();
+	}
+	else
+	{
+
 	}
 }
 
@@ -281,6 +303,15 @@ bool Smoke::CreateShader()
 		return false;
 	}
 
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadComputeShader(
+		TEXT("Resource\\Effect\\Compute.fx"),
+		"CS",
+		&m_ComputeShaderIndex))
+	{
+		OutputErrorLog("コンピュートシェーダーシェーダーの読み込みに失敗しました");
+		return false;
+	}
+
 	return true;
 }
 
@@ -359,11 +390,54 @@ bool Smoke::CreateState()
 
 bool Smoke::CreateTexture()
 {
-	if(!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+	if (!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
 		TEXT("Resource\\Texture\\smoke.png"),
 		&m_SmokeTextureIndex))
 	{
 		OutputErrorLog("テクスチャの読み込みに失敗しました");
+		return false;
+	}
+
+	return true;
+}
+
+bool Smoke::CreateComputeShaderBuffer()
+{
+	// コンピュートシェーダーバッファの生成.
+	D3D11_BUFFER_DESC BufferDesc;
+	ZeroMemory(&BufferDesc, sizeof(D3D11_BUFFER_DESC));
+	BufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+	BufferDesc.ByteWidth = sizeof(COMPUTESHADER_BUFFER) * PARTICLE_NUM;
+	BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
+	BufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+	BufferDesc.StructureByteStride = sizeof(COMPUTESHADER_BUFFER);
+
+	D3D11_SUBRESOURCE_DATA InitData;
+	InitData.pSysMem = m_ComputeData;
+
+	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
+		&BufferDesc,
+		&InitData,
+		&m_pComputeShaderBuffer)))
+	{
+		OutputErrorLog("コンピュートシェーダーバッファの生成に失敗しました");
+		return false;
+	}
+
+
+	// コンピュートシェーダーバッファのアクセスビュー生成.
+	D3D11_UNORDERED_ACCESS_VIEW_DESC AccessViewDesc;
+	ZeroMemory(&AccessViewDesc, sizeof(D3D11_UNORDERED_ACCESS_VIEW_DESC));
+	AccessViewDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+	AccessViewDesc.Buffer.FirstElement = 0;
+	AccessViewDesc.Format = DXGI_FORMAT_UNKNOWN;
+	AccessViewDesc.Buffer.NumElements = PARTICLE_NUM;
+	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateUnorderedAccessView(
+		m_pComputeShaderBuffer,
+		&AccessViewDesc,
+		&m_pComputeShaderBufferAccess)))
+	{
+		OutputErrorLog("コンピュートシェーダーバッファアクセスビューの生成に失敗しました");
 		return false;
 	}
 
@@ -387,6 +461,7 @@ void Smoke::ReleaseVertexBuffer()
 
 void Smoke::ReleaseShader()
 {
+	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseComputeShader(m_ComputeShaderIndex);
 	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
 	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
 }
@@ -405,6 +480,12 @@ void Smoke::ReleaseState()
 void Smoke::ReleaseTexture()
 {
 	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SmokeTextureIndex);
+}
+
+void Smoke::ReleaseComputeShaderBuffer()
+{
+	SafeRelease(m_pComputeShaderBufferAccess);
+	SafeRelease(m_pComputeShaderBuffer);
 }
 
 bool Smoke::WriteInstanceBuffer()
@@ -434,7 +515,6 @@ bool Smoke::WriteInstanceBuffer()
 			pInstanceData[i].Mat = MatWorld;
 
 			pInstanceData[i].Color.a = m_SmokeData[i].Color.a;
-			//pInstanceData[i].Color.a = m_SmokeData[i].AlphaColor;
 		}
 
 		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pInstanceBuffer, 0);

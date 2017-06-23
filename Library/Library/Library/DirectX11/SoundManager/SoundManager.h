@@ -72,7 +72,7 @@ namespace Lib
 		 * @param[in] _index 取得するサウンドのインデックス
 		 * @return 格納先のサウンド
 		 */
-		inline ISound* GetSound(int _index)
+		inline ISound* GetSound(int _index) const
 		{
 			return m_pSounds[_index];
 		}
@@ -96,8 +96,10 @@ namespace Lib
 		 */
 		~SoundManager();
 
+
 		std::vector<ISound*>	m_pSounds;		//!< サウンドオブジェクトを管理するコンテナ.
 		SoundDevice*			m_pSoundDevice;	//!< サウンドデバイス.
+
 
 		DISALLOW_COPY_AND_ASSIGN(SoundManager);
 

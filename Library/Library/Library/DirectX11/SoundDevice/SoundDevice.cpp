@@ -34,11 +34,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool SoundDevice::Initialize(HWND _hWnd)
 	{
-		if (m_pDSound8 != NULL)
-		{
-			OutputErrorLog("SuondDeviceオブジェクトは既に初期化されています");
-			return false;
-		}
+		MyAssert(m_pDSound8 == NULL, "SoundDeviceオブジェクトは既に初期化されています");
 
 		m_hWnd = _hWnd;
 		DirectSoundCreate8(NULL, &m_pDSound8, NULL);

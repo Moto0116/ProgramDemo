@@ -4,7 +4,7 @@
  * @author	morimoto
  */
 #ifndef LIB_EVENTBASE_H
-#define LIB_EVETNBASE_H
+#define LIB_EVENTBASE_H
 
 
 namespace Lib

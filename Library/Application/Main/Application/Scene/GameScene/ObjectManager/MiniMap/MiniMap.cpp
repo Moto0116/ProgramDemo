@@ -73,8 +73,8 @@ bool MiniMap::Initialize()
 void MiniMap::Finalize()
 {
 	ReleaseVertex2D();
-	ReleaseTexture();
 	ReleaseConstantBuffer();
+	ReleaseTexture();
 
 	delete m_pCamera;
 
@@ -220,6 +220,11 @@ bool MiniMap::CreateTexture()
 
 void MiniMap::ReleaseConstantBuffer()
 {
+	SafeRelease(m_pConstantBuffer);
+}
+
+void MiniMap::ReleaseTexture()
+{
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(NULL, m_RenderTargetStage);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(0xffffffff, m_RenderTargetStage);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(NULL, m_RenderTargetStage);
@@ -230,10 +235,7 @@ void MiniMap::ReleaseConstantBuffer()
 	SafeRelease(m_pShaderResourceView);
 	SafeRelease(m_pRenderTarget);
 	SafeRelease(m_pMapTexture);
-}
 
-void MiniMap::ReleaseTexture()
-{
 	SafeRelease(m_pShaderResourceView);
 	SafeRelease(m_pRenderTarget);
 	SafeRelease(m_pMapTexture);
@@ -242,7 +244,12 @@ void MiniMap::ReleaseTexture()
 bool MiniMap::WriteConstantBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResourceData)))
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+		m_pConstantBuffer, 
+		0, 
+		D3D11_MAP_WRITE_DISCARD,
+		0, 
+		&SubResourceData)))
 	{
 		m_pCamera->TransformView(&m_DefaultPos, &D3DXVECTOR3(0, 0, 0), &D3DXVECTOR3(0, 1, 0), m_ViewAngle);
 

@@ -66,6 +66,9 @@ namespace Lib
 			float		Power;		//!< スペキュラ強度
 		};
 
+		/**
+		 * テクスチャUVのデータ構造体 
+		 */
 		struct TEXTURE_UV_DATA
 		{
 			LPCTSTR			pUVSetName;	//!< UVセットの名前(テクスチャ座標とテクスチャを紐づける)

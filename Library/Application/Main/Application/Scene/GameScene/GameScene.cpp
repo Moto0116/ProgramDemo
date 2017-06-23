@@ -44,6 +44,7 @@ GameScene::GameScene(int _sceneId) :
 
 GameScene::~GameScene()
 {
+	Finalize();
 }
 
 
@@ -125,27 +126,49 @@ bool GameScene::Initialize()
 
 void GameScene::Finalize()
 {
-	m_pFont->ReleaseVertexBuffer();
-	m_pFont->Finalize();
-	delete m_pFont;
+	if (m_pFont != NULL)
+	{
+		m_pFont->ReleaseVertexBuffer();
+		m_pFont->Finalize();
+		SafeDelete(m_pFont);
+	}
 
-	m_pObjectManager->Finalize();
-	delete m_pObjectManager;
+	if (m_pObjectManager != NULL)
+	{
+		m_pObjectManager->Finalize();
+		SafeDelete(m_pObjectManager);
+	}
 
-	SINGLETON_INSTANCE(Lib::SoundManager)->Finalize();
-	SINGLETON_DELETE(Lib::SoundManager);
 
-	SINGLETON_INSTANCE(Lib::SoundDevice)->Finalize();
-	SINGLETON_DELETE(Lib::SoundDevice);
+	if (SINGLETON_INSTANCE(Lib::SoundManager) != NULL)
+	{
+		SINGLETON_INSTANCE(Lib::SoundManager)->Finalize();
+		SINGLETON_DELETE(Lib::SoundManager);
+	}
 
-	SINGLETON_INSTANCE(Lib::TextureManager)->Finalize();
-	SINGLETON_DELETE(Lib::TextureManager);
+	if (SINGLETON_INSTANCE(Lib::SoundDevice) != NULL)
+	{
+		SINGLETON_INSTANCE(Lib::SoundDevice)->Finalize();
+		SINGLETON_DELETE(Lib::SoundDevice);
+	}
 
-	SINGLETON_INSTANCE(Lib::ShaderManager)->Finalize();
-	SINGLETON_DELETE(Lib::ShaderManager);
+	if (SINGLETON_INSTANCE(Lib::TextureManager) != NULL)
+	{
+		SINGLETON_INSTANCE(Lib::TextureManager)->Finalize();
+		SINGLETON_DELETE(Lib::TextureManager);
+	}
 
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->Finalize();
-	SINGLETON_DELETE(Lib::FbxFileManager);
+	if (SINGLETON_INSTANCE(Lib::ShaderManager) != NULL)
+	{
+		SINGLETON_INSTANCE(Lib::ShaderManager)->Finalize();
+		SINGLETON_DELETE(Lib::ShaderManager);
+	}
+
+	if (SINGLETON_INSTANCE(Lib::FbxFileManager) != NULL)
+	{
+		SINGLETON_INSTANCE(Lib::FbxFileManager)->Finalize();
+		SINGLETON_DELETE(Lib::FbxFileManager);
+	}
 
 	SINGLETON_DELETE(MapDrawTaskManager);
 	SINGLETON_DELETE(DepthDrawTaskManager);

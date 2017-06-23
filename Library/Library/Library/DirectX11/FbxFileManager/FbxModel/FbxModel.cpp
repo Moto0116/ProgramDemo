@@ -42,11 +42,7 @@ namespace Lib
 
 	bool FbxModel::Initialize()
 	{
-		if (m_MeshData.size() == 0)
-		{
-			OutputErrorLog("メッシュデータがありません");
-			return false;
-		}
+		MyAssert(m_MeshData.size() != 0, "FbxModelオブジェクトは既に初期化されています");
 
 		if (!CreateIndexBuffer())
 		{

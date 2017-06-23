@@ -52,11 +52,8 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool GraphicsDevice::Initialize(HWND _hWnd)
 	{
-		if (m_pDevice != NULL)
-		{
-			OutputErrorLog("グラフィックデバイスオブジェクトは既に初期化されています");
-			return false;
-		}
+		MyAssert(m_pDevice == NULL, "GraphicsDeviceオブジェクトは既に初期化されています");
+
 
 		m_hWnd = _hWnd;
 		GetWindowRect(m_hWnd, &m_WindowRect);

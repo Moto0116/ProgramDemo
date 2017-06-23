@@ -72,6 +72,7 @@ namespace Lib
 		GraphicsDevice*				m_pGraphicsDevice;	//!< グラフィックデバイス.
 		ID3D11ShaderResourceView*	m_pTexture;			//!< テクスチャのシェーダーリソースビュー.
 
+
 		DISALLOW_COPY_AND_ASSIGN(Texture);
 
 	};

@@ -86,6 +86,9 @@ namespace Lib
 
 		std::vector<IAnimation*>	m_pAnimation;	//!< アニメーションを格納するコンテナ.
 
+
+		DISALLOW_COPY_AND_ASSIGN(AnimationManager);
+
 	};
 }
 

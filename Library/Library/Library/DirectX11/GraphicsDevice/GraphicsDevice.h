@@ -101,7 +101,7 @@ namespace Lib
 		 * DirectXデバイスの取得
 		 * @return DirectXデバイス
 		 */
-		inline ID3D11Device* GetDevice() 
+		inline ID3D11Device* GetDevice() const
 		{
 			return m_pDevice;
 		}
@@ -110,7 +110,7 @@ namespace Lib
 		 * デバイスコンテキストの取得
 		 * @return デバイスコンテキスト
 		 */
-		inline ID3D11DeviceContext* GetDeviceContext()
+		inline ID3D11DeviceContext* GetDeviceContext() const
 		{
 			return m_pDeviceContext;
 		}
@@ -119,7 +119,7 @@ namespace Lib
 		 * GraphicsDeviceに結びついているウィンドウのハンドルを取得する
 		 * @return ウィンドウハンドル
 		 */
-		inline HWND GetMainWindowHandle()
+		inline HWND GetMainWindowHandle() const
 		{
 			return m_hWnd;
 		}
@@ -128,7 +128,7 @@ namespace Lib
 		 * GraphicsDeviceに結びついているウィンドウのサイズを取得する
 		 * @return ウィンドウサイズ
 		 */
-		inline const RECT* GetMainWindowRect()
+		inline const RECT* GetMainWindowRect() const
 		{
 			return &m_WindowRect;
 		}
@@ -137,7 +137,7 @@ namespace Lib
 		 * バックバッファの取得
 		 * @return バックバッファ
 		 */
-		inline ID3D11Texture2D* GetBackBuffer()
+		inline ID3D11Texture2D* GetBackBuffer() const
 		{
 			return m_pBackBuffer;
 		}
@@ -146,7 +146,7 @@ namespace Lib
 		 * 深度バッファの取得
 		 * @return 深度バッファ
 		 */
-		inline ID3D11Texture2D* GetDepthStencil()
+		inline ID3D11Texture2D* GetDepthStencil() const
 		{
 			return m_pDepthStencilBuffer;
 		}
@@ -212,6 +212,9 @@ namespace Lib
 		ID3D11RasterizerState*  m_pRasterizerState;		//!< ラスタライザステート.
 		HWND					m_hWnd;					//!< 対応するウィンドウハンドル.
 		RECT					m_WindowRect;			//!< ウィンドウの矩形情報.
+
+
+		DISALLOW_COPY_AND_ASSIGN(GraphicsDevice);
 
 	};
 }

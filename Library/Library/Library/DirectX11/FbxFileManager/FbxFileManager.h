@@ -94,6 +94,9 @@ namespace Lib
 		FbxLoader*					m_pFbxLoader;		//!< fbx読み込みオブジェクト.
 		std::vector<FbxModel*>		m_pFbxModel;		//!< fbxモデルを管理するコンテナ.
 
+
+		DISALLOW_COPY_AND_ASSIGN(FbxFileManager);
+
 	};
 }
 

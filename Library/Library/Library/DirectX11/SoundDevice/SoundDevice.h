@@ -56,8 +56,12 @@ namespace Lib
 		 */
 		~SoundDevice();
 
+
 		IDirectSound8*	m_pDSound8;	//!< サウンドオブジェクト.
 		HWND			m_hWnd;		//!< 対応するウィンドウハンドル.
+
+
+		DISALLOW_COPY_AND_ASSIGN(SoundDevice);
 
 	};
 }

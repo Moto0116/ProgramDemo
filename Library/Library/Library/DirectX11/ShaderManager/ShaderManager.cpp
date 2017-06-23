@@ -61,6 +61,14 @@ namespace Lib
 			return false;
 		}
 
+
+		UINT Flag1 = D3D10_SHADER_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+#else
+		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
+#endif
+
 		ID3D11VertexShader* pVertexShader = NULL;
 		ID3DBlob* pShaderErrors = NULL;
 		ID3DBlob* pCompiledShader = NULL;
@@ -70,7 +78,7 @@ namespace Lib
 			NULL,
 			_pFuncName,
 			"vs_5_0",
-			D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION,
+			Flag1,
 			0,
 			NULL,
 			&pCompiledShader,
@@ -113,6 +121,14 @@ namespace Lib
 			return false;
 		}
 
+
+		UINT Flag1 = D3D10_SHADER_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+#else
+		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
+#endif
+
 		ID3D11PixelShader* pPixelShader = NULL;
 		ID3DBlob* pShaderErrors = NULL;
 		ID3DBlob* pCompiledShader = NULL;
@@ -122,7 +138,7 @@ namespace Lib
 			NULL,
 			_pFuncName,
 			"ps_5_0",
-			D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION,
+			Flag1,
 			0,
 			NULL,
 			&pCompiledShader,
@@ -165,6 +181,14 @@ namespace Lib
 			return false;
 		}
 
+
+		UINT Flag1 = D3D10_SHADER_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+#else
+		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
+#endif
+
 		ID3D11GeometryShader* pGeometryShader = NULL;
 		ID3DBlob* pShaderErrors = NULL;
 		ID3DBlob* pCompiledShader = NULL;
@@ -174,7 +198,7 @@ namespace Lib
 			NULL,
 			_pFuncName,
 			"gs_5_0",
-			D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION,
+			Flag1,
 			0,
 			NULL,
 			&pCompiledShader,
@@ -216,6 +240,14 @@ namespace Lib
 			return false;
 		}
 
+
+		UINT Flag1 = D3D10_SHADER_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+#else
+		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
+#endif
+
 		ID3D11HullShader* pHullShader = NULL;
 		ID3DBlob* pShaderErrors = NULL;
 		ID3DBlob* pCompiledShader = NULL;
@@ -225,7 +257,7 @@ namespace Lib
 			NULL,
 			_pFuncName,
 			"hs_5_0",
-			D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION,
+			Flag1,
 			0,
 			NULL,
 			&pCompiledShader,
@@ -267,6 +299,14 @@ namespace Lib
 			return false;
 		}
 
+
+		UINT Flag1 = D3D10_SHADER_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+#else
+		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
+#endif
+
 		ID3D11DomainShader* pDomainShader = NULL;
 		ID3DBlob* pShaderErrors = NULL;
 		ID3DBlob* pCompiledShader = NULL;
@@ -276,7 +316,7 @@ namespace Lib
 			NULL,
 			_pFuncName,
 			"ds_5_0",
-			D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION,
+			Flag1,
 			0,
 			NULL,
 			&pCompiledShader,
@@ -306,6 +346,65 @@ namespace Lib
 		*_pIndex = m_pDomainShader.size();
 		m_pDomainShader.push_back(pDomainShader);
 		m_pCompiledDomainShader.push_back(pCompiledShader);
+
+		return true;
+	}
+	
+	bool ShaderManager::LoadComputeShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex)
+	{
+		if (m_pGraphicsDevice == NULL)
+		{
+			OutputErrorLog("グラフィックデバイスがありません");
+			return false;
+		}
+
+
+		UINT Flag1 = D3D10_SHADER_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+#else
+		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
+#endif
+
+		ID3D11ComputeShader* pComputeShader = NULL;
+		ID3DBlob* pShaderErrors = NULL;
+		ID3DBlob* pCompiledShader = NULL;
+		if (FAILED(D3DX11CompileFromFile(
+			_pFilePath,
+			NULL,
+			NULL,
+			_pFuncName,
+			"cs_5_0",
+			Flag1,
+			0,
+			NULL,
+			&pCompiledShader,
+			&pShaderErrors,
+			NULL)))
+		{
+			OutputErrorLog("fxファイルの読み込みに失敗しました");
+			SafeRelease(pShaderErrors);
+			*_pIndex = m_InvalidIndex;
+			return false;
+		}
+
+		SafeRelease(pShaderErrors);
+
+		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateComputeShader(
+			pCompiledShader->GetBufferPointer(),
+			pCompiledShader->GetBufferSize(),
+			NULL,
+			&pComputeShader)))
+		{
+			OutputErrorLog("コンピュートシェーダの生成に失敗しました");
+			SafeRelease(pCompiledShader);
+			*_pIndex = m_InvalidIndex;
+			return false;
+		}
+
+		*_pIndex = m_pComputeShader.size();
+		m_pComputeShader.push_back(pComputeShader);
+		m_pCompiledComputeShader.push_back(pCompiledShader);
 
 		return true;
 	}
@@ -400,6 +499,25 @@ namespace Lib
 		}
 
 		for (auto itr = m_pCompiledDomainShader.begin(); itr != m_pCompiledDomainShader.end(); itr++)
+		{
+			SafeRelease(*itr);
+		}
+	}
+
+	void ShaderManager::ReleaseComputeShader(int _index)
+	{
+		SafeRelease(m_pComputeShader[_index]);
+		SafeRelease(m_pCompiledComputeShader[_index]);
+	}
+
+	void ShaderManager::ReleaseComputeShader()
+	{
+		for (auto itr = m_pComputeShader.begin(); itr != m_pComputeShader.end(); itr++)
+		{
+			SafeRelease(*itr);
+		}
+
+		for (auto itr = m_pCompiledComputeShader.begin(); itr != m_pCompiledComputeShader.end(); itr++)
 		{
 			SafeRelease(*itr);
 		}

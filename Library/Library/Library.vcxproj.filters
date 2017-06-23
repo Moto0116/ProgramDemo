@@ -217,6 +217,8 @@
     <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionBase.cpp" />
     <ClCompile Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.cpp" />
     <ClCompile Include="Library\DirectX11\Billboard2D\Billboard2D.cpp" />
+    <ClCompile Include="Library\BinaryFile\BinaryFile.cpp" />
+    <ClCompile Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Debugger\Debugger.h">
@@ -338,6 +340,8 @@
     <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionBase.h" />
     <ClInclude Include="Library\CollisionManager\CollisionBase\CollisionQuad2D\CollisionQuad2D.h" />
     <ClInclude Include="Library\DirectX11\Billboard2D\Billboard2D.h" />
+    <ClInclude Include="Library\BinaryFile\BinaryFile.h" />
+    <ClInclude Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Vertex2D\Effect\Vertex2D.fx">
