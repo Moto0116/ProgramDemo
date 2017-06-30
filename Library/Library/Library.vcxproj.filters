@@ -219,6 +219,8 @@
     <ClCompile Include="Library\DirectX11\Billboard2D\Billboard2D.cpp" />
     <ClCompile Include="Library\BinaryFile\BinaryFile.cpp" />
     <ClCompile Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.cpp" />
+    <ClCompile Include="Library\Math\Vector\Vector.cpp" />
+    <ClCompile Include="Library\Math\Math.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Debugger\Debugger.h">
@@ -251,12 +253,6 @@
     <ClInclude Include="Library\SingletonBase\SingletonBase.h">
       <Filter>Library\SingletonBase</Filter>
     </ClInclude>
-    <ClInclude Include="Library\SingletonBase\SingletonBase_private.h">
-      <Filter>Library\SingletonBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\TaskManager\TaskManager_private.h">
-      <Filter>Library\TaskManager</Filter>
-    </ClInclude>
     <ClInclude Include="Library\Window\Window.h">
       <Filter>Library\Window</Filter>
     </ClInclude>
@@ -287,9 +283,6 @@
     <ClInclude Include="Library\DirectX11\SoundManager\SoundManager.h">
       <Filter>Library\DX11Manager\SoundManager</Filter>
     </ClInclude>
-    <ClInclude Include="Library\TaskManager\TaskBase\TaskBase_private.h">
-      <Filter>Library\TaskManager\TaskBase</Filter>
-    </ClInclude>
     <ClInclude Include="Library\DirectX11\SoundManager\Sound\Sound.h">
       <Filter>Library\DX11Manager\SoundManager\Sound</Filter>
     </ClInclude>
@@ -317,7 +310,6 @@
     <ClInclude Include="Library\EventManager\EventManager.h">
       <Filter>Library\EventManagerBase</Filter>
     </ClInclude>
-    <ClInclude Include="Library\EventManager\EventManager_private.h" />
     <ClInclude Include="Library\DirectX11\VertexManager\VertexManager.h" />
     <ClInclude Include="Library\DirectX11\VertexManager\Vertex\Vertex.h" />
     <ClInclude Include="Library\DirectX11\VertexManager\IVertex\IVertex.h" />
@@ -325,7 +317,6 @@
       <Filter>Library\DX11Manager\TextureManager\ITexture</Filter>
     </ClInclude>
     <ClInclude Include="Library\DirectX11\Font\Font.h" />
-    <ClInclude Include="Library\GameDataManager\GameDataManager_private.h" />
     <ClInclude Include="Library\DirectX11\AnimationManager\IAnimation\IAnimation.h" />
     <ClInclude Include="Library\DirectX11\FbxFileManager\FbxFileManager.h" />
     <ClInclude Include="Library\DirectX11\FbxFileManager\FbxModel\FbxModel.h" />
@@ -342,11 +333,20 @@
     <ClInclude Include="Library\DirectX11\Billboard2D\Billboard2D.h" />
     <ClInclude Include="Library\BinaryFile\BinaryFile.h" />
     <ClInclude Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.h" />
+    <ClInclude Include="Library\Math\Vector\Vector.h" />
+    <ClInclude Include="Library\Math\Math.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Vertex2D\Effect\Vertex2D.fx">
       <Filter>Library\DX11Manager\Vertex2D\Effect</Filter>
     </FxCompile>
     <FxCompile Include="Library\DirectX11\Font\Effect\Font.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Library\SingletonBase\SingletonBase_private.inl" />
+    <None Include="Library\EventManager\EventManager_private.inl" />
+    <None Include="Library\GameDataManager\GameDataManager_private.inl" />
+    <None Include="Library\TaskManager\TaskBase\TaskBase_private.inl" />
+    <None Include="Library\TaskManager\TaskManager_private.inl" />
   </ItemGroup>
 </Project>

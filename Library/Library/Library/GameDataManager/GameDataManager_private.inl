@@ -1,5 +1,5 @@
 ﻿/**
- * @file	GameDataManager_private.h
+ * @file	GameDataManager_private.inl
  * @brief	ゲームデータ管理クラス実装
  * @author	morimoto
  */

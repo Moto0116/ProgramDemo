@@ -93,7 +93,7 @@ namespace Lib
 }
 
 
-#include "GameDataManager_private.h"
+#include "GameDataManager_private.inl"
 
 
 #endif // !LIB_GAMEDATAMANAGER_H

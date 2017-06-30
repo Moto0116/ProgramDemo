@@ -76,7 +76,7 @@ namespace Lib
 }
 
 
-#include "TaskManager_private.h"
+#include "TaskManager_private.inl"
 
 
 #endif // !LIB_TASKMANAGER_H

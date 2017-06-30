@@ -1,5 +1,5 @@
 ﻿/**
- * @file	SingletonBase_private.h
+ * @file	SingletonBase_private.inl
  * @brief	Singleton基底クラステンプレート実装
  * @author	morimoto
  */

@@ -81,7 +81,7 @@ namespace Lib
 }
 
 
-#include "TaskBase_private.h"
+#include "TaskBase_private.inl"
 
 
 #endif // !LIB_TASKBASE_H

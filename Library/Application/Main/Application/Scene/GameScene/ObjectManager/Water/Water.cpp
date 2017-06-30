@@ -142,22 +142,24 @@ void Water::Update()
 	}
 	else
 	{
-		m_WaveAddTime++;
+		///@todo 波の追加処理
 
-		if (m_WaveAddTime >= 800 && m_WaveAddCount <= 6)
-		{
-			m_WaveAddTime = 0;
-			m_WaveAddCount++;
+		//m_WaveAddTime++;
 
-			m_AddWavePos = D3DXVECTOR2(
-				m_MersenneTwister() % static_cast<int>(m_WaveTextureWidth)* (1 / m_WaveTextureWidth),
-				m_MersenneTwister() % static_cast<int>(m_WaveTextureHeight)* (1 / m_WaveTextureHeight)
-				);
+		//if (m_WaveAddTime >= 800 && m_WaveAddCount <= 6)
+		//{
+		//	m_WaveAddTime = 0;
+		//	m_WaveAddCount++;
 
-			m_AddWaveHeight = (m_MersenneTwister() % 30 + 20) * 0.001f;
+		//	m_AddWavePos = D3DXVECTOR2(
+		//		m_MersenneTwister() % static_cast<int>(m_WaveTextureWidth)* (1 / m_WaveTextureWidth),
+		//		m_MersenneTwister() % static_cast<int>(m_WaveTextureHeight)* (1 / m_WaveTextureHeight)
+		//		);
 
-			WriteConstantBuffer();
-		}
+		//	m_AddWaveHeight = (m_MersenneTwister() % 30 + 20) * 0.001f;
+
+		//	WriteConstantBuffer();
+		//}
 	}
 }
 

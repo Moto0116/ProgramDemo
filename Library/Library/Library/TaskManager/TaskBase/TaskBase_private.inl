@@ -1,6 +1,6 @@
-/**
- * @file	TaskBase_private.h
- * @brief	ƒ^ƒXƒN‚ÌŠî’êƒNƒ‰ƒXÀ‘•
+ï»¿/**
+ * @file	TaskBase_private.inl
+ * @brief	ã‚¿ã‚¹ã‚¯ã®åŸºåº•ã‚¯ãƒ©ã‚¹å®Ÿè£…
  * @author	morimoto
  */
 

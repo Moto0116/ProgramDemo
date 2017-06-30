@@ -1,5 +1,5 @@
 ﻿/**
- * @file	TaskManager_private.h
+ * @file	TaskManager_private.inl
  * @brief	タスク管理の基底クラステンプレート実装
  * @author	morimoto
  */

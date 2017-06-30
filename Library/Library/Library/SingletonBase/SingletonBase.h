@@ -75,7 +75,7 @@ namespace Lib
 }
 
 
-#include "SingletonBase_private.h"
+#include "SingletonBase_private.inl"
 
 
 // シングルトンオブジェクトの生成マクロ.

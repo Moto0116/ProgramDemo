@@ -1,5 +1,5 @@
 ﻿/**
- * @file	EventManager.cpp
+ * @file	EventManager.inl
  * @brief	イベント管理基底クラス実装
  * @author	morimoto
  */

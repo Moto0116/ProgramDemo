@@ -63,7 +63,7 @@ namespace Lib
 }
 
 
-#include "EventManager_private.h"
+#include "EventManager_private.inl"
 
 
 #endif // !LIB_EVENTMANAGER_H

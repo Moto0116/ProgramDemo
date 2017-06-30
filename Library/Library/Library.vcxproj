@@ -98,8 +98,7 @@
     <ClInclude Include="Library\Define\Define.h" />
     <ClInclude Include="Library\DirectX11\AnimationManager\Animation\Animation.h" />
     <ClInclude Include="Library\DirectX11\AnimationManager\AnimationManager.h" />
-    <ClInclude Include="Library\EventManager\EventManager_private.h" />
-    <ClInclude Include="Library\GameDataManager\GameDataManager_private.h" />
+    <None Include="Library\EventManager\EventManager_private.inl" />
     <ClInclude Include="Library\InputDeviceManager\GamePad\GamePad.h" />
     <ClInclude Include="Library\InputDeviceManager\KeyDevice\KeyDevice.h" />
     <ClInclude Include="Library\DirectX11\GraphicsDevice\GraphicsDevice.h" />
@@ -109,17 +108,19 @@
     <ClInclude Include="Library\EventManager\EventListenerBase\EventListenerBase.h" />
     <ClInclude Include="Library\Debugger\Debugger.h" />
     <ClInclude Include="Library\InputDeviceManager\InputDeviceManager.h" />
-    <ClInclude Include="Library\SingletonBase\SingletonBase_private.h" />
+    <ClInclude Include="Library\Math\Math.h" />
+    <ClInclude Include="Library\Math\Vector\Vector.h" />
+    <None Include="Library\GameDataManager\GameDataManager_private.inl" />
     <ClInclude Include="Library\TaskManager\TaskBase\DrawTask\DrawTask.h" />
     <ClInclude Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.h" />
-    <ClInclude Include="Library\TaskManager\TaskBase\TaskBase_private.h" />
+    <None Include="Library\SingletonBase\SingletonBase_private.inl" />
     <ClInclude Include="Library\TaskManager\TaskManager.h" />
     <ClInclude Include="Library\TaskManager\TaskBase\TaskBase.h" />
     <ClInclude Include="Library\TaskManager\TaskBase\UpdateTask\UpdateTask.h" />
     <ClInclude Include="Library\SceneManager\SceneManager.h" />
     <ClInclude Include="Library\SceneManager\SceneBase\SceneBase.h" />
     <ClInclude Include="Library\SingletonBase\SingletonBase.h" />
-    <ClInclude Include="Library\TaskManager\TaskManager_private.h" />
+    <None Include="Library\TaskManager\TaskBase\TaskBase_private.inl" />
     <ClInclude Include="Library\Window\Window.h" />
     <ClInclude Include="Library\InputDeviceManager\MouseDevice\MouseDevice.h" />
     <ClInclude Include="Library\DirectX11\TextureManager\TextureManager.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="Library\DirectX11\Light\Light.h" />
     <ClInclude Include="Library\ObjectManagerBase\ObjectManagerBase.h" />
     <ClInclude Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.h" />
+    <None Include="Library\TaskManager\TaskManager_private.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\BinaryFile\BinaryFile.cpp" />
@@ -161,6 +163,8 @@
     <ClCompile Include="Library\EventManager\EventListenerBase\EventListenerBase.cpp" />
     <ClCompile Include="Library\Debugger\Debugger.cpp" />
     <ClCompile Include="Library\InputDeviceManager\InputDeviceManager.cpp" />
+    <ClCompile Include="Library\Math\Math.cpp" />
+    <ClCompile Include="Library\Math\Vector\Vector.cpp" />
     <ClCompile Include="Library\TaskManager\TaskBase\DrawTask\DrawTask.cpp" />
     <ClCompile Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.cpp" />
     <ClCompile Include="Library\TaskManager\TaskManager.cpp" />
