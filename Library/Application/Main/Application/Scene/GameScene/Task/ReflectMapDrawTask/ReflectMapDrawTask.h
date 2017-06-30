@@ -43,9 +43,8 @@ public:
 	 */
 	void SetDrawObject(Object3DBase* _pObject);
 
-
 private:
-	Object3DBase* m_pObject;	//!< 描画を行うオブジェクト
+	Object3DBase* m_pObject;	//!< 描画を行うオブジェクト.
 
 };
 
@@ -54,4 +53,4 @@ typedef Lib::TaskManager<ReflectMapDrawTask> ReflectMapDrawTaskManager;
 
 
 
-#endif // REFLECTMAPDRAWTASK_H
+#endif // !REFLECTMAPDRAWTASK_H

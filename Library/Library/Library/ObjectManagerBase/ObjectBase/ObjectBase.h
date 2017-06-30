@@ -51,4 +51,4 @@ namespace Lib
 
 
 
-#endif // LIB_OBJECTBASE_H
+#endif // !LIB_OBJECTBASE_H

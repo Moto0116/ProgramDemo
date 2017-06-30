@@ -3,8 +3,8 @@
  * @brief	TLSFメモリアロケータクラス定義
  * @author	morimoto
  */
-#ifndef TLSFALLOCATOR_H
-#define TLSFALLOCATOR_H
+#ifndef LIB_TLSFALLOCATOR_H
+#define LIB_TLSFALLOCATOR_H
 
 //----------------------------------------------------------------------
 // Include
@@ -32,10 +32,10 @@ namespace Lib
 
 
 	private:
-		void* m_MemoryPool;
+		void* m_MemoryPool;	//!< メモリプール.
 
 	};
 }
 
 
-#endif // TLSFALLOCATOR_H
+#endif // !LIB_TLSFALLOCATOR_H

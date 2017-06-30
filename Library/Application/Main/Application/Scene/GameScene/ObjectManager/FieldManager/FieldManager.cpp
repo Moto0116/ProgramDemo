@@ -1,6 +1,6 @@
 ﻿/**
  * @file	FieldManager.cpp
- * @brief	フィールドクラス実装
+ * @brief	フィールド管理クラス実装
  * @author	morimoto
  */
 

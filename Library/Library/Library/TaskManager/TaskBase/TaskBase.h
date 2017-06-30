@@ -70,9 +70,9 @@ namespace Lib
 		};
 	
 	protected:
-		static unsigned int m_TaskNum;	//!< タスクの作成数
-		unsigned int		m_TaskID;	//!< タスクのID
-		PriorityType		m_Priority;	//!< タスク実行の優先度
+		static unsigned int m_TaskNum;	//!< タスクの作成数.
+		unsigned int		m_TaskID;	//!< タスクのID.
+		PriorityType		m_Priority;	//!< タスク実行の優先度.
 
 	private:
 		DISALLOW_COPY_AND_ASSIGN(TaskBase);
@@ -84,4 +84,4 @@ namespace Lib
 #include "TaskBase_private.h"
 
 
-#endif // LIB_TASKBASE_H
+#endif // !LIB_TASKBASE_H

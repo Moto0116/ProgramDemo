@@ -66,11 +66,11 @@ namespace Lib
 		/**
 		 * デストラクタ
 		 */
-		inline ~TaskManager();
+		inline virtual ~TaskManager();
 
 
-		std::list<BeginTask*>	m_pBeginTaskList;	//!< 開始タスクオブジェクトを管理するコンテナ 
-		std::list<Type*>		m_pTaskList;		//!< タスクオブジェクトを管理するコンテナ
+		std::list<BeginTask*>	m_pBeginTaskList;	//!< 開始タスクオブジェクトを管理するコンテナ.
+		std::list<Type*>		m_pTaskList;		//!< タスクオブジェクトを管理するコンテナ.
 
 	};
 }
@@ -79,4 +79,4 @@ namespace Lib
 #include "TaskManager_private.h"
 
 
-#endif // LIB_TASKMANAGER_H
+#endif // !LIB_TASKMANAGER_H

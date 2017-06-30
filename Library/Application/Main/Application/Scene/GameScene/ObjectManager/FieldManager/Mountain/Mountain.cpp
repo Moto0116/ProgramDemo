@@ -95,8 +95,8 @@ void Mountain::MapDraw()
 	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
 	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
-	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), NULL, 0);
-	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_MapPixelShaderIndex), NULL, 0);
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), nullptr, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_MapPixelShaderIndex), nullptr, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
@@ -111,10 +111,9 @@ void Mountain::CubeMapDraw()
 	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
 	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
-
-	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_CubeMapVertexShaderIndex), NULL, 0);
-	pDeviceContext->GSSetShader(pShaderManager->GetGeometryShader(m_CubeMapGeometryShaderIndex), NULL, 0);
-	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_CubeMapPixelShaderIndex), NULL, 0);
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_CubeMapVertexShaderIndex), nullptr, 0);
+	pDeviceContext->GSSetShader(pShaderManager->GetGeometryShader(m_CubeMapGeometryShaderIndex), nullptr, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_CubeMapPixelShaderIndex), nullptr, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
@@ -143,7 +142,7 @@ bool Mountain::CreateModel()
 		TEXT("Resource\\Model\\mountain.fbx"),
 		&m_MountainModelIndex))
 	{
-		OutputErrorLog("空モデルの読み込みに失敗しました");
+		OutputErrorLog("モデルの読み込みに失敗しました");
 		return false;
 	}
 

@@ -32,15 +32,21 @@ const D3DXVECTOR2 Smoke::m_LifeRange = D3DXVECTOR2(180, 240);
 //----------------------------------------------------------------------
 Smoke::Smoke(MainCamera* _pCamera, D3DXVECTOR3* _pPos) :
 	m_pCamera(_pCamera),
+	m_VertexShaderIndex(Lib::ShaderManager::m_InvalidIndex),
+	m_PixelShaderIndex(Lib::ShaderManager::m_InvalidIndex),
+	m_ComputeShaderIndex(Lib::ShaderManager::m_InvalidIndex),
+	m_SmokeTextureIndex(Lib::TextureManager::m_InvalidIndex),
+	m_SkyCLUTIndex(Lib::TextureManager::m_InvalidIndex),
 	m_IsActive(true),
 	m_IsComputeShader(false),
 	m_RandDevice(),
 	m_MersenneTwister(m_RandDevice())
 {
-	m_EmitterData.Pos = *_pPos;							//!< パーティクル発生座標.
-	m_EmitterData.Vec = D3DXVECTOR3(0.08f, 0.5f, 0.08f);//!< パーティクルの初速.
-	m_EmitterData.AngleRange = 6;						//!< パーティクルの移動範囲.
+	m_EmitterData.Pos = *_pPos;							// パーティクル発生座標.
+	m_EmitterData.Vec = D3DXVECTOR3(0.08f, 0.5f, 0.08f);// パーティクルの初速.
+	m_EmitterData.AngleRange = 6;						// パーティクルの移動範囲.
 
+	// パーティクルデータの初期化.
 	for (int i = 0; i < PARTICLE_NUM; i++)
 	{
 		double DegX = m_MersenneTwister() %
@@ -62,12 +68,11 @@ Smoke::Smoke(MainCamera* _pCamera, D3DXVECTOR3* _pPos) :
 		m_SmokeData[i].Vec.y = fabs(sin(RadY) * m_EmitterData.Vec.y);
 		m_SmokeData[i].Vec.z = cos(RadZ) * m_EmitterData.Vec.z;
 
-
-		m_SmokeData[i].Pos = D3DXVECTOR3(0, -1, 0);				//!< パーティクルの座標.
-		m_SmokeData[i].Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);	//!< パーティクルのスケーリング.
-		m_SmokeData[i].Color = 0xffffffff;						//!< パーティクルのカラー.
-		m_SmokeData[i].Life = 300 - i;							//!< パーティクルの寿命.
-		m_SmokeData[i].IsActive = false;						//!< パーティクルの活動状態.
+		m_SmokeData[i].Pos = D3DXVECTOR3(0, -1, 0);				// パーティクルの座標.
+		m_SmokeData[i].Scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);	// パーティクルのスケーリング.
+		m_SmokeData[i].Color = 0xffffffff;						// パーティクルのカラー.
+		m_SmokeData[i].Life = 300 - i;							// パーティクルの寿命.
+		m_SmokeData[i].IsActive = false;						// パーティクルの活動状態.
 
 		m_ComputeData[i].Pos = D3DXVECTOR4(m_SmokeData[i].Pos, 0);
 		m_ComputeData[i].Scale = D3DXVECTOR4(m_SmokeData[i].Scale, 0);
@@ -135,10 +140,8 @@ void Smoke::Update()
 			}
 			else
 			{
-				//@todo アクティブでなくなった瞬間に初期化してアクティブにするようにしたらうまくいきそう
-
 				m_SmokeData[i].Life++;
-				if (m_SmokeData[i].Life == 300)
+				if (m_SmokeData[i].Life == 300)	// 一定時間が経過したらアクティブ状態に遷移.
 				{
 					m_SmokeData[i].Pos = m_EmitterData.Pos;
 					m_SmokeData[i].Color = 0xffffffff;
@@ -164,14 +167,14 @@ void Smoke::Draw()
 
 	if (m_IsActive)
 	{
-		pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_VertexShaderIndex), NULL, 0);
-		pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_PixelShaderIndex), NULL, 0);
+		pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_VertexShaderIndex), nullptr, 0);
+		pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_PixelShaderIndex), nullptr, 0);
 		pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 		pDeviceContext->IASetInputLayout(m_pVertexLayout);
 
 		pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 0);
-		pDeviceContext->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
+		pDeviceContext->OMSetBlendState(m_pBlendState, nullptr, 0xffffffff);
 
 		ID3D11Buffer* pBuffer[2] = { m_pVertexBuffer, m_pInstanceBuffer };
 		UINT Stride[2] = { sizeof(VERTEX), sizeof(INSTANCE_DATA) };
@@ -180,6 +183,9 @@ void Smoke::Draw()
 
 		ID3D11ShaderResourceView* pResource = pTextureManageer->GetTexture(m_SmokeTextureIndex)->Get();
 		pDeviceContext->PSSetShaderResources(0, 1, &pResource);
+
+		ID3D11ShaderResourceView* pResource2 = pTextureManageer->GetTexture(m_SkyCLUTIndex)->Get();
+		pDeviceContext->PSSetShaderResources(3, 1, &pResource2);
 
 		pDeviceContext->DrawInstanced(VERTEX_NUM, PARTICLE_NUM, 0, 0);
 	}
@@ -191,11 +197,11 @@ void Smoke::Draw()
 //----------------------------------------------------------------------
 bool Smoke::CreateTask()
 {
-	// タスク生成処理
+	// タスク生成処理.
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 
-	// タスクにオブジェクト設定
+	// タスクにオブジェクト設定.
 	m_pDrawTask->SetDrawObject(this);
 	m_pUpdateTask->SetUpdateObject(this);
 
@@ -328,7 +334,7 @@ bool Smoke::CreateVertexLayout()
 		{ "MATRIX",   1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "MATRIX",   2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
 		{ "MATRIX",   3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
-		{ "COLOR",	  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+		{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
 	if (FAILED(pGraphicdDevice->GetDevice()->CreateInputLayout(
@@ -394,7 +400,15 @@ bool Smoke::CreateTexture()
 		TEXT("Resource\\Texture\\smoke.png"),
 		&m_SmokeTextureIndex))
 	{
-		OutputErrorLog("テクスチャの読み込みに失敗しました");
+		OutputErrorLog("煙テクスチャの読み込みに失敗しました");
+		return false;
+	}
+
+	if(!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+		TEXT("Resource\\Texture\\MainLightCLUT.png"),
+		&m_SkyCLUTIndex))
+	{
+		OutputErrorLog("カラールックアップテーブルテクスチャの読み込みに失敗しました");
 		return false;
 	}
 
@@ -479,6 +493,7 @@ void Smoke::ReleaseState()
 
 void Smoke::ReleaseTexture()
 {
+	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
 	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SmokeTextureIndex);
 }
 
@@ -500,6 +515,7 @@ bool Smoke::WriteInstanceBuffer()
 	{
 		INSTANCE_DATA* pInstanceData = reinterpret_cast<INSTANCE_DATA*>(MappedResource.pData);
 
+		// インスタンスバッファへのデータ書き込み.
 		for (int i = 0; i < PARTICLE_NUM; i++)
 		{
 			D3DXMATRIX MatWorld, MatRotate, MatTranslate;

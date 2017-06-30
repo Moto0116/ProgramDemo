@@ -24,11 +24,11 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	FbxLoader::FbxLoader(GraphicsDevice* _pGraphicsDevice) :
 		m_pGraphicsDevice(_pGraphicsDevice),
-		m_pFbxManager(NULL),
-		m_pFbxScene(NULL),
-		m_pFbxImporter(NULL),
-		m_pFbxIOSettings(NULL),
-		m_pModel(NULL)
+		m_pFbxManager(nullptr),
+		m_pFbxScene(nullptr),
+		m_pFbxImporter(nullptr),
+		m_pFbxIOSettings(nullptr),
+		m_pModel(nullptr)
 	{
 	}
 
@@ -42,7 +42,7 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	bool FbxLoader::Initialize()
 	{
-		MyAssert(m_pFbxManager == NULL, "FbxLoaderオブジェクトは既に初期化されています");
+		MyAssert(m_pFbxManager != nullptr, "FbxLoaderオブジェクトは既に初期化されています");
 
 		if (!InitFbxManager())
 		{
@@ -111,7 +111,7 @@ namespace Lib
 
 	void FbxLoader::RecursiveNode(FbxNode* _pFbxNode)
 	{
-		FbxNode* pChildNode = NULL;
+		FbxNode* pChildNode = nullptr;
 		int ChildCount = _pFbxNode->GetChildCount();
 		for (int i = 0; i < ChildCount; i++)
 		{
@@ -121,7 +121,7 @@ namespace Lib
 
 		fbxsdk::FbxNodeAttribute* pAttribute = _pFbxNode->GetNodeAttribute();
 
-		if (pAttribute != NULL)
+		if (pAttribute != nullptr)
 		{
 			switch (pAttribute->GetAttributeType())
 			{
@@ -475,16 +475,16 @@ namespace Lib
 				LoadInfo.Format = DXGI_FORMAT_FROM_FILE;
 				LoadInfo.Filter = D3DX11_FILTER_POINT;
 				LoadInfo.MipFilter = D3DX11_FILTER_POINT;
-				LoadInfo.pSrcInfo = NULL;
+				LoadInfo.pSrcInfo = nullptr;
 
-				ID3D11ShaderResourceView* pResourceView = NULL;
+				ID3D11ShaderResourceView* pResourceView = nullptr;
 				if (FAILED(D3DX11CreateShaderResourceViewFromFile(
 					m_pGraphicsDevice->GetDevice(),
 					TextureFileName[n],
 					&LoadInfo,
-					NULL,
+					nullptr,
 					&pResourceView,
-					NULL)))
+					nullptr)))
 				{
 					OutputErrorLog("テクスチャの読み込みに失敗しました");
 					return false;
@@ -598,7 +598,7 @@ namespace Lib
 	bool FbxLoader::InitFbxManager()
 	{
 		m_pFbxManager = fbxsdk::FbxManager::Create();
-		if (m_pFbxManager == NULL)
+		if (m_pFbxManager == nullptr)
 		{
 			OutputErrorLog("FbxManagerクラスの生成に失敗しました");
 			return false;
@@ -610,7 +610,7 @@ namespace Lib
 	bool FbxLoader::InitFbxScene()
 	{
 		m_pFbxScene = fbxsdk::FbxScene::Create(m_pFbxManager, "");
-		if (m_pFbxScene == NULL)
+		if (m_pFbxScene == nullptr)
 		{
 			OutputErrorLog("FbxSceneクラスの生成に失敗しました");
 			return false;
@@ -622,7 +622,7 @@ namespace Lib
 	bool FbxLoader::InitFbxImporter()
 	{
 		m_pFbxImporter = fbxsdk::FbxImporter::Create(m_pFbxManager, "");
-		if (m_pFbxImporter == NULL)
+		if (m_pFbxImporter == nullptr)
 		{
 			OutputErrorLog("FbxImporterクラスの生成に失敗しました");
 			return false;
@@ -634,7 +634,7 @@ namespace Lib
 	bool FbxLoader::InitFbxIOSettings()
 	{
 		m_pFbxIOSettings = fbxsdk::FbxIOSettings::Create(m_pFbxManager, IOSROOT);
-		if (m_pFbxIOSettings == NULL)
+		if (m_pFbxIOSettings == nullptr)
 		{
 			OutputErrorLog("FbxIOSettingsクラスの生成に失敗しました");
 			return false;

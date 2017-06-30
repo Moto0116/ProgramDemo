@@ -38,6 +38,9 @@ const D3DXVECTOR2 Rain::m_ZRange = D3DXVECTOR2(-55, 180);
 //----------------------------------------------------------------------
 Rain::Rain(MainCamera* _pCamera) : 
 	m_pCamera(_pCamera),
+	m_pFont(nullptr),
+	m_TextureIndex(Lib::TextureManager::m_InvalidIndex),
+	m_SoundIndex(Lib::TextureManager::m_InvalidIndex),
 	m_RandDevice(),
 	m_MersenneTwister(m_RandDevice()),
 	m_IsActive(false)
@@ -105,22 +108,25 @@ void Rain::Update()
 
 		if (m_IsActive)
 		{
-			SINGLETON_INSTANCE(Lib::SoundManager)->GetSound(m_SoundIndex)->SoundOperation(Lib::SoundManager::PLAY_LOOP);
+			Lib::ISound* pSound = SINGLETON_INSTANCE(Lib::SoundManager)->GetSound(m_SoundIndex);
+			pSound->SoundOperation(Lib::SoundManager::PLAY_LOOP);
 		}
 		else
 		{
-			SINGLETON_INSTANCE(Lib::SoundManager)->GetSound(m_SoundIndex)->SoundOperation(Lib::SoundManager::STOP_RESET);
+			Lib::ISound* pSound = SINGLETON_INSTANCE(Lib::SoundManager)->GetSound(m_SoundIndex);
+			pSound->SoundOperation(Lib::SoundManager::STOP_RESET);
+
 		}
 	}
 
 	if (m_IsActive == true)
 	{
-		// 雨の操作
+		// 雨粒の処理.
 		for (int i = 0; i < RAIN_NUM; i++)
 		{
 			if (m_RainData[i].IsFall == true)
 			{
-				// 落下中であれば座標移動を行う
+				// 落下中であれば座標移動を行う.
 				m_RainData[i].Pos.y -= 3.5f;
 
 				if (m_RainData[i].Pos.y <= -4.5f)
@@ -135,7 +141,7 @@ void Rain::Update()
 			}
 			else
 			{
-				// 落下中でなければ波紋を出す
+				// 落下中でなければ波紋を出す.
 				m_RainData[i].Time++;
 
 				m_RainData[i].Scale.x += 0.3f;
@@ -170,14 +176,14 @@ void Rain::Draw()
 	if (m_IsActive)
 	{
 		ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-		pContext->VSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), NULL, 0);
-		pContext->PSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), NULL, 0);
+		pContext->VSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), nullptr, 0);
+		pContext->PSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), nullptr, 0);
 		pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 		pContext->IASetInputLayout(m_pVertexLayout);
 
 		pContext->OMSetDepthStencilState(m_pDepthStencilState, 0);
-		pContext->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
+		pContext->OMSetBlendState(m_pBlendState, nullptr, 0xffffffff);
 
 		ID3D11Buffer* pBuffer[2] = { m_pVertexBuffer, m_pInstanceBuffer };
 		UINT Stride[2] = { sizeof(VERTEX), sizeof(INSTANCE_DATA) };
@@ -205,11 +211,11 @@ void Rain::Draw()
 //----------------------------------------------------------------------
 bool Rain::CreateTask()
 {
-	// タスク生成処理
+	// タスク生成処理.
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 
-	// タスクにオブジェクト設定
+	// タスクにオブジェクト設定.
 	m_pDrawTask->SetDrawObject(this);
 	m_pUpdateTask->SetUpdateObject(this);
 
@@ -265,7 +271,7 @@ bool Rain::CreateVertexBuffer()
 	{
 		D3DXMatrixIdentity(&m_pInstanceData[i].Mat);
 		D3DXMatrixTranspose(&m_pInstanceData[i].Mat, &m_pInstanceData[i].Mat);
-		m_pInstanceData[i].Pos = D3DXVECTOR3(0, 0, 0);
+		m_pInstanceData[i].Pos = D3DXVECTOR4(0, 0, 0, 0);
 	}
 
 	// インスタンスバッファの設定.
@@ -365,7 +371,6 @@ bool Rain::CreateState()
 		&m_pBlendState)))
 	{
 		OutputErrorLog("ブレンドステートの生成に失敗しました");
-		ReleaseState();
 		return false;
 	}
 
@@ -506,7 +511,7 @@ bool Rain::WriteInstanceBuffer()
 			else
 			{
 				D3DXMatrixScaling(&MatWorld, m_RainData[i].Scale.x, m_RainData[i].Scale.y, m_RainData[i].Scale.z);
-				D3DXMatrixRotationX(&MatRotate, static_cast<float>(D3DXToRadian(-90)));	// 上を向くように反転
+				D3DXMatrixRotationX(&MatRotate, static_cast<float>(D3DXToRadian(-90)));	// 上を向くように反転.
 				D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatRotate);
 			}
 
@@ -514,7 +519,7 @@ bool Rain::WriteInstanceBuffer()
 			D3DXMatrixMultiply(&MatWorld, &MatWorld, &MatTranslate);
 			D3DXMatrixTranspose(&pInstanceData[i].Mat, &MatWorld);
 
-			pInstanceData[i].Pos = m_RainData[i].Pos;
+			pInstanceData[i].Pos = D3DXVECTOR4(m_RainData[i].Pos, 0);
 		}
 
 		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pInstanceBuffer, 0);

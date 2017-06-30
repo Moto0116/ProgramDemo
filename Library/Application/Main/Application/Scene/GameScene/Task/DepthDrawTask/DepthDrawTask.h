@@ -43,9 +43,8 @@ public:
 	 */
 	void SetDrawObject(Object3DBase* _pObject3D);
 
-
 private:
-	Object3DBase* m_pObject3D;	//!< 描画を行うオブジェクト
+	Object3DBase* m_pObject3D;	//!< 描画を行うオブジェクト.
 
 
 };
@@ -54,4 +53,4 @@ private:
 typedef Lib::TaskManager<DepthDrawTask> DepthDrawTaskManager;
 
 
-#endif // DEPTHDRAWTASK_H
+#endif // !DEPTHDRAWTASK_H

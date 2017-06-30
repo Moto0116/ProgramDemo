@@ -3,7 +3,6 @@
  * @brief	頂点クラス定義
  * @author	morimoto
  */
-
 #ifndef LIB_VERTEX_H
 #define LIB_VERTEX_H
 
@@ -35,4 +34,4 @@ namespace Lib
 }
 
 
-#endif // LIB_VERTEX_H
+#endif // !LIB_VERTEX_H

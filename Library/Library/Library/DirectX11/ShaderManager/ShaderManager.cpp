@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------
 #include "ShaderManager.h"
 
+#include "..\GraphicsDevice\GraphicsDevice.h"
 #include "..\..\Debugger\Debugger.h"
 
 
@@ -24,13 +25,13 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	ShaderManager::ShaderManager() : 
-		m_pGraphicsDevice(NULL)
+		m_pGraphicsDevice(nullptr)
 	{
-		// 読み込みに失敗した際に参照する値としてNULLを追加.
-		m_pVertexShader.push_back(NULL);
-		m_pPixelShader.push_back(NULL);
-		m_pCompiledVertexShader.push_back(NULL);
-		m_pCompiledPixelShader.push_back(NULL);
+		// 読み込みに失敗した際に参照する値としてnullptrを追加.
+		m_pVertexShader.push_back(nullptr);
+		m_pPixelShader.push_back(nullptr);
+		m_pCompiledVertexShader.push_back(nullptr);
+		m_pCompiledPixelShader.push_back(nullptr);
 	}
 
 	ShaderManager::~ShaderManager()
@@ -55,7 +56,7 @@ namespace Lib
 
 	bool ShaderManager::LoadVertexShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		if (m_pGraphicsDevice == NULL)
+		if (m_pGraphicsDevice == nullptr)
 		{
 			OutputErrorLog("グラフィックデバイスがありません");
 			return false;
@@ -67,23 +68,23 @@ namespace Lib
 		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
 #else
 		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
-#endif
+#endif // _DEBUG
 
-		ID3D11VertexShader* pVertexShader = NULL;
-		ID3DBlob* pShaderErrors = NULL;
-		ID3DBlob* pCompiledShader = NULL;
+		ID3D11VertexShader* pVertexShader = nullptr;
+		ID3DBlob* pShaderErrors = nullptr;
+		ID3DBlob* pCompiledShader = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			_pFilePath,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			_pFuncName,
 			"vs_5_0",
 			Flag1,
 			0,
-			NULL,
+			nullptr,
 			&pCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("fxファイルの読み込みに失敗しました");
 			SafeRelease(pShaderErrors);
@@ -97,7 +98,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateVertexShader(
 			pCompiledShader->GetBufferPointer(),
 			pCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&pVertexShader)))
 		{
 			OutputErrorLog("頂点シェーダーの生成に失敗しました");
@@ -115,7 +116,7 @@ namespace Lib
 
 	bool ShaderManager::LoadPixelShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		if (m_pGraphicsDevice == NULL)
+		if (m_pGraphicsDevice == nullptr)
 		{
 			OutputErrorLog("グラフィックデバイスがありません");
 			return false;
@@ -127,23 +128,23 @@ namespace Lib
 		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
 #else
 		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
-#endif
+#endif // _DEBUG
 
-		ID3D11PixelShader* pPixelShader = NULL;
-		ID3DBlob* pShaderErrors = NULL;
-		ID3DBlob* pCompiledShader = NULL;
+		ID3D11PixelShader* pPixelShader = nullptr;
+		ID3DBlob* pShaderErrors = nullptr;
+		ID3DBlob* pCompiledShader = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			_pFilePath,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			_pFuncName,
 			"ps_5_0",
 			Flag1,
 			0,
-			NULL,
+			nullptr,
 			&pCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("fxファイルの読み込みに失敗しました");
 			SafeRelease(pShaderErrors);
@@ -156,7 +157,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreatePixelShader(
 			pCompiledShader->GetBufferPointer(),
 			pCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&pPixelShader)))
 		{
 			OutputErrorLog("ピクセルシェーダーの生成に失敗しました");
@@ -175,7 +176,7 @@ namespace Lib
 
 	bool ShaderManager::LoadGeometryShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		if (m_pGraphicsDevice == NULL)
+		if (m_pGraphicsDevice == nullptr)
 		{
 			OutputErrorLog("グラフィックデバイスがありません");
 			return false;
@@ -187,23 +188,23 @@ namespace Lib
 		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
 #else
 		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
-#endif
+#endif // _DEBUG
 
-		ID3D11GeometryShader* pGeometryShader = NULL;
-		ID3DBlob* pShaderErrors = NULL;
-		ID3DBlob* pCompiledShader = NULL;
+		ID3D11GeometryShader* pGeometryShader = nullptr;
+		ID3DBlob* pShaderErrors = nullptr;
+		ID3DBlob* pCompiledShader = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			_pFilePath,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			_pFuncName,
 			"gs_5_0",
 			Flag1,
 			0,
-			NULL,
+			nullptr,
 			&pCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("fxファイルの読み込みに失敗しました");
 			SafeRelease(pShaderErrors);
@@ -216,7 +217,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateGeometryShader(
 			pCompiledShader->GetBufferPointer(),
 			pCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&pGeometryShader)))
 		{
 			OutputErrorLog("ジオメトリシェーダーの生成に失敗しました");
@@ -234,7 +235,7 @@ namespace Lib
 
 	bool ShaderManager::LoadHullShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		if (m_pGraphicsDevice == NULL)
+		if (m_pGraphicsDevice == nullptr)
 		{
 			OutputErrorLog("グラフィックデバイスがありません");
 			return false;
@@ -246,23 +247,23 @@ namespace Lib
 		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
 #else
 		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
-#endif
+#endif // _DEBUG
 
-		ID3D11HullShader* pHullShader = NULL;
-		ID3DBlob* pShaderErrors = NULL;
-		ID3DBlob* pCompiledShader = NULL;
+		ID3D11HullShader* pHullShader = nullptr;
+		ID3DBlob* pShaderErrors = nullptr;
+		ID3DBlob* pCompiledShader = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			_pFilePath,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			_pFuncName,
 			"hs_5_0",
 			Flag1,
 			0,
-			NULL,
+			nullptr,
 			&pCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("fxファイルの読み込みに失敗しました");
 			SafeRelease(pShaderErrors);
@@ -275,7 +276,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateHullShader(
 			pCompiledShader->GetBufferPointer(),
 			pCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&pHullShader)))
 		{
 			OutputErrorLog("ハルシェーダーの生成に失敗しました");
@@ -293,7 +294,7 @@ namespace Lib
 
 	bool ShaderManager::LoadDomainShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		if (m_pGraphicsDevice == NULL)
+		if (m_pGraphicsDevice == nullptr)
 		{
 			OutputErrorLog("グラフィックデバイスがありません");
 			return false;
@@ -305,23 +306,23 @@ namespace Lib
 		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
 #else
 		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
-#endif
+#endif // _DEBUG
 
-		ID3D11DomainShader* pDomainShader = NULL;
-		ID3DBlob* pShaderErrors = NULL;
-		ID3DBlob* pCompiledShader = NULL;
+		ID3D11DomainShader* pDomainShader = nullptr;
+		ID3DBlob* pShaderErrors = nullptr;
+		ID3DBlob* pCompiledShader = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			_pFilePath,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			_pFuncName,
 			"ds_5_0",
 			Flag1,
 			0,
-			NULL,
+			nullptr,
 			&pCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("fxファイルの読み込みに失敗しました");
 			SafeRelease(pShaderErrors);
@@ -334,7 +335,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateDomainShader(
 			pCompiledShader->GetBufferPointer(),
 			pCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&pDomainShader)))
 		{
 			OutputErrorLog("ドメインシェーダーの生成に失敗しました");
@@ -352,7 +353,7 @@ namespace Lib
 	
 	bool ShaderManager::LoadComputeShader(LPCTSTR _pFilePath, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		if (m_pGraphicsDevice == NULL)
+		if (m_pGraphicsDevice == nullptr)
 		{
 			OutputErrorLog("グラフィックデバイスがありません");
 			return false;
@@ -364,23 +365,23 @@ namespace Lib
 		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
 #else
 		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
-#endif
+#endif // _DEBUG
 
-		ID3D11ComputeShader* pComputeShader = NULL;
-		ID3DBlob* pShaderErrors = NULL;
-		ID3DBlob* pCompiledShader = NULL;
+		ID3D11ComputeShader* pComputeShader = nullptr;
+		ID3DBlob* pShaderErrors = nullptr;
+		ID3DBlob* pCompiledShader = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			_pFilePath,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			_pFuncName,
 			"cs_5_0",
 			Flag1,
 			0,
-			NULL,
+			nullptr,
 			&pCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("fxファイルの読み込みに失敗しました");
 			SafeRelease(pShaderErrors);
@@ -393,7 +394,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateComputeShader(
 			pCompiledShader->GetBufferPointer(),
 			pCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&pComputeShader)))
 		{
 			OutputErrorLog("コンピュートシェーダの生成に失敗しました");

@@ -39,7 +39,7 @@ namespace Lib
 		 * @param[in] _hWndParent 親ウィンドウのハンドル
 		 * @return 作成に成功したらtrue 失敗したらfalse
 		 */
-		bool Initialize(LPCTSTR _pWindowName, int _windowWidth, int _windowHeight, DWORD _style, HWND _hWndParent = NULL);
+		bool Initialize(LPCTSTR _pWindowName, int _windowWidth, int _windowHeight, DWORD _style, HWND _hWndParent = nullptr);
 	
 		/**
 		 * ウィンドウ破棄
@@ -70,5 +70,4 @@ namespace Lib
 }
 
 
-
-#endif // LIB_WINDOW_H
+#endif // !LIB_WINDOW_H

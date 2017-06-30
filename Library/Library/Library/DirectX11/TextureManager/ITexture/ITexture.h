@@ -54,4 +54,4 @@ namespace Lib
 
 
 
-#endif // LIB_ITEXTURE_H
+#endif // !LIB_ITEXTURE_H

@@ -79,4 +79,4 @@ namespace Lib
 }
 
 
-#endif // LIB_CAMERA_H
+#endif // !LIB_CAMERA_H

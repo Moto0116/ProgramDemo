@@ -81,7 +81,7 @@ namespace Lib
 		/**
 		 * デストラクタ
 		 */
-		~AnimationManager();
+		virtual ~AnimationManager();
 
 
 		std::vector<IAnimation*>	m_pAnimation;	//!< アニメーションを格納するコンテナ.
@@ -93,4 +93,4 @@ namespace Lib
 }
 
 
-#endif // LIB_ANIMATIONMANAGER_H
+#endif // !LIB_ANIMATIONMANAGER_H

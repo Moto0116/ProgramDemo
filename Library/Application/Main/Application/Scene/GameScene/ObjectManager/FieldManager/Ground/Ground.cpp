@@ -93,8 +93,8 @@ void Ground::MapDraw()
 	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
 	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
-	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), NULL, 0);
-	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_MapPixelShaderIndex), NULL, 0);
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), nullptr, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_MapPixelShaderIndex), nullptr, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
@@ -119,7 +119,6 @@ bool Ground::CreateModel()
 		TEXT("Resource\\Model\\map.fbx"),
 		&m_GroundModelIndex))
 	{
-
 		OutputErrorLog("モデルの読み込みに失敗しました");
 		return false;
 	}

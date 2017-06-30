@@ -12,6 +12,7 @@
 #include <chrono>
 #include <crtdbg.h>
 #include <Windows.h>
+#include <DbgHelp.h>
 
 
 namespace Lib
@@ -60,39 +61,50 @@ namespace Lib
 		 * @return 計測時間(msec単位)
 		 */
 		LONGLONG GetTime();
+
+		/**
+		 * スタックフレーム情報を出力する
+		 */
+		void OutputStackFrame();
+
 	}
 }
 
 
 #ifdef _DEBUG
 
+// アサートマクロ.
+#define MyAssert(_expression, _str)											\
+	do																		\
+	{																		\
+		if ((_expression))													\
+		{																	\
+			Lib::Debugger::OutputDebugLog(									\
+			"\nMyAssert: %s\nErrorLog: %s\nFileName: %s\nLine: %d\n\n",		\
+			#_expression,													\
+			TEXT(_str),														\
+			__FILE__,														\
+			__LINE__);														\
+			DebugBreak();													\
+		}																	\
+	} while (0)
 
-#define MyAssert(_expression, _str)									\
-if(!_expression)													\
-{																	\
-	Lib::Debugger::OutputDebugLog(									\
-	"\nMyAssert: %s\nErrorLog: %s\nFileName: %s\nLine: %d\n\n",		\
-	#_expression,													\
-	TEXT(_str),														\
-	__FILE__,														\
-	__LINE__);														\
-	DebugBreak();													\
-}
-
-#define OutputErrorLog(_str)													\
-	Lib::Debugger::OutputDebugLog("\n\n---------------Error---------------");	\
-	Lib::Debugger::OutputDebugLog("\nErrorLog: %s\nFileName: %s\nLine: %d\n\n",	\
-	TEXT(_str),																	\
-	__FILE__,																	\
-	__LINE__);
-
+// デバッグログ出力マクロ.
+#define OutputErrorLog(_str)														\
+	do																				\
+	{																				\
+		Lib::Debugger::OutputDebugLog("\n\n---------------Error---------------");	\
+		Lib::Debugger::OutputDebugLog("\nErrorLog: %s\nFileName: %s\nLine: %d\n\n", \
+		TEXT(_str),																	\
+		__FILE__,																	\
+		__LINE__);																	\
+	} while (0)
 
 #else
 
-#define MyAssert(_expression, _str)
+#define MyAssert(_expression, _str) (void(0))
 
-#define OutputErrorLog(_str)
-
+#define OutputErrorLog(_str) (void(0))
 
 #endif // _DEBUG
 
@@ -100,4 +112,4 @@ if(!_expression)													\
 
 
 
-#endif // LIB_DEBUGGER_H
+#endif // !LIB_DEBUGGER_H

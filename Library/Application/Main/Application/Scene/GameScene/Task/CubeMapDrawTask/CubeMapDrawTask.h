@@ -43,9 +43,8 @@ public:
 	 */
 	void SetDrawObject(Object3DBase* _pObject);
 
-
 private:
-	Object3DBase* m_pObject;	//!< 描画を行うオブジェクト
+	Object3DBase* m_pObject;	//!< 描画を行うオブジェクト.
 
 };
 
@@ -53,4 +52,4 @@ private:
 typedef Lib::TaskManager<CubeMapDrawTask> CubeMapDrawTaskManager;
 
 
-#endif // CUBEMAPDRAWTASK_H
+#endif // !CUBEMAPDRAWTASK_H

@@ -18,7 +18,7 @@ struct VS_INPUT
 	float2 UV		: TEXCOORD;
 	float4 Color    : COLOR;
 	float4x4 mat    : MATRIX;          // インスタンスごとに設定される行列
-	float3 Position	: POS;
+	float4 Position	: POS;
 	uint InstanceId : SV_InstanceID;   // インスタンスＩＤ
 };
 
@@ -27,7 +27,7 @@ struct VS_OUTPUT
 	float4 PosWVP   : SV_POSITION;
 	float2 UV		: TEXCOORD;
 	float4 Color    : COLOR;
-	float3 Position	: POS;
+	float4 Position	: POS;
 };
 
 

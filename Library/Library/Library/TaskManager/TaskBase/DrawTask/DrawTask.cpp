@@ -20,7 +20,7 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	DrawTask::DrawTask() :
-		m_pObject(NULL)
+		m_pObject(nullptr)
 	{
 	}
 

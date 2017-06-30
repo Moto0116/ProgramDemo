@@ -241,4 +241,4 @@ namespace Lib
 }
 
 
-#endif // LIB_VERTEX2D_H
+#endif // !LIB_VERTEX2D_H

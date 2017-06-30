@@ -27,9 +27,9 @@ const DWORD Application::m_WindowStyle = WS_OVERLAPPEDWINDOW & ~WS_THICKFRAME & 
 // Constructor	Destructor
 //----------------------------------------------------------------------
 Application::Application() :
-	m_pMainWindow(NULL),
-	m_pSceneManager(NULL),
-	m_pGameScene(NULL)
+	m_pMainWindow(nullptr),
+	m_pSceneManager(nullptr),
+	m_pGameScene(nullptr)
 {
 }
 
@@ -44,31 +44,29 @@ Application::~Application()
 //----------------------------------------------------------------------
 bool Application::Initialize()
 {
-	Lib::Debugger::CheckMemoryLeak();	// メモリリークチェック関数
+	Lib::Debugger::CheckMemoryLeak();	// メモリリーク検出関数.
 
 	if (!CreateMainWindow())
 	{
+		Finalize();
 		return false;
 	}
 
 	if (!CreateGraphicsDevice())
 	{
-		ReleaseMainWindow();
+		Finalize();
 		return false;
 	}
 
 	if (!CreateInputDevice())
 	{
-		ReleaseGraphicsDevice();
-		ReleaseMainWindow();
+		Finalize();
 		return false;
 	}
 
 	if (!CreateSceneManager())
 	{
-		ReleaseInputDevice();
-		ReleaseGraphicsDevice();
-		ReleaseMainWindow();
+		Finalize();
 		return false;
 	}
 
@@ -87,9 +85,9 @@ void Application::Run()
 {
 	while (1)
 	{
-		if (!m_pMainWindow->Update())
+		if (!m_pMainWindow->Update())	// ウィンドウの更新処理を実行.
 		{
-			if (m_pSceneManager->Update())
+			if (m_pSceneManager->Update())	// シーンの更新処理を実行.
 			{
 				break;
 			}
@@ -134,7 +132,8 @@ bool Application::CreateGraphicsDevice()
 bool Application::CreateInputDevice()
 {
 	SINGLETON_CREATE(Lib::InputDeviceManager);
-	if (!SINGLETON_INSTANCE(Lib::InputDeviceManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowHandle()))
+	if (!SINGLETON_INSTANCE(Lib::InputDeviceManager)->Initialize(
+		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowHandle()))
 	{
 		OutputErrorLog("入力デバイス管理クラス生成に失敗しました");
 		SINGLETON_DELETE(Lib::InputDeviceManager);
@@ -176,15 +175,15 @@ bool Application::CreateSceneManager()
 
 	m_pGameScene = new GameScene(GAME_SCENE_ID);
 
-	m_pSceneManager->AddScene(m_pGameScene);		// 管理オブジェクトに追加
-	m_pSceneManager->SetEntryScene(m_pGameScene);	// エントリシーンとして設定
+	m_pSceneManager->AddScene(m_pGameScene);		// 管理オブジェクトに追加.
+	m_pSceneManager->SetEntryScene(m_pGameScene);	// エントリシーンとして設定.
 
 	return true;
 }
 
 void Application::ReleaseMainWindow()
 {
-	if (m_pMainWindow != NULL)
+	if (m_pMainWindow != nullptr)
 	{
 		m_pMainWindow->Finalize();
 		SafeDelete(m_pMainWindow);
@@ -193,7 +192,7 @@ void Application::ReleaseMainWindow()
 
 void Application::ReleaseGraphicsDevice()
 {
-	if (SINGLETON_INSTANCE(Lib::GraphicsDevice) != NULL)
+	if (SINGLETON_INSTANCE(Lib::GraphicsDevice) != nullptr)
 	{
 		SINGLETON_INSTANCE(Lib::GraphicsDevice)->Finalize();
 		SINGLETON_DELETE(Lib::GraphicsDevice);
@@ -202,7 +201,7 @@ void Application::ReleaseGraphicsDevice()
 
 void Application::ReleaseInputDevice()
 {
-	if (SINGLETON_INSTANCE(Lib::InputDeviceManager) != NULL)
+	if (SINGLETON_INSTANCE(Lib::InputDeviceManager) != nullptr)
 	{
 		SINGLETON_INSTANCE(Lib::InputDeviceManager)->ReleaseDevice(Lib::InputDeviceManager::GAMEPAD_TYPE);
 		SINGLETON_INSTANCE(Lib::InputDeviceManager)->ReleaseDevice(Lib::InputDeviceManager::MOUSEDEVICE_TYPE);
@@ -215,7 +214,7 @@ void Application::ReleaseInputDevice()
 
 void Application::ReleaseSceneManager()
 {
-	if (m_pSceneManager != NULL)
+	if (m_pSceneManager != nullptr)
 	{
 		m_pSceneManager->DeleteScene(m_pGameScene);
 		SafeDelete(m_pGameScene);

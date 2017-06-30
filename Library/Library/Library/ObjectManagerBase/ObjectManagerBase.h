@@ -50,4 +50,4 @@ namespace Lib
 }
 
 
-#endif // LIB_OBJECTMANAGERBASE_H
+#endif // !LIB_OBJECTMANAGERBASE_H

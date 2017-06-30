@@ -75,4 +75,4 @@ namespace Lib
 }
 
 
-#endif // LIB_LIGHT_H
+#endif // !LIB_LIGHT_H

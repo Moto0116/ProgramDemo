@@ -16,7 +16,7 @@
 // Constructor	Destructor
 //----------------------------------------------------------------------
 DepthDrawTask::DepthDrawTask() : 
-	m_pObject3D(NULL)
+	m_pObject3D(nullptr)
 {
 }
 

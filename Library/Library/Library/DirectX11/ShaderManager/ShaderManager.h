@@ -14,12 +14,13 @@
 #include <D3DX10.h>
 #include <vector>
 
-#include "..\GraphicsDevice\GraphicsDevice.h"
 #include "..\..\SingletonBase\SingletonBase.h"
 
 
 namespace Lib
 {
+	class GraphicsDevice;
+
 	/**
 	 * シェーダーの管理クラス
 	 */
@@ -317,7 +318,7 @@ namespace Lib
 		/**
 		 * デストラクタ
 		 */
-		~ShaderManager();
+		virtual ~ShaderManager();
 
 
 		GraphicsDevice*						m_pGraphicsDevice;			//!< グラフィックデバイス.
@@ -342,4 +343,4 @@ namespace Lib
 
 
 
-#endif // LIB_SHADERMANAGER_H
+#endif // !LIB_SHADERMANAGER_H

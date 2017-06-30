@@ -12,13 +12,13 @@
 #include <D3D11.h>
 #include <vector>
 
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "FbxModel\FbxModel.h"
 #include "SingletonBase\SingletonBase.h"
 
 
 namespace Lib
 {
+	class GraphicsDevice;
 	class FbxLoader;
 
 	/**
@@ -87,7 +87,7 @@ namespace Lib
 		/**
 		 * FbxFileManagerクラスのデストラクタ
 		 */
-		~FbxFileManager();
+		virtual ~FbxFileManager();
 
 
 		GraphicsDevice*				m_pGraphicsDevice;	//!< グラフィックデバイス.
@@ -101,4 +101,4 @@ namespace Lib
 }
 
 
-#endif // LIB_FBXFILEMANAGER_H
+#endif // !LIB_FBXFILEMANAGER_H

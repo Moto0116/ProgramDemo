@@ -1,6 +1,6 @@
 ﻿/**
  * @file	MainLight.h
- * @brief	メインライトオブジェクト定義
+ * @brief	メインライトクラス定義
  * @author	morimoto
  */
 #ifndef MAINLIGHT_H
@@ -25,7 +25,7 @@ class MainCamera;
 
 
 /**
- * メインライトクラス
+ * メインライト
  * @todo 大きくなってるのでライトの描画と深度バッファ管理を分離する予定
  */
 class MainLight : public Lib::ObjectBase
@@ -44,7 +44,7 @@ public:
 
 	/**
 	 * 初期化処理
-	 * @return 初期化に成功したか
+	 * @return 初期化に成功したらtrue 失敗したらfalse
 	 */
 	virtual bool Initialize();
 
@@ -67,7 +67,7 @@ public:
 private:
 	enum
 	{
-		VERTEX_NUM = 4	//!< 頂点数
+		VERTEX_NUM = 4	//!< 頂点数.
 	};
 
 	/**
@@ -93,7 +93,7 @@ private:
 		virtual void Run();
 
 	private:
-		MainLight* m_pMainLight;	//!< 処理オブジェクト
+		MainLight* m_pMainLight;	//!< 処理オブジェクト.
 
 	};
 
@@ -121,7 +121,7 @@ private:
 		virtual void Run();
 
 	private:
-		MainLight* m_pMainLight;	//!< 処理オブジェクト
+		MainLight* m_pMainLight;	//!< 処理オブジェクト.
 
 	};
 
@@ -131,12 +131,12 @@ private:
 	 */
 	struct LIGHT_CONSTANT_BUFFER
 	{
-		D3DXVECTOR4 LightPos;	//!< ライト座標
-		D3DXVECTOR4 LightDir;	//!< ライトの向き
-		D3DXMATRIX	LightView;	//!< ライトのビュー行列
-		D3DXMATRIX	LightProj;	//!< ライトのプロジェクション行列
-		D3DXMATRIX	Matrix;		//!< ライトのワールド変換行列
-		D3DXVECTOR4	LightDot;	//!< ライトの逆ベクトルと上方ベクトルの内積
+		D3DXVECTOR4 LightPos;	//!< ライト座標.
+		D3DXVECTOR4 LightDir;	//!< ライトの向き.
+		D3DXMATRIX	LightView;	//!< ライトのビュー行列.
+		D3DXMATRIX	LightProj;	//!< ライトのプロジェクション行列.
+		D3DXMATRIX	Matrix;		//!< ライトのワールド変換行列.
+		D3DXVECTOR4	LightDot;	//!< ライトの逆ベクトルと上方ベクトルの内積.
 	};
 
 	/**
@@ -316,7 +316,7 @@ private:
 
 	//--------------------その他オブジェクト--------------------
 	Lib::Light*					m_pLight;				//!< ライトオブジェクト.
-	MainCamera*					m_pCamera;				//!< カメラオブジェクト
+	MainCamera*					m_pCamera;				//!< カメラオブジェクト.
 
 
 	//--------------------ライト定数バッファ--------------------
@@ -344,12 +344,9 @@ private:
 	VERTEX						m_pVertexData[VERTEX_NUM];	//!< 頂点データ.
 	int							m_LightTextureIndex;		//!< ライトテクスチャインデックス.
 	int							m_BloomTextureIndex;		//!< ブルームテクスチャインデックス.
-
-
-	//--------------------オブジェクトの状態--------------------
-	LIGHT_STATE					m_LightState;				//!< ライトの状態
+	LIGHT_STATE					m_LightState;				//!< ライトの状態.
 
 };
 
 
-#endif // MAINLIGHT_H
+#endif // !MAINLIGHT_H

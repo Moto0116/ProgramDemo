@@ -30,10 +30,10 @@ namespace Lib
 		 */
 		enum HIT
 		{
-			TOP_HIT = 1,	//!< 上部が当たっている
-			LEFT_HIT = 2,	//!< 左側が当たっている
-			RIGHT_HIT = 4,	//!< 右側が当たっている
-			BOTTOM_HIT = 8	//!< 画部が当たっている
+			TOP_HIT = 1,	//!< 上部が当たっている.
+			LEFT_HIT = 2,	//!< 左側が当たっている.
+			RIGHT_HIT = 4,	//!< 右側が当たっている.
+			BOTTOM_HIT = 8	//!< 画部が当たっている.
 		};
 
 		/**
@@ -41,8 +41,8 @@ namespace Lib
 		 */
 		struct COLLISION_INFO
 		{
-			LPCSTR	pName;		//!< 当たったオブジェクトの名前
-			BYTE	HitData;	//!< 当たった部分
+			LPCSTR	pName;		//!< 当たったオブジェクトの名前.
+			BYTE	HitData;	//!< 当たった部分.
 		};
 
 		/**
@@ -137,14 +137,14 @@ namespace Lib
 
 
 	private:
-		D3DXVECTOR2		m_Pos;	//!< あたり判定の座標
-		D3DXVECTOR2		m_Size;	//!< あたり判定のサイズ
-		std::string		m_Name;	//!< あたり判定オブジェクトの名前
+		D3DXVECTOR2		m_Pos;	//!< あたり判定の座標.
+		D3DXVECTOR2		m_Size;	//!< あたり判定のサイズ.
+		std::string		m_Name;	//!< あたり判定オブジェクトの名前.
 
-		std::vector<COLLISION_INFO> m_CollisionInfos;	//!< 衝突したオブジェクトの情報
+		std::vector<COLLISION_INFO> m_CollisionInfos;	//!< 衝突したオブジェクトの情報.
 
 	};
 }
 
 
-#endif // COLLISIONQUAD2D_H
+#endif // !COLLISIONQUAD2D_H

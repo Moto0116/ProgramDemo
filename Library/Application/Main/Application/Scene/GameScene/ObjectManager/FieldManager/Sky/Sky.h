@@ -30,7 +30,7 @@ public:
 
 	/**
 	 * 初期化処理
-	 * @return 初期化に成功したか
+	 * @return 初期化に成功したらtrue 失敗したらfalse
 	*/
 	virtual bool Initialize();
 
@@ -64,19 +64,8 @@ public:
 	 */
 	virtual void CubeMapDraw();
 
-
 private:
 	static D3DXVECTOR3 m_DefaultScale;	//!< デフォルトスケーリング値.
-
-	int m_SkyModelIndex;				//!< 空のモデルインデックス.
-	int m_SkyTextureIndex;				//!< 空のテクスチャインデックス.
-	int	m_ShadowVertexShaderIndex;		//!< 深度値描画の頂点シェーダーインデックス.
-	int	m_ShadowPixelShaderIndex;		//!< 深度値描画のピクセルシェーダーインデックス.
-	int	m_MapVertexShaderIndex;			//!< マップ描画の頂点シェーダーインデックス.
-	int	m_MapPixelShaderIndex;			//!< マップ描画のピクセルシェーダーインデックス.
-	int	m_CubeMapVertexShaderIndex;		//!< キューブマップ描画の頂点シェーダーインデックス.
-	int	m_CubeMapGeometryShaderIndex;	//!< キューブマップ描画のジオメトリシェーダーインデックス.
-	int	m_CubeMapPixelShaderIndex;		//!< キューブマップ描画のピクセルシェーダーインデックス.
 
 
 	//----------------------------------------------------------------------
@@ -85,43 +74,43 @@ private:
 
 	/**
 	 * タスクの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateTask();
 
 	/**
 	 * モデルの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateModel();
 
 	/**
 	 * テクスチャの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateTexture();
 
 	/**
 	 * 通常描画時のシェーダー生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateDefaultShader();
 
 	/**
 	 * シャドウマップシェーダの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateShadowShader();
 
 	/**
 	 * マップシェーダの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateMapShader();
 
 	/**
 	 * キューブマップシェーダの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateCubeMapShader();
 
@@ -166,8 +155,20 @@ private:
 	void ReleaseCubeMapShader();
 
 
+
+	//--------------------描画関連--------------------
+	int m_SkyModelIndex;				//!< 空のモデルインデックス.
+	int m_SkyTextureIndex;				//!< 空のテクスチャインデックス.
+	int	m_ShadowVertexShaderIndex;		//!< 深度値描画の頂点シェーダーインデックス.
+	int	m_ShadowPixelShaderIndex;		//!< 深度値描画のピクセルシェーダーインデックス.
+	int	m_MapVertexShaderIndex;			//!< マップ描画の頂点シェーダーインデックス.
+	int	m_MapPixelShaderIndex;			//!< マップ描画のピクセルシェーダーインデックス.
+	int	m_CubeMapVertexShaderIndex;		//!< キューブマップ描画の頂点シェーダーインデックス.
+	int	m_CubeMapGeometryShaderIndex;	//!< キューブマップ描画のジオメトリシェーダーインデックス.
+	int	m_CubeMapPixelShaderIndex;		//!< キューブマップ描画のピクセルシェーダーインデックス.
+
 };
 
 
 
-#endif // SKY_H
+#endif // !SKY_H

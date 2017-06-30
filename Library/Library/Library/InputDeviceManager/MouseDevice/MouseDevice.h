@@ -9,9 +9,8 @@
 //----------------------------------------------------------------------
 // Define
 //----------------------------------------------------------------------
-/**
- * DirectInputのバージョン指定
- */
+
+// DirectInputのバージョン指定.
 #define DIRECTINPUT_VERSION 0x0800
 
 
@@ -101,4 +100,4 @@ namespace Lib
 }
 
 
-#endif // LIB_MOUSEDEVICE_H
+#endif // !LIB_MOUSEDEVICE_H

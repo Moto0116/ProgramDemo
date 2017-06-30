@@ -16,13 +16,28 @@
 namespace Lib
 {
 	//----------------------------------------------------------------------
+	// Static Private Variables
+	//----------------------------------------------------------------------
+	const char* KeyDevice::m_pDebugFileName = "KeyLog.log";
+	const int KeyDevice::m_DebugFileSizeMax = 50000000;
+	const int KeyDevice::m_TimeCounterMax = 2000000000;
+	const int KeyDevice::m_TimeCounter2Max = 2000000000;
+	
+
+	//----------------------------------------------------------------------
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	KeyDevice::KeyDevice() :
-		m_pDInput8(NULL),
-		m_pDInputDevice8(NULL),
-		m_hWnd(NULL)
+		m_pDInput8(nullptr),
+		m_pDInputDevice8(nullptr),
+		m_hWnd(nullptr),
+		m_IsDebug(false),
+		m_pDebugFile(nullptr),
+		m_TimeCounter(0),
+		m_TimeCounter2(0),
+		m_IsDebugLogPlay(false)
 	{
+		m_pUpdateFunc = &KeyDevice::NormalUpdate;
 	}
 
 	KeyDevice::~KeyDevice()
@@ -34,19 +49,31 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------
-	bool KeyDevice::Initialize(LPDIRECTINPUT8 _pDInput8, HWND _hWnd)
+	bool KeyDevice::Initialize(LPDIRECTINPUT8 _pDInput8, HWND _hWnd, bool _isDebug, bool _IsPlayDebugLog)
 	{
-		if (_pDInput8 == NULL)
-		{
-			OutputErrorLog("DirectInputオブジェクトがありません");
-			return false;
-		}
-
+		MyAssert(_pDInput8 == nullptr, "DirectInputオブジェクトがありません");
 
 		m_pDInput8 = _pDInput8;
 		m_hWnd = _hWnd;
+		m_IsDebug = _isDebug;
+		m_IsDebugLogPlay = _IsPlayDebugLog;
 
-		if (FAILED(m_pDInput8->CreateDevice(GUID_SysKeyboard, &m_pDInputDevice8, NULL)))
+
+#ifdef _DEBUG
+		// デバッグフラグで更新関数を変更.
+		if (m_IsDebug && m_IsDebugLogPlay == false)
+		{
+			m_pUpdateFunc = &KeyDevice::DebugUpdate;
+			fopen_s(&m_pDebugFile, m_pDebugFileName, "w");
+		}
+		else if (m_IsDebug && m_IsDebugLogPlay)
+		{
+			///@todo デバッグログを再生する機能は未実装.
+		}
+#endif // _DEBUG
+
+
+		if (FAILED(m_pDInput8->CreateDevice(GUID_SysKeyboard, &m_pDInputDevice8, nullptr)))
 		{
 			OutputErrorLog("デバイスの生成に失敗しました");
 			return false;
@@ -87,15 +114,18 @@ namespace Lib
 	void KeyDevice::Finalize()
 	{
 		SafeRelease(m_pDInputDevice8);
+
+#ifdef _DEBUG
+		if (m_IsDebug)
+		{
+			fclose(m_pDebugFile);
+		}
+#endif // _DEBUG
 	}
 
 	void KeyDevice::Update()
 	{
-		HRESULT Result = m_pDInputDevice8->Acquire();
-		if ((Result == DI_OK) || (Result == S_FALSE))
-		{
-			m_pDInputDevice8->GetDeviceState(sizeof(m_pDIKeyState), &m_pDIKeyState);
-		}
+		(this->*m_pUpdateFunc)();
 	}
 
 	void KeyDevice::KeyCheck(int _dik)
@@ -124,5 +154,67 @@ namespace Lib
 			}
 			m_pOldDIKeyState[_dik] = KEY_OFF;
 		}
+	}
+
+
+	//----------------------------------------------------------------------
+	// Private Functions
+	//----------------------------------------------------------------------
+	void KeyDevice::NormalUpdate()
+	{
+		// キー情報の更新処理.
+		HRESULT Result = m_pDInputDevice8->Acquire();
+		if ((Result == DI_OK) || (Result == S_FALSE))
+		{
+			m_pDInputDevice8->GetDeviceState(sizeof(m_pDIKeyState), &m_pDIKeyState);
+		}
+	}
+
+	void KeyDevice::DebugUpdate()
+	{
+		// キー情報の更新処理.
+		HRESULT Result = m_pDInputDevice8->Acquire();
+		if ((Result == DI_OK) || (Result == S_FALSE))
+		{
+			m_pDInputDevice8->GetDeviceState(sizeof(m_pDIKeyState), &m_pDIKeyState);
+		}
+
+		// 更新関数が実行されるたびにキー情報をファイルに出力.
+		for (int i = 0; i < 256; i++)
+		{
+			if (m_pDIKeyState[i] & 0x80)
+			{
+				fprintf(m_pDebugFile, "%d,%d,%d,%d\n", i, m_pDIKeyState[i], m_TimeCounter, m_TimeCounter2);
+			}
+		}
+
+		// タイムカウンタの処理.
+		m_TimeCounter++;
+		if (m_TimeCounter >= m_TimeCounterMax)
+		{
+			m_TimeCounter2++;
+			if (m_TimeCounter2 >= m_TimeCounter2Max)
+			{
+				m_TimeCounter2 = 0;
+				Debugger::OutputDebugLog("\n\nタイムカウンタが溢れました\n\n");
+			}
+			m_TimeCounter = 0;
+		}
+
+		// ファイルサイズのチェック.
+		fpos_t FileSize;
+		fgetpos(m_pDebugFile, &FileSize);
+		if (FileSize >= m_DebugFileSizeMax)
+		{
+			Debugger::OutputDebugLog("\n\nデバッグログファイルが既定のサイズを超えました\n");
+			Debugger::OutputDebugLog("\nファイルを破棄します\n\n");
+			fclose(m_pDebugFile);
+			fopen_s(&m_pDebugFile, m_pDebugFileName, "w");
+		}
+	}
+
+	void KeyDevice::DebugLogPlay()
+	{
+		///@todo デバッグログ再生の更新関数は未実装.
 	}
 }

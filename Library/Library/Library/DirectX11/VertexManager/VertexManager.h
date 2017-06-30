@@ -22,9 +22,11 @@ namespace Lib
 	/**
 	 * 頂点管理クラス
 	 */
-	class VertexManager
+	class VertexManager : public SingletonBase<VertexManager>
 	{
 	public:
+		friend SingletonBase<VertexManager>;
+
 		/**
 		 * コンストラクタ
 		 */
@@ -33,7 +35,7 @@ namespace Lib
 		/**
 		 * デストラクタ
 		 */
-		~VertexManager();
+		virtual ~VertexManager();
 
 		/**
 		 * 初期化処理
@@ -55,4 +57,4 @@ namespace Lib
 }
 
 
-#endif // LIB_VERTEXMANAGER_H
+#endif // !LIB_VERTEXMANAGER_H

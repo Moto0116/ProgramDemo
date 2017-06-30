@@ -18,7 +18,7 @@ namespace Lib
 	class ObjectBase;
 
 	/**
-	 *  更新のタスククラス
+	 * 更新のタスククラス
 	 */
 	class UpdateTask : public TaskBase<>
 	{
@@ -45,7 +45,7 @@ namespace Lib
 		void SetUpdateObject(ObjectBase* _pObject);
 	
 	private:
-		ObjectBase* m_pObject;	//!< 更新を行うオブジェクト
+		ObjectBase* m_pObject;	//!< 更新を行うオブジェクト.
 		
 	};
 
@@ -55,4 +55,4 @@ namespace Lib
 
 
 
-#endif // LIB_UPDATETASK_H
+#endif // !LIB_UPDATETASK_H

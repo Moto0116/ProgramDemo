@@ -66,4 +66,4 @@ namespace Lib
 }
 
 
-#endif // BINARYFILE_H
+#endif // !BINARYFILE_H

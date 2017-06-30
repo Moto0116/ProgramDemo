@@ -19,9 +19,9 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	MouseDevice::MouseDevice() : 
-		m_pDInput8(NULL), 
-		m_pDInputDevice8(NULL),
-		m_hWnd(NULL)
+		m_pDInput8(nullptr), 
+		m_pDInputDevice8(nullptr),
+		m_hWnd(nullptr)
 	{
 	}
 
@@ -36,16 +36,12 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool MouseDevice::Initialize(LPDIRECTINPUT8 _pDInput8, HWND _hWnd)
 	{
-		if (_pDInput8 == NULL)
-		{
-			OutputErrorLog("DirectInputオブジェクトがありません");
-			return false;
-		}
+		MyAssert(_pDInput8 == nullptr, "DirectInputオブジェクトがありません");
 
 		m_pDInput8 = _pDInput8;
 		m_hWnd = _hWnd;
 
-		if (FAILED(m_pDInput8->CreateDevice(GUID_SysMouse, &m_pDInputDevice8, NULL)))
+		if (FAILED(m_pDInput8->CreateDevice(GUID_SysMouse, &m_pDInputDevice8, nullptr)))
 		{
 			OutputErrorLog("DirectInputデバイスの生成に失敗しましたん");
 			return false;

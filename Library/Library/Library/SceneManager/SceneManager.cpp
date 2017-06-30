@@ -9,8 +9,6 @@
 //----------------------------------------------------------------------
 #include "SceneManager.h"
 
-#include <Windows.h>
-
 #include "..\Define\Define.h"
 #include "..\Debugger\Debugger.h"
 #include "SceneBase\SceneBase.h"
@@ -28,7 +26,7 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	SceneManager::SceneManager() :
-		m_pCurrentScene(NULL)
+		m_pCurrentScene(nullptr)
 	{
 	}
 
@@ -36,7 +34,7 @@ namespace Lib
 	{
 		for (auto itr = m_pSceneData.begin(); itr != m_pSceneData.end(); itr++)
 		{
-			SafeDelete(*itr);
+			SafeDelete(*itr);	// シーンが残っていたら削除する.
 		}
 	}
 
@@ -79,19 +77,19 @@ namespace Lib
 
 			break;
 		case SceneBase::FINAL_STATE:
-			int NextID = m_pCurrentScene->GetNextSceneID();	// 遷移先を取得する
+			int NextSceneID = m_pCurrentScene->GetNextSceneID();	// 遷移先のシーンIDを取得する.
 			m_pCurrentScene->Finalize();
 
 			for (auto itr = m_pSceneData.begin(); itr != m_pSceneData.end(); itr++)
 			{
-				if ((*itr)->GetID() == NextID)
+				if ((*itr)->GetID() == NextSceneID)
 				{
-					m_pCurrentScene = (*itr);	// 遷移先を見つけたら現在のシーンに設定
+					m_pCurrentScene = (*itr);	// 遷移先を見つけたら現在のシーンに設定.
 					return false;
 				}
 			}
 
-			return true;// 遷移先が見つからなければ動作を終了する
+			return true;	// 遷移先が見つからなければ動作を終了する.
 
 			break;
 		}
@@ -126,7 +124,7 @@ namespace Lib
 				case SceneBase::INIT_STATE:
 					break;
 				case SceneBase::UPDATE_STATE:
-					(*itr)->Finalize();	// オブジェクトが生きていれば破棄する
+					(*itr)->Finalize();	// オブジェクトが生きていれば破棄する.
 					break;
 				case SceneBase::FINAL_STATE:
 					break;
@@ -144,7 +142,7 @@ namespace Lib
 		{
 			if ((*itr)->GetID() == _pScene->GetID())
 			{
-				m_pCurrentScene = (*itr);
+				m_pCurrentScene = (*itr);	// 現在のシーンとして設定.
 			}
 		}
 	}

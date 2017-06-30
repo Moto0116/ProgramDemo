@@ -31,7 +31,6 @@
     <ClCompile Include="Main\Object3DBase\Object3DBase.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\House.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.cpp" />
     <ClCompile Include="Main\Object2DBase\Object2DBase.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.cpp" />
@@ -46,6 +45,7 @@
     <ClCompile Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\Smoke\Smoke.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\Application\Application.h">
@@ -57,7 +57,6 @@
     <ClInclude Include="Main\Object3DBase\Object3DBase.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\House.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.h" />
     <ClInclude Include="Main\Object2DBase\Object2DBase.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.h" />
@@ -73,6 +72,7 @@
     <ClInclude Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.h" />
     <ClInclude Include="Main\Application\MyDefine.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\Smoke\Smoke.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\Effect\DefaultEffect.fx" />

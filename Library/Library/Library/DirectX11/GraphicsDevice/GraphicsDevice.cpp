@@ -18,21 +18,21 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	GraphicsDevice::GraphicsDevice() :
-		m_pDevice(NULL),
-		m_pDeviceContext(NULL),
-		m_pDXGI(NULL),
-		m_pAdapter(NULL),
-		m_pDXGIFactory(NULL),
-		m_pDXGISwapChain(NULL),
-		m_pBackBuffer(NULL),
-		m_pDepthStencilBuffer(NULL),
-		m_pRasterizerState(NULL),
-		m_hWnd(NULL)
+		m_pDevice(nullptr),
+		m_pDeviceContext(nullptr),
+		m_pDXGI(nullptr),
+		m_pAdapter(nullptr),
+		m_pDXGIFactory(nullptr),
+		m_pDXGISwapChain(nullptr),
+		m_pBackBuffer(nullptr),
+		m_pDepthStencilBuffer(nullptr),
+		m_pRasterizerState(nullptr),
+		m_hWnd(nullptr)
 	{
 		for (int i = 0; i < m_RenderTargetNum; i++)
 		{
-			m_pRenderTargetView[i] = NULL;
-			m_pDepthStencilView[i] = NULL;
+			m_pRenderTargetView[i] = nullptr;
+			m_pDepthStencilView[i] = nullptr;
 
 			for (int j = 0; j < 4; j++)
 			{
@@ -52,7 +52,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool GraphicsDevice::Initialize(HWND _hWnd)
 	{
-		MyAssert(m_pDevice == NULL, "GraphicsDeviceオブジェクトは既に初期化されています");
+		MyAssert(m_pDevice != nullptr, "GraphicsDeviceオブジェクトは既に初期化されています");
 
 
 		m_hWnd = _hWnd;
@@ -104,9 +104,9 @@ namespace Lib
 			return false;
 		}
 
-		if (_pRenderTarget == NULL)
+		if (_pRenderTarget == nullptr)
 		{
-			m_pRenderTargetView[_stage] = NULL;
+			m_pRenderTargetView[_stage] = nullptr;
 		}
 		else
 		{
@@ -123,9 +123,9 @@ namespace Lib
 			return false;
 		}
 
-		if (_pDepthStencilView == NULL)
+		if (_pDepthStencilView == nullptr)
 		{
-			m_pDepthStencilView[_stage] = NULL;
+			m_pDepthStencilView[_stage] = nullptr;
 		}
 		else
 		{
@@ -142,7 +142,7 @@ namespace Lib
 			return false;
 		}
 
-		if (_pViewPort == NULL)
+		if (_pViewPort == nullptr)
 		{
 			m_ViewPort[_stage] = m_ViewPort[BACKBUFFER_TARGET];
 		}
@@ -177,15 +177,15 @@ namespace Lib
 	{
 #ifdef _DEBUG
 		if (FAILED(D3D11CreateDevice(
-			NULL,
+			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
-			NULL,
+			nullptr,
 			D3D11_CREATE_DEVICE_DEBUG,
-			NULL,
+			nullptr,
 			0,
 			D3D11_SDK_VERSION,
 			&m_pDevice,
-			NULL,
+			nullptr,
 			&m_pDeviceContext)))
 		{
 			OutputErrorLog("DirectX11デバイスの生成に失敗しました");
@@ -193,21 +193,21 @@ namespace Lib
 		}
 #else
 		if (FAILED(D3D11CreateDevice(
-			NULL,
+			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
-			NULL,
+			nullptr,
 			0,
-			NULL,
+			nullptr,
 			0,
 			D3D11_SDK_VERSION,
 			&m_pDevice,
-			NULL,
+			nullptr,
 			&m_pDeviceContext)))
 		{
 			OutputErrorLog("DirectX11デバイスの生成に失敗しました");
 			return false;
 		}
-#endif
+#endif // _DEBUG
 
 
 		return true;
@@ -281,11 +281,11 @@ namespace Lib
 			return false;
 		}
 
-		m_pDXGISwapChain->SetFullscreenState(false, NULL); // フルスクリーンモードを切る.
+		m_pDXGISwapChain->SetFullscreenState(false, nullptr); // フルスクリーンモードを切る.
 
 
 		// レンダーターゲットビューの作成に失敗しました.
-		if (FAILED(m_pDevice->CreateRenderTargetView(m_pBackBuffer, NULL, &m_pRenderTargetView[BACKBUFFER_TARGET])))
+		if (FAILED(m_pDevice->CreateRenderTargetView(m_pBackBuffer, nullptr, &m_pRenderTargetView[BACKBUFFER_TARGET])))
 		{
 			OutputErrorLog("レンダーターゲットビューの作成に失敗しました");
 			ReleaseDisplay();
@@ -307,7 +307,7 @@ namespace Lib
 		DepthDesc.MiscFlags = 0;
 
 		// 深度ステンシルバッファの生成.
-		if (FAILED(m_pDevice->CreateTexture2D(&DepthDesc, NULL, &m_pDepthStencilBuffer)))
+		if (FAILED(m_pDevice->CreateTexture2D(&DepthDesc, nullptr, &m_pDepthStencilBuffer)))
 		{
 			OutputErrorLog("深度ステンシルバッファの作成に失敗しました");
 			ReleaseDisplay();
@@ -317,7 +317,7 @@ namespace Lib
 		// 深度ステンシルビューの作成.
 		if (FAILED(m_pDevice->CreateDepthStencilView(
 			m_pDepthStencilBuffer, 
-			NULL, 
+			nullptr, 
 			&m_pDepthStencilView[BACKBUFFER_TARGET])))
 		{
 			OutputErrorLog("深度ステンシルビューの作成に失敗しました");
@@ -345,7 +345,7 @@ namespace Lib
 		// ラスタライザステートの設定.
 		D3D11_RASTERIZER_DESC RasterizerDesc;
 		RasterizerDesc.FillMode = D3D11_FILL_SOLID;
-		RasterizerDesc.CullMode = D3D11_CULL_NONE;	// カリングをオフ
+		RasterizerDesc.CullMode = D3D11_CULL_NONE;	// カリングをオフ.
 		RasterizerDesc.FrontCounterClockwise = FALSE;
 		RasterizerDesc.DepthBias = 0;
 		RasterizerDesc.DepthBiasClamp = 0.0f;

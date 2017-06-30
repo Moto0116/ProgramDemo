@@ -74,7 +74,6 @@ namespace Lib
 		 */
 		bool LoadGameData(LPCTSTR _pLoadFilePath);
 
-
 	private:
 		/**
 		* コンストラクタ
@@ -86,6 +85,7 @@ namespace Lib
 		*/
 		virtual ~GameDataManager();
 
+
 		FILE*							m_pSaveDataFile;	//!< セーブデータファイル.
 		std::map<std::string, Data>		m_Datas;			//!< データを管理しているコンテナ.
 
@@ -96,4 +96,4 @@ namespace Lib
 #include "GameDataManager_private.h"
 
 
-#endif // LIB_GAMEDATAMANAGER_H
+#endif // !LIB_GAMEDATAMANAGER_H

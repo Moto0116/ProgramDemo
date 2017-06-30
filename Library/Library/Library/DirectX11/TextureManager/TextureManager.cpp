@@ -25,10 +25,10 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	TextureManager::TextureManager() : 
-		m_pGraphicsDevice(NULL)
+		m_pGraphicsDevice(nullptr)
 	{
-		// 読み込みに失敗した際に参照する値としてNULLを追加.
-		m_pTextures.push_back(NULL);
+		// 読み込みに失敗した際に参照する値としてnullptrを追加.
+		m_pTextures.push_back(nullptr);
 	}
 
 	TextureManager::~TextureManager()
@@ -58,7 +58,7 @@ namespace Lib
 	{
 		Texture* pTexture = new Texture(m_pGraphicsDevice, _pTexturePath);
 
-		if (pTexture->Get() == NULL)
+		if (pTexture->Get() == nullptr)
 		{
 			SafeDelete(pTexture);
 			*_pIndex = m_InvalidIndex;

@@ -30,7 +30,7 @@ public:
 
 	/**
 	 * 初期化処理
-	 * @return 初期化に成功したか
+	 * @return 初期化に成功したらtrue 失敗したらfalse
 	*/
 	virtual bool Initialize();
 
@@ -59,15 +59,8 @@ public:
 	 */
 	virtual void MapDraw();
 
-
 private:
 	static D3DXVECTOR3 m_DefaultScale;	//!< デフォルトスケーリング値.
-
-	int m_GroundModelIndex;			//!< グラウンドのモデルインデックス.
-	int	m_ShadowVertexShaderIndex;	//!< 深度値描画の頂点シェーダーインデックス.
-	int	m_ShadowPixelShaderIndex;	//!< 深度値描画のピクセルシェーダーインデックス.
-	int	m_MapVertexShaderIndex;		//!< マップ描画の頂点シェーダーインデックス.
-	int	m_MapPixelShaderIndex;		//!< マップ描画のピクセルシェーダーインデックス.
 
 
 	//----------------------------------------------------------------------
@@ -76,31 +69,31 @@ private:
 
 	/**
 	 * タスクの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateTask();
 
 	/**
 	 * モデルの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateModel();
 
 	/**
 	 * 通常描画時のシェーダー生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateDefaultShader();
 
 	/**
 	 * シャドウマップシェーダの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateShadowShader();
 
 	/**
 	 * マップシェーダの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateMapShader();
 
@@ -136,7 +129,14 @@ private:
 
 
 
+	//--------------------描画関連--------------------
+	int m_GroundModelIndex;			//!< グラウンドのモデルインデックス.
+	int	m_ShadowVertexShaderIndex;	//!< 深度値描画の頂点シェーダーインデックス.
+	int	m_ShadowPixelShaderIndex;	//!< 深度値描画のピクセルシェーダーインデックス.
+	int	m_MapVertexShaderIndex;		//!< マップ描画の頂点シェーダーインデックス.
+	int	m_MapPixelShaderIndex;		//!< マップ描画のピクセルシェーダーインデックス.
+
 };
 
 
-#endif // GROUND_H
+#endif // !GROUND_H

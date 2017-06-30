@@ -64,14 +64,12 @@ public:
 	 */
 	virtual void Draw();
 
-
 private:
 	enum
 	{
 		VERTEX_NUM = 4,		//!< 頂点数.
 		PARTICLE_NUM = 600	//!< パーティクルの数.
 	};
-
 
 	/**
 	 * ポイントスプライト用の頂点構造体
@@ -119,10 +117,10 @@ private:
 	 */
 	struct COMPUTESHADER_BUFFER
 	{
-		D3DXVECTOR4 Pos;
-		D3DXVECTOR4 Scale;
-		D3DXCOLOR Color;
-		D3DXVECTOR4 Life;
+		D3DXVECTOR4 Pos;	//!< パーティクルの座標.
+		D3DXVECTOR4 Scale;	//!< パーティクルの拡大率.
+		D3DXCOLOR Color;	//!< パーティクルのカラー値.
+		D3DXVECTOR4 Life;	//!< パーティクルのライフ値.
 	};
 
 
@@ -228,8 +226,17 @@ private:
 	bool WriteInstanceBuffer();
 
 
+
+	//--------------------タスクオブジェクト--------------------
 	Lib::DrawTask*				m_pDrawTask;					//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*			m_pUpdateTask;					//!< 更新タスクオブジェクト.
+
+
+	//--------------------その他オブジェクト--------------------
+	MainCamera*					m_pCamera;						//!< カメラオブジェクト.
+
+
+	//--------------------描画関連--------------------
 	int							m_VertexShaderIndex;			//!< 頂点シェーダーインデックス.
 	int							m_PixelShaderIndex;				//!< ピクセルシェーダーインデックス.
 	int							m_ComputeShaderIndex;			//!< コンピュートシェーダーインデックス.
@@ -243,16 +250,14 @@ private:
 	VERTEX						m_pVertexData[VERTEX_NUM];		//!< 頂点データ.
 	INSTANCE_DATA				m_pInstanceData[PARTICLE_NUM];	//!< インスタンスデータ.
 
-	MainCamera*					m_pCamera;						//!< カメラオブジェクト.
-	EMITTER_DATA				m_EmitterData;					//!< エミッタデータ構造体.
-	SMOKE_DATA					m_SmokeData[PARTICLE_NUM];		//!< 煙のデータ配列.
+	int							m_SmokeTextureIndex;			//!< 煙のテクスチャインデックス.
+	int							m_SkyCLUTIndex;					//!< ライトのカラールックアップテーブル.
+
 	bool						m_IsActive;						//!< このオブジェクトの活動状態.
 	bool						m_IsComputeShader;				//!< コンピュートシェーダを使用するか.
-
+	EMITTER_DATA				m_EmitterData;					//!< エミッタデータ構造体.
+	SMOKE_DATA					m_SmokeData[PARTICLE_NUM];		//!< 煙のデータ配列.
 	COMPUTESHADER_BUFFER		m_ComputeData[PARTICLE_NUM];	//!< コンピュートシェーダで使用するデータ.
-
-	int							m_SmokeTextureIndex;			//!< 煙のテクスチャインデックス.
-
 	std::random_device			m_RandDevice;					//!< 乱数生成デバイス.
 	std::mt19937				m_MersenneTwister;				//!< 乱数生成オブジェクト.
 
@@ -260,4 +265,4 @@ private:
 
 
 
-#endif // SMOKE_H
+#endif // !SMOKE_H

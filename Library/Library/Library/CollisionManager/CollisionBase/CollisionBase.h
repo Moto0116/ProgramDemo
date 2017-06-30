@@ -66,4 +66,4 @@ namespace Lib
 }
 
 
-#endif // COLLISIONBASE_H
+#endif // !COLLISIONBASE_H

@@ -47,8 +47,8 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	Window::Window() :
-		m_hWnd(NULL),
-		m_hWndParent(NULL)
+		m_hWnd(nullptr),
+		m_hWndParent(nullptr)
 	{
 	}
 	
@@ -71,13 +71,13 @@ namespace Lib
 		WndClass.lpfnWndProc = WindowProc;
 		WndClass.cbClsExtra = 0;
 		WndClass.cbWndExtra = 0;
-		WndClass.hInstance = GetModuleHandle(NULL);
-		WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+		WndClass.hInstance = GetModuleHandle(nullptr);
+		WndClass.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+		WndClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
 		WndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-		WndClass.lpszMenuName = NULL;
+		WndClass.lpszMenuName = nullptr;
 		WndClass.lpszClassName = _pWindowName;
-		WndClass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+		WndClass.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
 		RegisterClassEx(&WndClass);
 	
 		m_hWnd = CreateWindow(
@@ -89,19 +89,17 @@ namespace Lib
 			_windowWidth,
 			_windowHeight,
 			_hWndParent,
-			NULL,
-			GetModuleHandle(NULL),
-			NULL);
+			nullptr,
+			GetModuleHandle(nullptr),
+			nullptr);
 	
-		if (m_hWnd == NULL)
+		if (m_hWnd == nullptr)
 		{
 			OutputErrorLog("ウィンドウの作成に失敗しました");
 			return false;
 		}
 	
-		ShowWindow(m_hWnd, SW_SHOW);
 		UpdateWindow(m_hWnd);
-		SetWindowText(m_hWnd, _pWindowName);
 	
 		ZeroMemory(&m_WindowMsg, sizeof(m_WindowMsg));
 
@@ -110,7 +108,7 @@ namespace Lib
 
 	void Window::Finalize()
 	{
-		if (m_hWnd != NULL)
+		if (m_hWnd != nullptr)
 		{
 			SendMessage(m_hWnd, WM_CLOSE, 0, 0);
 		}
@@ -120,7 +118,7 @@ namespace Lib
 	{
 		if (m_WindowMsg.message != WM_QUIT)
 		{
-			if (PeekMessage(&m_WindowMsg, NULL, 0U, 0U, PM_REMOVE))
+			if (PeekMessage(&m_WindowMsg, nullptr, 0U, 0U, PM_REMOVE))
 			{
 				TranslateMessage(&m_WindowMsg);
 				DispatchMessage(&m_WindowMsg);
@@ -129,7 +127,7 @@ namespace Lib
 			return false;
 		}
 
-		m_hWnd = NULL;
+		m_hWnd = nullptr;
 
 		return true;
 	}

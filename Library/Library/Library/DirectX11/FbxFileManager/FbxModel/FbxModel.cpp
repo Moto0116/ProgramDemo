@@ -19,11 +19,11 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	FbxModel::FbxModel(GraphicsDevice* _pGraphicsDevice) :
 		m_pGraphicsDevice(_pGraphicsDevice),
-		m_ppIndexBuffer(NULL),
-		m_ppVertexBuffer(NULL),
-		m_ppVertexData(NULL),
-		m_pSamplerState(NULL),
-		m_pMaterialConstantBuffer(NULL)
+		m_ppIndexBuffer(nullptr),
+		m_ppVertexBuffer(nullptr),
+		m_ppVertexData(nullptr),
+		m_pSamplerState(nullptr),
+		m_pMaterialConstantBuffer(nullptr)
 	{
 	}
 
@@ -42,7 +42,7 @@ namespace Lib
 
 	bool FbxModel::Initialize()
 	{
-		MyAssert(m_MeshData.size() != 0, "FbxModelオブジェクトは既に初期化されています");
+		MyAssert(m_MeshData.size() == 0, "メッシュデータがありません");
 
 		if (!CreateIndexBuffer())
 		{
@@ -134,7 +134,7 @@ namespace Lib
 
 		m_pGraphicsDevice->GetDeviceContext()->PSSetSamplers(0, 1, &m_pSamplerState);
 
-		m_pGraphicsDevice->GetDeviceContext()->OMSetBlendState(NULL, NULL, 0xffffffff);
+		m_pGraphicsDevice->GetDeviceContext()->OMSetBlendState(nullptr, nullptr, 0xffffffff);
 
 		m_pGraphicsDevice->GetDeviceContext()->VSSetConstantBuffers(3, 1, &m_pMaterialConstantBuffer);
 		m_pGraphicsDevice->GetDeviceContext()->PSSetConstantBuffers(3, 1, &m_pMaterialConstantBuffer);
@@ -321,7 +321,7 @@ namespace Lib
 		// 定数バッファの生成.
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(
 			&ConstantBufferDesc, 
-			NULL, 
+			nullptr, 
 			&m_pMaterialConstantBuffer)))
 		{
 			OutputErrorLog("定数バッファ生成に失敗しました");
@@ -333,7 +333,7 @@ namespace Lib
 
 	void FbxModel::ReleaseIndexBuffer()
 	{
-		if (m_ppIndexBuffer != NULL)
+		if (m_ppIndexBuffer != nullptr)
 		{
 			for (unsigned int i = 0; i < m_MeshData.size(); i++)
 			{
@@ -345,7 +345,7 @@ namespace Lib
 
 	void FbxModel::ReleaseVertexBuffer()
 	{
-		if (m_ppVertexData != NULL)
+		if (m_ppVertexData != nullptr)
 		{
 			for (unsigned int i = 0; i < m_MeshData.size(); i++)
 			{
@@ -354,7 +354,7 @@ namespace Lib
 			SafeDeleteArray(m_ppVertexData);
 		}
 
-		if (m_ppVertexBuffer != NULL)
+		if (m_ppVertexBuffer != nullptr)
 		{
 			for (unsigned int i = 0; i < m_MeshData.size(); i++)
 			{

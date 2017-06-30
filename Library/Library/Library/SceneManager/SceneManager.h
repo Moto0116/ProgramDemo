@@ -51,7 +51,7 @@ namespace Lib
 
 		/**
 		 * シーンの追加
-		 * @param[in] _pScene 登録するシーンオブジェクト
+		 * @param[in] _pScene 追加するシーンオブジェクト
 		 * @return シーンの追加に成功したらtrue 失敗したらfalse
 		 */
 		bool AddScene(SceneBase* _pScene);
@@ -69,7 +69,7 @@ namespace Lib
 		void SetEntryScene(SceneBase* _pScene);
 
 	private:
-		static const int m_EmptySceneID;	//!< 空シーンのID.
+		static const int		m_EmptySceneID;	//!< 空シーンのID.
 
 		std::vector<SceneBase*>	m_pSceneData;	//!< シーンを格納しているコンテナ.
 		SceneBase*				m_pCurrentScene;//!< 現在のシーン.
@@ -78,4 +78,4 @@ namespace Lib
 }
 
 
-#endif // LIB_SCENEMANAGER_H
+#endif // !LIB_SCENEMANAGER_H

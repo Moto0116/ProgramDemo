@@ -1,6 +1,6 @@
 ﻿/**
  * @file	FieldManager.h
- * @brief	フィールドクラス定義
+ * @brief	フィールド管理クラス定義
  * @author	morimoto
  */
 #ifndef FIELDMANAGER_H
@@ -13,7 +13,7 @@
 
 
 /**
- * フィールドクラス
+ * フィールド管理クラス
  */
 class FieldManager : public Lib::ObjectManagerBase
 {
@@ -28,8 +28,7 @@ public:
 	 */
 	virtual ~FieldManager();
 
-
 };
 
 
-#endif // FIELDMANAGER_H
+#endif // !FIELDMANAGER_H

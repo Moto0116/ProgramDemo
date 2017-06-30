@@ -27,8 +27,9 @@ namespace Lib
 
 		/**
 		 * コンストラクタ
+		 * @param[in] _sceneID シーンのID
 		 */
-		SceneBase(int _sceneId);
+		SceneBase(int _sceneID);
 
 		/**
 		 * デストラクタ
@@ -55,7 +56,7 @@ namespace Lib
 		 * シーンの状態を取得する
 		 * @return シーンの状態
 		 */
-		inline STATE GetState()
+		inline STATE GetState() const
 		{
 			return m_State;
 		}
@@ -70,14 +71,13 @@ namespace Lib
 		}
 
 		/**
-		 * 次のシーンIDを取得する
-		 * @return 次のシーンID
+		 * 遷移先のシーンIDを取得する
+		 * @return 遷移先のシーンID
 		 */
 		inline int GetNextSceneID() const
 		{
 			return m_NextSceneID;
 		}
-
 
 	protected:
 		STATE	m_State;		//!< シーンの状態.
@@ -88,4 +88,4 @@ namespace Lib
 }
 
 
-#endif // LIB_SCENEBASE_H
+#endif // !LIB_SCENEBASE_H

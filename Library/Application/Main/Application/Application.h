@@ -45,10 +45,9 @@ public:
 	void Finalize();
 
 	/**
-	 * アプリケーションを起動
+	 * アプリケーションの実行
 	 */
 	void Run();
-
 
 private:
 	/**
@@ -56,13 +55,13 @@ private:
 	 */
 	enum SCENE_ID
 	{
-		TITLE_SCENE_ID,	//!< タイトルシーンID
-		GAME_SCENE_ID	//!< ゲームシーンID
+		TITLE_SCENE_ID,	//!< タイトルシーンID.
+		GAME_SCENE_ID	//!< ゲームシーンID.
 	};
 
-	static const int m_WindowWidth;		//!< ウィンドウの幅
-	static const int m_WindowHeight;	//!< ウィンドウの高さ
-	static const DWORD m_WindowStyle;	//!< ウィンドウのスタイル
+	static const int m_WindowWidth;		//!< ウィンドウの幅.
+	static const int m_WindowHeight;	//!< ウィンドウの高さ.
+	static const DWORD m_WindowStyle;	//!< ウィンドウのスタイル.
 
 	/**
 	 * メインウィンドウの生成
@@ -109,11 +108,11 @@ private:
 	void ReleaseSceneManager();
 
 
-	Lib::Window*		m_pMainWindow;		//!< メインウィンドウ
-	Lib::SceneManager*	m_pSceneManager;	//!< シーン管理オブジェクト
-	GameScene*			m_pGameScene;		//!< シーンオブジェクト
+	Lib::Window*		m_pMainWindow;		//!< メインウィンドウ.
+	Lib::SceneManager*	m_pSceneManager;	//!< シーン管理オブジェクト.
+	GameScene*			m_pGameScene;		//!< シーンオブジェクト.
 
 };
 
 
-#endif
+#endif // !APPLICATION_H

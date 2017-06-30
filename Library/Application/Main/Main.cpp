@@ -24,3 +24,4 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr,
 
 	return 0;
 }
+

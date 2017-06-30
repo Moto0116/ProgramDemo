@@ -9,9 +9,8 @@
 //----------------------------------------------------------------------
 // Define
 //----------------------------------------------------------------------
-/**
- * DirectInputのバージョン指定
- */
+
+// DirectInputのバージョン指定.
 #define DIRECTINPUT_VERSION 0x0800
 
 
@@ -62,9 +61,11 @@ namespace Lib
 		/**
 		 * デバイスの生成
 		 * @param[in] _deviceType 生成するデバイスの種類
+		 * @param[in] _isDebug デバッグ機能を使用するかの指定
+		 * @param[in] _IsPlayDebugLog ログファイルを再生するかの指定
 		 * @return 成功したらtrue 失敗したらfalse
 		 */
-		bool CreateDevice(INPUTDEVICE_TYPE _deviceType);
+		bool CreateDevice(INPUTDEVICE_TYPE _deviceType, bool _isDebug = false, bool _IsPlayDebugLog = false);
 
 		/**
 		 * デバイスの破棄
@@ -149,21 +150,24 @@ namespace Lib
 
 		/**
 		 * ゲームパッドの生成
+		 * @param[in] _isDebug デバッグ機能を使用するかの指定
 		 * @return 成功したらtrue 失敗したらfalse
 		 */
-		bool CreateGamePad();
+		bool CreateGamePad(bool _isDebug, bool _IsPlayDebugLog);
 
 		/**
 		 * キーデバイスの生成
+		 * @param[in] _isDebug デバッグ機能を使用するかの指定
 		 * @return 成功したらtrue 失敗したらfalse
 		 */
-		bool CreateKeyDevice();
+		bool CreateKeyDevice(bool _isDebug, bool _IsPlayDebugLog);
 
 		/**
 		 * マウスデバイスの生成
+		 * @param[in] _isDebug デバッグ機能を使用するかの指定
 		 * @return 成功したらtrue 失敗したらfalse
 		 */
-		bool CreateMouseDevice();
+		bool CreateMouseDevice(bool _isDebug, bool _IsPlayDebugLog);
 
 		/**
 		 * ゲームパッドの破棄
@@ -191,4 +195,4 @@ namespace Lib
 }
 
 
-#endif // LIB_INPUTDEVICEMANAGER_H
+#endif // !LIB_INPUTDEVICEMANAGER_H

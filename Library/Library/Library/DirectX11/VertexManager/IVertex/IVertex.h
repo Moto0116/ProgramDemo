@@ -3,7 +3,6 @@
  * @brief	頂点インターフェース定義
  * @author	morimoto
  */
-
 #ifndef LIB_IVERTEX_H
 #define LIB_IVERTEX_H
 
@@ -37,4 +36,4 @@ namespace Lib
 }
 
 
-#endif // LIB_IVERTEX_H
+#endif // !LIB_IVERTEX_H

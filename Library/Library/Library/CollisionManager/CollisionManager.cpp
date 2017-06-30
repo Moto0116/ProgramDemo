@@ -72,7 +72,7 @@ namespace Lib
 		D3DXVECTOR2 Size1 = _pCollision1->GetSize();
 		D3DXVECTOR2 Size2 = _pCollision2->GetSize();
 
-		// 衝突しているかチェック
+		// 衝突しているかチェック.
 		if ((Pos1.x - Size1.x / 2) < (Pos2.x + Size2.x / 2) &&
 			(Pos1.x + Size1.x / 2) > (Pos2.x - Size2.x / 2))
 		{

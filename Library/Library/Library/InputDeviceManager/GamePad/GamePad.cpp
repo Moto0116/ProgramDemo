@@ -9,8 +9,6 @@
 //----------------------------------------------------------------------
 #include "GamePad.h"
 
-#pragma comment(lib,"XInput.lib")
-
 
 namespace Lib
 {

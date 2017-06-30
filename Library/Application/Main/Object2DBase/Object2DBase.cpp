@@ -14,8 +14,11 @@
 #include "DirectX11\TextureManager\TextureManager.h"
 
 
+//----------------------------------------------------------------------
+// Constructor	Destructor
+//----------------------------------------------------------------------
 Object2DBase::Object2DBase() : 
-	m_pVertex(NULL),
+	m_pVertex(nullptr),
 	m_Pos(D3DXVECTOR2(0, 0)),
 	m_Size(D3DXVECTOR2(0, 0))
 {
@@ -32,6 +35,10 @@ Object2DBase::~Object2DBase()
 	delete m_pDrawTask;
 }
 
+
+//----------------------------------------------------------------------
+// Public Functions
+//----------------------------------------------------------------------
 bool Object2DBase::Initialize()
 {
 	return true;
@@ -52,6 +59,10 @@ void Object2DBase::Draw()
 	m_pVertex->Draw();
 }
 
+
+//----------------------------------------------------------------------
+// Protected Functions
+//----------------------------------------------------------------------
 bool Object2DBase::CreateVertex2D()
 {
 	m_pVertex = new Lib::Vertex2D();
@@ -84,7 +95,7 @@ bool Object2DBase::CreateVertex2D()
 
 void Object2DBase::ReleaseVertex2D()
 { 
-	if (m_pVertex != NULL)
+	if (m_pVertex != nullptr)
 	{
 		m_pVertex->ReleaseVertexBuffer();
 		m_pVertex->Finalize();

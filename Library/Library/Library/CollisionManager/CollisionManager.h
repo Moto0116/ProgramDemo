@@ -71,4 +71,4 @@ namespace Lib
 }
 
 
-#endif // COLLISIONMANAGER_H
+#endif // !COLLISIONMANAGER_H

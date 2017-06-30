@@ -1,4 +1,5 @@
 Texture2D g_Texture : register(t0);
+Texture2D g_SkyCLUT : register(t3);
 SamplerState g_Sampler : register(s0);
 
 cbuffer camera : register(b1)
@@ -53,7 +54,13 @@ VS_OUTPUT VS(VS_INPUT In)
 
 float4 PS(VS_OUTPUT In) : SV_TARGET
 {
-	float4 FinalColor = g_Texture.Sample(g_Sampler, In.UV);
+	float4 FinalColor = 
+	g_Texture.Sample(g_Sampler, In.UV);
+	FinalColor = FinalColor * g_SkyCLUT.Sample(g_Sampler, float2(g_LightDot.x, 0.0f));
 	FinalColor.a *= In.Color.a;
 	return FinalColor;
+
+	//float4 FinalColor = g_Texture.Sample(g_Sampler, In.UV);
+	//FinalColor.a *= In.Color.a;
+	//return FinalColor;
 }

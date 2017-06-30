@@ -129,4 +129,4 @@ namespace Lib
 }
 
 
-#endif // LIB_ANIMATION_H
+#endif // !LIB_ANIMATION_H

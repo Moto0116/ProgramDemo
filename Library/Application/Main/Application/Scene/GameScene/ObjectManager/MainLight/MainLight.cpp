@@ -1,6 +1,6 @@
 ﻿/**
  * @file	MainLight.cpp
- * @brief	メインライトオブジェクト実装
+ * @brief	メインライトクラス実装
  * @author	morimoto
  */
 
@@ -39,10 +39,10 @@ const int MainLight::m_RenderTargetStage = 1;
 // Constructor	Destructor
 //----------------------------------------------------------------------
 MainLight::MainLight(MainCamera* _pCamera) :
-	m_pLight(NULL),
+	m_pLight(nullptr),
 	m_pCamera(_pCamera),
-	m_pDepthTexture(NULL),
-	m_pRenderTarget(NULL),
+	m_pDepthTexture(nullptr),
+	m_pRenderTarget(nullptr),
 	m_LightState(m_DefaultLightPos, 0.0f)
 {
 }
@@ -57,55 +57,16 @@ MainLight::~MainLight()
 //----------------------------------------------------------------------
 bool MainLight::Initialize()
 { 
-	if (!CreateTask())
-	{
-		return false;
-	}
-
-	if (!CreateLight())
-	{
-		return false;
-	}
-
-	if (!CreateConstantBuffer())
-	{
-		return false;
-	}
-
-	if (!WriteConstantBuffer())
-	{
-		return false;
-	}
-
-	if (!CreateDepthTexture())
-	{
-		return false;
-	}
-
-	if (!CreateVertex())
-	{
-		return false;
-	}
-
-	if (!CreateShader())
-	{
-		return false;
-	}
-
-	if (!CreateVertexLayout())
-	{
-		return false;
-	}
-
-	if (!CreateState())
-	{
-		return false;
-	}
-
-	if (!CreateLightTexture())
-	{
-		return false;
-	}
+	if (!CreateTask())				return false;
+	if (!CreateLight())				return false;
+	if (!CreateConstantBuffer())	return false;
+	if (!WriteConstantBuffer())		return false;
+	if (!CreateDepthTexture())		return false;
+	if (!CreateVertex())			return false;
+	if (!CreateShader())			return false;
+	if (!CreateVertexLayout())		return false;
+	if (!CreateState())				return false;
+	if (!CreateLightTexture())		return false;
 
 	return true;
 }
@@ -117,7 +78,6 @@ void MainLight::Finalize()
 	ReleaseVertexLayout();
 	ReleaseShader();
 	ReleaseVertex();
-
 	ReleaseDepthTexture();
 	ReleaseConstantBuffer();
 	ReleaseLight();
@@ -148,12 +108,12 @@ void MainLight::Draw()
 	//--------------------描画--------------------
 	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 
-	pContext->VSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), NULL, 0);
-	pContext->PSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), NULL, 0);
+	pContext->VSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), nullptr, 0);
+	pContext->PSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), nullptr, 0);
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	pContext->IASetInputLayout(m_pVertexLayout);
 	pContext->OMSetDepthStencilState(m_pDepthStencilState, 0);
-	pContext->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
+	pContext->OMSetBlendState(m_pBlendState, nullptr, 0xffffffff);
 
 	UINT Stride = sizeof(VERTEX);
 	UINT Offset = 0;
@@ -228,7 +188,10 @@ bool MainLight::CreateConstantBuffer()
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
+	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
+		&ConstantBufferDesc, 
+		nullptr,
+		&m_pConstantBuffer)))
 	{
 		OutputErrorLog("定数バッファ生成に失敗しました");
 		return false;
@@ -256,7 +219,7 @@ bool MainLight::CreateDepthTexture()
 
 	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateTexture2D(
 		&DepthTextureDesc,
-		NULL,
+		nullptr,
 		&m_pDepthTexture)))
 	{
 		OutputErrorLog("Z値テクスチャ生成に失敗しました");
@@ -265,7 +228,7 @@ bool MainLight::CreateDepthTexture()
 
 	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateRenderTargetView(
 		m_pDepthTexture, 
-		NULL,
+		nullptr,
 		&m_pRenderTarget)))
 	{
 		OutputErrorLog("Z値テクスチャから描画ターゲットの生成に失敗しました");
@@ -274,7 +237,7 @@ bool MainLight::CreateDepthTexture()
 
 	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateShaderResourceView(
 		m_pDepthTexture, 
-		NULL, 
+		nullptr, 
 		&m_pDepthStencilResource)))
 	{
 		OutputErrorLog("シェーダーリソースビューの生成に失敗しました");
@@ -298,7 +261,7 @@ bool MainLight::CreateDepthTexture()
 
 	if (FAILED(FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateTexture2D(
 		&DepthStencilDesc,
-		NULL,
+		nullptr,
 		&m_pDepthStencilTexture))))
 	{
 		OutputErrorLog("深度ステンシルテクスチャ生成に失敗しました");
@@ -307,7 +270,7 @@ bool MainLight::CreateDepthTexture()
 
 	if (FAILED(FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilView(
 		m_pDepthStencilTexture,
-		NULL,
+		nullptr,
 		&m_pDepthStencilView))))
 	{
 		OutputErrorLog("深度ステンシルテクスチャのデプスステンシルビューの生成に失敗しました");
@@ -505,10 +468,10 @@ void MainLight::ReleaseConstantBuffer()
 
 void MainLight::ReleaseDepthTexture()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(NULL, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(nullptr, m_RenderTargetStage);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(0xffffffff, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(NULL, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(NULL, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(nullptr, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(nullptr, m_RenderTargetStage);
 
 	SafeRelease(m_pDepthStencilView);
 	SafeRelease(m_pDepthStencilTexture);

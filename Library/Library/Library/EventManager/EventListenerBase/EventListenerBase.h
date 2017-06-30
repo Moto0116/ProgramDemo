@@ -52,4 +52,4 @@ namespace Lib
 
 
 
-#endif // LIB_EVENTLISTENERBASE_H
+#endif // !LIB_EVENTLISTENERBASE_H

@@ -20,19 +20,19 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	Vertex2D::Vertex2D() :
-		m_pGraphicsDevice(NULL),
-		m_pVertexShader(NULL),
-		m_pVertexCompiledShader(NULL),
-		m_pVertexLayout(NULL),
-		m_pPixelShader(NULL),
-		m_pPixelCompiledShader(NULL),
-		m_pBlendState(NULL),
-		m_pSamplerState(NULL),
-		m_pDepthStencilState(NULL),
-		m_pVertexBuffer(NULL),
-		m_pConstantBuffer(NULL),
-		m_pTexture(NULL),
-		m_pAnimation(NULL),
+		m_pGraphicsDevice(nullptr),
+		m_pVertexShader(nullptr),
+		m_pVertexCompiledShader(nullptr),
+		m_pVertexLayout(nullptr),
+		m_pPixelShader(nullptr),
+		m_pPixelCompiledShader(nullptr),
+		m_pBlendState(nullptr),
+		m_pSamplerState(nullptr),
+		m_pDepthStencilState(nullptr),
+		m_pVertexBuffer(nullptr),
+		m_pConstantBuffer(nullptr),
+		m_pTexture(nullptr),
+		m_pAnimation(nullptr),
 		m_WindowWidth(0),
 		m_WindowHeight(0),
 		m_IsInverse(false)
@@ -50,7 +50,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool Vertex2D::Initialize(GraphicsDevice* _pGraphicsDevice)
 	{
-		if (m_pGraphicsDevice != NULL)
+		if (m_pGraphicsDevice != nullptr)
 		{
 			OutputErrorLog("このオブジェクトは既に初期化されています");
 			return false;
@@ -105,7 +105,7 @@ namespace Lib
 
 	bool Vertex2D::CreateVertexBuffer(const D3DXVECTOR2* _pSize, const D3DXVECTOR2* _pMinUV, const D3DXVECTOR2* _pMaxUV, const D3DXCOLOR* _pColor)
 	{
-		if (m_pVertexBuffer != NULL)
+		if (m_pVertexBuffer != nullptr)
 		{
 			OutputErrorLog("頂点バッファはすでに生成されています");
 			return false;
@@ -262,18 +262,18 @@ namespace Lib
 
 	void Vertex2D::ShaderSetup()
 	{
-		m_pGraphicsDevice->GetDeviceContext()->VSSetShader(m_pVertexShader, NULL, 0);
-		m_pGraphicsDevice->GetDeviceContext()->PSSetShader(m_pPixelShader, NULL, 0);
-		m_pGraphicsDevice->GetDeviceContext()->GSSetShader(NULL, NULL, 0);
-		m_pGraphicsDevice->GetDeviceContext()->HSSetShader(NULL, NULL, 0);
-		m_pGraphicsDevice->GetDeviceContext()->DSSetShader(NULL, NULL, 0);
+		m_pGraphicsDevice->GetDeviceContext()->VSSetShader(m_pVertexShader, nullptr, 0);
+		m_pGraphicsDevice->GetDeviceContext()->PSSetShader(m_pPixelShader, nullptr, 0);
+		m_pGraphicsDevice->GetDeviceContext()->GSSetShader(nullptr, nullptr, 0);
+		m_pGraphicsDevice->GetDeviceContext()->HSSetShader(nullptr, nullptr, 0);
+		m_pGraphicsDevice->GetDeviceContext()->DSSetShader(nullptr, nullptr, 0);
 		m_pGraphicsDevice->GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	}
 
 	void Vertex2D::Draw()
 	{
 		// アニメーションインターフェースがあればアニメーションを行う.
-		if (m_pAnimation != NULL)
+		if (m_pAnimation != nullptr)
 		{
 			Animation::ANIMATION_FRAME* pFrame = m_pAnimation->GetCurrentFrame();
 			if (m_IsInverse)
@@ -294,7 +294,7 @@ namespace Lib
 		m_pGraphicsDevice->GetDeviceContext()->IASetInputLayout(m_pVertexLayout);
 
 		// テクスチャインターフェースがあれば、テクスチャを貼り付ける.
-		if (m_pTexture != NULL)
+		if (m_pTexture != nullptr)
 		{
 			ID3D11ShaderResourceView* pTextureResource = m_pTexture->Get();
 			m_pGraphicsDevice->GetDeviceContext()->PSSetSamplers(0, 1, &m_pSamplerState);
@@ -302,7 +302,7 @@ namespace Lib
 		}
 
 		m_pGraphicsDevice->GetDeviceContext()->OMSetDepthStencilState(m_pDepthStencilState, 0);
-		m_pGraphicsDevice->GetDeviceContext()->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
+		m_pGraphicsDevice->GetDeviceContext()->OMSetBlendState(m_pBlendState, nullptr, 0xffffffff);
 
 		UINT Stride = sizeof(VERTEX);
 		UINT Offset = 0;
@@ -322,21 +322,21 @@ namespace Lib
 		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
 #else
 		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
-#endif
+#endif // _DEBUG
 
-		ID3DBlob* pShaderErrors = NULL;
+		ID3DBlob* pShaderErrors = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			TEXT("Library\\DirectX11\\Vertex2D\\Effect\\Vertex2D.fx"),
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			"VS",
 			"vs_5_0",
 			Flag1,
 			0,
-			NULL,
+			nullptr,
 			&m_pVertexCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("頂点シェーダーの読み込みに失敗しました");
 			SafeRelease(pShaderErrors);
@@ -348,7 +348,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateVertexShader(
 			m_pVertexCompiledShader->GetBufferPointer(),
 			m_pVertexCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&m_pVertexShader)))
 		{
 			OutputErrorLog("頂点シェーダーの生成に失敗しました");
@@ -389,21 +389,21 @@ namespace Lib
 		Flag1 |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
 #else
 		Flag1 |= D3D10_SHADER_OPTIMIZATION_LEVEL3;
-#endif
+#endif // _DEBUG
 
-		ID3DBlob* pShaderErrors = NULL;
+		ID3DBlob* pShaderErrors = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			TEXT("Library\\DirectX11\\Vertex2D\\Effect\\Vertex2D.fx"),
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			"PS",
 			"ps_5_0",
 			Flag1,
 			0,
-			NULL,
+			nullptr,
 			&m_pPixelCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("ピクセルシェーダーの読み込みに失敗しました");
 			SafeRelease(pShaderErrors);
@@ -415,7 +415,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreatePixelShader(
 			m_pPixelCompiledShader->GetBufferPointer(),
 			m_pPixelCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&m_pPixelShader)))
 		{
 			OutputErrorLog("ピクセルシェーダーの生成に失敗しました");
@@ -489,7 +489,7 @@ namespace Lib
 		ConstantBufferDesc.StructureByteStride = 0;
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(
 			&ConstantBufferDesc,
-			NULL,
+			nullptr,
 			&m_pConstantBuffer)))
 		{
 			OutputErrorLog("定数バッファの生成に失敗しました");

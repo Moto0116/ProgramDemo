@@ -365,10 +365,20 @@ private:
 	void ReflectMapBeginScene();
 
 
+
+	//--------------------タスクオブジェクト--------------------
 	Lib::DrawTask*				m_pDrawTask;					//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*			m_pUpdateTask;					//!< 更新タスクオブジェクト.
 	CubeDrawBeginTask*			m_pCubeDrawBeginTask;			//!< キューブマップ描画タスクオブジェクト.
 	ReflectDrawBeginTask*		m_pReflectDrawBeginTask;		//!< 反射マップ描画タスクオブジェクト.
+
+
+	//--------------------その他オブジェクト--------------------
+	Lib::Camera*				m_pCamera;						//!< カメラオブジェクト.
+	Lib::Font*					m_pFont;						//!< フォント描画オブジェクト.
+
+
+	//--------------------描画関連--------------------
 	int							m_CubeVertexShaderIndex;		//!< キューブマップ頂点シェーダーインデックス.
 	int							m_CubePixelShaderIndex;			//!< キューブマップピクセルシェーダーインデックス.
 	int							m_ReflectVertexShaderIndex;		//!< 反射頂点シェーダーインデックス.
@@ -392,7 +402,6 @@ private:
 	ID3D11DepthStencilView*		m_pDepthStencilView;			//!< 深度ステンシルビュー.
 	D3D11_VIEWPORT				m_ViewPort;						//!< ビューポート.
 
-	Lib::Camera*				m_pCamera;						//!< カメラオブジェクト.
 	D3DXMATRIX					m_ViewMat[6];					//!< ビュー変換行列.
 	D3DXMATRIX					m_ProjMat;						//!< プロジェクション変換行列.
 	CUBE_CONSTANT_BUFFER		m_CubeConstantBuffer;			//!< キューブマップ描画定数バッファデータ.
@@ -426,7 +435,7 @@ private:
 	std::mt19937				m_MersenneTwister;			//!< 乱数生成オブジェクト.
 	int							m_WaveAddTime;
 	int							m_WaveAddCount;
-	bool						IsCubeMapDraw;
+	bool						m_IsCubeMapDraw;
 
 	ID3D11Texture2D*			m_pReflectTexture;
 	ID3D11Texture2D*			m_pReflectDepthStencilTexture;
@@ -435,12 +444,12 @@ private:
 	ID3D11ShaderResourceView*	m_pReflectShaderResourceView;
 	D3D11_VIEWPORT				m_ReflectViewPort;
 
-	Lib::Font*					m_pFont;
 
+	//--------------------入力デバイスの状態--------------------
 	const Lib::KeyDevice::KEYSTATE* m_pKeyState;			//!< キーの状態.
 
 };
 
 
 
-#endif // WATER_H
+#endif // !WATER_H

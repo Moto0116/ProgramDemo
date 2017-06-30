@@ -20,7 +20,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	Sound::Sound(SoundDevice* _pSoundDevice, LPSTR _pSoundPath) :
 		m_pSoundDevice(_pSoundDevice),
-		m_pSound(NULL)
+		m_pSound(nullptr)
 	{
 		Load(_pSoundPath);
 	}
@@ -84,21 +84,21 @@ namespace Lib
 		DSBufferDesc.lpwfxFormat = &WaveFormat;
 		DSBufferDesc.guid3DAlgorithm = GUID_NULL;
 
-		IDirectSoundBuffer* pTmpBuffer = NULL;
-		m_pSoundDevice->GetInstance()->GetSoundObject()->CreateSoundBuffer(&DSBufferDesc, &pTmpBuffer, NULL);
+		IDirectSoundBuffer* pTmpBuffer = nullptr;
+		m_pSoundDevice->GetInstance()->GetSoundObject()->CreateSoundBuffer(&DSBufferDesc, &pTmpBuffer, nullptr);
 		pTmpBuffer->QueryInterface(IID_IDirectSoundBuffer8, reinterpret_cast<void**>(&m_pSound));
 		pTmpBuffer->Release();
 
-		if (m_pSound == NULL)
+		if (m_pSound == nullptr)
 		{
 			OutputErrorLog("サウンドの読み込みに失敗しました");
 			SafeDeleteArray(pWaveData);
 			return;
 		}
 
-		LPVOID pData = NULL;
+		LPVOID pData = nullptr;
 		DWORD Length = 0;
-		if (FAILED(m_pSound->Lock(0, 0, &pData, &Length, NULL, NULL, DSBLOCK_ENTIREBUFFER)))
+		if (FAILED(m_pSound->Lock(0, 0, &pData, &Length, nullptr, nullptr, DSBLOCK_ENTIREBUFFER)))
 		{
 			OutputErrorLog("サウンドの読み込みに失敗しました");
 			SafeDeleteArray(pWaveData);
@@ -106,7 +106,7 @@ namespace Lib
 		}
 
 		memcpy(pData, pWaveData, Length);
-		m_pSound->Unlock(pData, Length, NULL, 0);
+		m_pSound->Unlock(pData, Length, nullptr, 0);
 
 		SafeDeleteArray(pWaveData);
 	}
@@ -122,12 +122,12 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool Sound::WaveLoad(LPSTR _pFilePath, WAVEFORMATEX* _pWaveFormat, char** _pWaveData, DWORD* _pDataSize)
 	{
-		HMMIO hMmio = NULL;
+		HMMIO hMmio = nullptr;
 		MMIOINFO MmioInfo;
 		ZeroMemory(&MmioInfo, sizeof(MMIOINFO));
 		
 		hMmio = mmioOpen(_pFilePath, &MmioInfo, MMIO_READ);
-		if (hMmio == NULL)
+		if (hMmio == nullptr)
 		{
 			return false;
 		}
@@ -135,7 +135,7 @@ namespace Lib
 		MMRESULT MmResult;
 		MMCKINFO RiffChunk;
 		RiffChunk.fccType = mmioFOURCC('W', 'A', 'V', 'E');
-		MmResult = mmioDescend(hMmio, &RiffChunk, NULL, MMIO_FINDRIFF);
+		MmResult = mmioDescend(hMmio, &RiffChunk, nullptr, MMIO_FINDRIFF);
 		if (MmResult != MMSYSERR_NOERROR) 
 		{
 			mmioClose(hMmio, 0);

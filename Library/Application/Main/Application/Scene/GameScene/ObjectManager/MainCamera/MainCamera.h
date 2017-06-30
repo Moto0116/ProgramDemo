@@ -30,18 +30,18 @@ class MainCamera : public Lib::ObjectBase
 {
 public:
 	/**
-	 * MainCameraクラスのコンストラクタ
+	 * コンストラクタ
 	 */
 	MainCamera();
 
 	/**
-	 * MainCameraクラスのデストラクタ
+	 * デストラクタ
 	 */
 	virtual ~MainCamera();
 
 	/**
 	 * 初期化処理
-	 * @return 初期化に成功したか
+	 * @return 初期化に成功したらtrue 失敗したらfalse
 	 */
 	virtual bool Initialize();
 
@@ -124,6 +124,11 @@ private:
 	static const float	m_RotateSpeedWeight;	//!< ズーム速度を計算する際の重み.
 
 
+
+	//----------------------------------------------------------------------
+	// カメラの操作処理
+	//----------------------------------------------------------------------
+
 	/**
 	 * 移動処理
 	 */
@@ -169,15 +174,31 @@ private:
 	 */
 	void Transform();
 
+
+	//----------------------------------------------------------------------
+	// 生成処理
+	//----------------------------------------------------------------------
+
 	/**
 	 * 定数バッファ初期化関数
+	 * @return 初期化に成功したらtrue 失敗したらfalse
 	 */
 	bool CreateConstantBuffer();
+
+
+	//----------------------------------------------------------------------
+	// 解放処理
+	//----------------------------------------------------------------------
 
 	/**
 	 * 定数バッファの開放関数
 	 */
 	void ReleaseConstantBuffer();
+
+
+	//----------------------------------------------------------------------
+	// その他処理
+	//----------------------------------------------------------------------
 
 	/**
 	 * 定数バッファへの書き込み関数
@@ -186,21 +207,35 @@ private:
 	bool WriteConstantBuffer();
 
 
-	Lib::UpdateTask*				m_pUpdateTask;		//!< 更新タスクオブジェクト
-	Lib::Camera*					m_pCamera;			//!< カメラオブジェクト
-	D3DXVECTOR3						m_Pos;				//!< カメラ座標
-	D3DXVECTOR3						m_LookPoint;		//!< カメラの注視点
-	D3DXVECTOR3						m_UpVec;			//!< カメラの上方向ベクトル
-	D3DXVECTOR2						m_CameraAngle;		//!< カメラの画角
-	ID3D11Buffer*					m_pConstantBuffer;	//!< 定数バッファ
-	Lib::MouseDevice::MOUSESTATE	m_MouseState;		//!< マウスの状態
-	const Lib::KeyDevice::KEYSTATE* m_pKeyState;		//!< キーの状態
-	float							m_MoveSpeed;		//!< カメラの移動速度
-	float							m_ZoomSpeed;		//!< カメラのズーム速度
-	float							m_CameraLength;		//!< カメラの注視点の距離
-	bool							m_IsCameraControl;	//!< カメラを操作したか
+
+	//--------------------タスクオブジェクト--------------------
+	Lib::UpdateTask*				m_pUpdateTask;		//!< 更新タスクオブジェクト.
+
+
+	//--------------------その他オブジェクト--------------------
+	Lib::Camera*					m_pCamera;			//!< カメラオブジェクト.
+
+
+	//--------------------カメラのステータス--------------------
+	D3DXVECTOR3						m_Pos;				//!< カメラ座標.
+	D3DXVECTOR3						m_LookPoint;		//!< カメラの注視点.
+	D3DXVECTOR3						m_UpVec;			//!< カメラの上方向ベクトル.
+	D3DXVECTOR2						m_CameraAngle;		//!< カメラの画角.
+	float							m_MoveSpeed;		//!< カメラの移動速度.
+	float							m_ZoomSpeed;		//!< カメラのズーム速度.
+	float							m_CameraLength;		//!< カメラの注視点の距離.
+	bool							m_IsCameraControl;	//!< カメラを操作したか.
+
+
+	//--------------------カメラの定数バッファ--------------------
+	ID3D11Buffer*					m_pConstantBuffer;	//!< 定数バッファ.
+
+
+	//--------------------入力デバイスの状態--------------------
+	Lib::MouseDevice::MOUSESTATE	m_MouseState;		//!< マウスの状態.
+	const Lib::KeyDevice::KEYSTATE* m_pKeyState;		//!< キーの状態.
 
 };
 
 
-#endif
+#endif // !MAINCAMERA_H

@@ -16,7 +16,7 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	TlsfAllocator::TlsfAllocator() :
-		m_MemoryPool(NULL)
+		m_MemoryPool(nullptr)
 	{
 	}
 

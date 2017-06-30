@@ -40,6 +40,7 @@ namespace Lib
 
 		/**
 		 * サウンドの操作
+		 * @param[in] _operation サウンドに対して行う操作
 		 */
 		virtual void SoundOperation(SoundManager::SOUND_OPERATION _operation);
 
@@ -86,4 +87,4 @@ namespace Lib
 
 
 
-#endif // LIB_SOUND_H
+#endif // !LIB_SOUND_H

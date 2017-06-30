@@ -83,5 +83,4 @@ namespace Lib
 }
 
 
-
-#endif // LIB_TASKMANAGER_PRIVATE_H
+#endif // !LIB_TASKMANAGER_PRIVATE_H

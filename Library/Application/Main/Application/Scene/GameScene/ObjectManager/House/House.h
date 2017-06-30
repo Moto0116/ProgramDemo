@@ -97,37 +97,37 @@ private:
 
 	/**
 	 * タスクの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateTask();
 
 	/**
 	 * モデルの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateModel();
 
 	/**
 	 * シャドウマップシェーダの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateShadowShader();
 
 	/**
 	 * マップシェーダの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateMapShader();
 
 	/**
 	 * キューブマップシェーダの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateCubeMapShader();
 
 	/**
 	 * 反射マップシェーダの生成
-	 * @return 成功したらtrue 失敗しましたfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateReflectMapShader();
 
@@ -173,4 +173,4 @@ private:
 };
 
 
-#endif // HOUSE_H
+#endif // !HOUSE_H

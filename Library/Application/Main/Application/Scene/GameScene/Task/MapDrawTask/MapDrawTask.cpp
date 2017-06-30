@@ -16,7 +16,7 @@
 // Constructor	Destructor
 //----------------------------------------------------------------------
 MapDrawTask::MapDrawTask() :
-	m_pObject3D(NULL)
+	m_pObject3D(nullptr)
 {
 }
 

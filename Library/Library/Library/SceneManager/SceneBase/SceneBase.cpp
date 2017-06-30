@@ -15,9 +15,9 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
-	SceneBase::SceneBase(int _sceneId) : 
+	SceneBase::SceneBase(int _sceneID) :
 		m_State(INIT_STATE),
-		m_SceneID(_sceneId)
+		m_SceneID(_sceneID)
 	{
 	}
 

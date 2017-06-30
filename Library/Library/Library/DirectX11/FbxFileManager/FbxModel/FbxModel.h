@@ -29,9 +29,9 @@ namespace Lib
 		 */
 		struct FBXMODEL_VERTEX
 		{
-			D3DXVECTOR3 Pos;	//!< 頂点座標 
-			D3DXVECTOR3	Normal;	//!< 法線ベクトル
-			D3DXVECTOR2 Texel;	//!< テクスチャ座標
+			D3DXVECTOR3 Pos;	//!< 頂点座標.
+			D3DXVECTOR3	Normal;	//!< 法線ベクトル.
+			D3DXVECTOR2 Texel;	//!< テクスチャ座標.
 		};
 
 		/**
@@ -39,11 +39,11 @@ namespace Lib
 		 */
 		struct VERTEX_DATA
 		{
-			int				PolygonNum;			//!< ポリゴンの数
-			int				PolygonVertexNum;	//!< Meshの総頂点数
-			int*			pIndexAry;			//!< インデックスバッファ
-			int				ControlPositionNum;	//!< インデックスバッファが指す頂点の数
-			D3DXVECTOR3*	pVertex;			//!< インデックスが参照する頂点
+			int				PolygonNum;			//!< ポリゴンの数.
+			int				PolygonVertexNum;	//!< Meshの総頂点数.
+			int*			pIndexAry;			//!< インデックスバッファ.
+			int				ControlPositionNum;	//!< インデックスバッファが指す頂点の数.
+			D3DXVECTOR3*	pVertex;			//!< インデックスが参照する頂点.
 		};
 
 		/**
@@ -51,7 +51,7 @@ namespace Lib
 		 */
 		struct NORMAL_DATA
 		{
-			D3DXVECTOR3* pNormalVec; //!< 法線ベクトルの配列
+			D3DXVECTOR3* pNormalVec; //!< 法線ベクトルの配列.
 		};
 
 		/**
@@ -59,11 +59,11 @@ namespace Lib
 		 */
 		struct MATERIAL
 		{
-			D3DXCOLOR	Diffuse;	//!< ディフューズ反射
-			D3DXCOLOR	Ambient;	//!< アンビエント反射
-			D3DXCOLOR	Specular;	//!< スペキュラ反射
-			D3DXCOLOR	Emissive;	//!< エミッシブ
-			float		Power;		//!< スペキュラ強度
+			D3DXCOLOR	Diffuse;	//!< ディフューズ反射.
+			D3DXCOLOR	Ambient;	//!< アンビエント反射.
+			D3DXCOLOR	Specular;	//!< スペキュラ反射.
+			D3DXCOLOR	Emissive;	//!< エミッシブ.
+			float		Power;		//!< スペキュラ強度.
 		};
 
 		/**
@@ -71,8 +71,8 @@ namespace Lib
 		 */
 		struct TEXTURE_UV_DATA
 		{
-			LPCTSTR			pUVSetName;	//!< UVセットの名前(テクスチャ座標とテクスチャを紐づける)
-			D3DXVECTOR2*	pTextureUV;	//!< テクスチャ座標
+			LPCTSTR			pUVSetName;	//!< UVセットの名前(テクスチャ座標とテクスチャを紐づける).
+			D3DXVECTOR2*	pTextureUV;	//!< テクスチャ座標.
 		};
 
 		/**
@@ -80,8 +80,8 @@ namespace Lib
 		 */
 		struct TEXTURE_DATA
 		{
-			TEXTURE_UV_DATA* pTextureUVData;
-			int TextureUVCount;
+			TEXTURE_UV_DATA* pTextureUVData;	//!< テクスチャUVデータ.
+			int TextureUVCount;					//!< テクスチャUVデータの数.
 		};
 
 		/**
@@ -89,11 +89,11 @@ namespace Lib
 		 */
 		struct MATERIAL_DATA
 		{
-			MATERIAL					pMaterial;			//!< メッシュのマテリアル
-			int							TextureCount;		//!< マテリアルに紐づいているテクスチャの数
-			LPCTSTR*					pTextureName;		//!< マテリアルに紐づいているテクスチャの名前が格納された配列
-			LPCTSTR*					pTextureUVSetName;	//!< マテリアルに紐づいているテクスチャとUVを結びつける文字列が格納された配列
-			ID3D11ShaderResourceView**	pTextureView;		//!< マテリアルに紐づいているテクスチャのビューが格納された配列
+			MATERIAL					pMaterial;			//!< メッシュのマテリアル.
+			int							TextureCount;		//!< マテリアルに紐づいているテクスチャの数.
+			LPCTSTR*					pTextureName;		//!< マテリアルに紐づいているテクスチャの名前が格納された配列.
+			LPCTSTR*					pTextureUVSetName;	//!< マテリアルに紐づいているテクスチャとUVを結びつける文字列が格納された配列.
+			ID3D11ShaderResourceView**	pTextureView;		//!< マテリアルに紐づいているテクスチャのビューが格納された配列.
 		};
 
 		/**
@@ -101,13 +101,22 @@ namespace Lib
 		 */
 		struct MESH_DATA
 		{
-			VERTEX_DATA*	pVertexData;	//!< メッシュの頂点情報
-			NORMAL_DATA*	pNormalData;	//!< メッシュの法線情報
-			TEXTURE_DATA*	pTextureData;	//!< テクスチャの情報
-			MATERIAL_DATA*	pMaterialData;	//!< マテリアルの情報
+			VERTEX_DATA*	pVertexData;	//!< メッシュの頂点情報.
+			NORMAL_DATA*	pNormalData;	//!< メッシュの法線情報.
+			TEXTURE_DATA*	pTextureData;	//!< テクスチャの情報.
+			MATERIAL_DATA*	pMaterialData;	//!< マテリアルの情報.
 		};
 
+
+		/**
+		 * コンストラクタ
+		 * @param[in] _pGraphicsDevice グラフィックデバイス
+		 */
 		FbxModel(GraphicsDevice* _pGraphicsDevice);
+
+		/**
+		 * デストラクタ
+		 */
 		~FbxModel();
 
 		/**
@@ -163,32 +172,33 @@ namespace Lib
 		 */
 		struct MATERIAL_CONSTANT_BUFFER
 		{
-			D3DXVECTOR4 Diffuse;
-			D3DXVECTOR4 Ambient;
-			D3DXVECTOR4 Specular;
-			D3DXVECTOR4 Emissive;
+			D3DXVECTOR4 Diffuse;	//!< ディフューズ.
+			D3DXVECTOR4 Ambient;	//!< アンビエント.
+			D3DXVECTOR4 Specular;	//!< スペキュラ.
+			D3DXVECTOR4 Emissive;	//!< エミッシブ.
 		};
 
 		/**
 		 * インデックスバッファを初期化する
-		 * @return 初期化に成功したらtrue
+		 * @return 初期化に成功したらtrue 失敗したらfalsef
 		 */
 		bool CreateIndexBuffer();
 
 		/**
 		 * 頂点バッファを初期化する
-		 * @return 初期化に成功したらtrue
+		 * @return 初期化に成功したらtrue 失敗したらfalsef
 		 */
 		bool CreateVertexBuffer();
 
 		/**
 		 * サンプラステートを初期化する
-		 * @return 初期化に成功したらtrue
+		 * @return 初期化に成功したらtrue 失敗したらfalsef
 		 */
 		bool CreateSamplerState();
 
 		/**
 		 * 定数バッファを初期化する
+		 * @return 初期化に成功したらtrue 失敗したらfalsef
 		 */
 		bool CreateConstantBuffer();
 
@@ -214,20 +224,21 @@ namespace Lib
 
 		/**
 		 * 定数バッファへの書き込み関数
+		 * @param[in] 定数バッファに書き込むデータを持つメッシュ
 		 */
 		void WriteConstantBuffer(int _meshNum = 0);
 
 
-		GraphicsDevice*				m_pGraphicsDevice;
-		std::vector<MESH_DATA>		m_MeshData;
-		ID3D11Buffer**				m_ppIndexBuffer;
-		ID3D11Buffer**				m_ppVertexBuffer;
-		FBXMODEL_VERTEX**			m_ppVertexData;
-		ID3D11SamplerState*			m_pSamplerState;
-		ID3D11Buffer*				m_pMaterialConstantBuffer;
+		GraphicsDevice*				m_pGraphicsDevice;			//!< グラフィックデバイス.
+		std::vector<MESH_DATA>		m_MeshData;					//!< メッシュデータ.
+		ID3D11Buffer**				m_ppIndexBuffer;			//!< インデックスバッファ.
+		ID3D11Buffer**				m_ppVertexBuffer;			//!< 頂点バッファ.
+		FBXMODEL_VERTEX**			m_ppVertexData;				//!< 頂点データ.
+		ID3D11SamplerState*			m_pSamplerState;			//!< サンプラステート.
+		ID3D11Buffer*				m_pMaterialConstantBuffer;	//!< マテリアルの定数バッファ.
 
 	};
 }
 
 
-#endif // LIB_FBXMODEL_H
+#endif // !LIB_FBXMODEL_H

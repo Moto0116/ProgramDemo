@@ -13,7 +13,7 @@ namespace Lib
 	// Static Private Variables
 	//----------------------------------------------------------------------
 	template <typename Type>
-	Type* SingletonBase<Type>::m_pInstance = NULL;
+	Type* SingletonBase<Type>::m_pInstance = nullptr;
 
 
 	//----------------------------------------------------------------------
@@ -31,4 +31,4 @@ namespace Lib
 }
 
 
-#endif // LIB_SINGLETONBASE_PRIVATE_H
+#endif // !LIB_SINGLETONBASE_PRIVATE_H

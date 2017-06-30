@@ -16,7 +16,7 @@
 // Constructor	Destructor
 //----------------------------------------------------------------------
 CubeMapDrawTask::CubeMapDrawTask() : 
-	m_pObject(NULL)
+	m_pObject(nullptr)
 {
 }
 

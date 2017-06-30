@@ -47,11 +47,11 @@ MiniMap::~MiniMap()
 //----------------------------------------------------------------------
 bool MiniMap::Initialize()
 {
-	m_pBeginTask = new BeginTask(this);
+	m_pDrawBeginTask = new DrawBeginTask(this);
 
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(MapDrawTaskManager)->AddBeginTask(m_pBeginTask);
+	SINGLETON_INSTANCE(MapDrawTaskManager)->AddBeginTask(m_pDrawBeginTask);
 
 	m_pCamera = new Lib::Camera(
 		m_TextureWidth,
@@ -64,7 +64,12 @@ bool MiniMap::Initialize()
 	if (!WriteConstantBuffer())		return false;
 	if (!CreateVertex2D())			return false;
 
-	m_pVertex->WriteConstantBuffer(&m_Pos);
+	if (!m_pVertex->WriteConstantBuffer(&m_Pos))
+	{
+		OutputErrorLog("定数バッファの書き込みに失敗しました");
+		return false;
+	}
+
 	m_pVertex->SetInverse(false);
 
 	return true;
@@ -78,11 +83,11 @@ void MiniMap::Finalize()
 
 	delete m_pCamera;
 
-	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveBeginTask(m_pBeginTask);
+	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveBeginTask(m_pDrawBeginTask);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 
-	delete m_pBeginTask;
+	delete m_pDrawBeginTask;
 }
 
 void MiniMap::Update()
@@ -115,7 +120,7 @@ bool MiniMap::CreateConstantBuffer()
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
+	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, nullptr, &m_pConstantBuffer)))
 	{
 		OutputErrorLog("定数バッファ生成に失敗しました");
 		return false;
@@ -145,7 +150,7 @@ bool MiniMap::CreateTexture()
 
 	if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
 		&MapTextureDesc,
-		NULL,
+		nullptr,
 		&m_pMapTexture)))
 	{
 		OutputErrorLog("マップテクスチャ生成に失敗しました");
@@ -154,7 +159,7 @@ bool MiniMap::CreateTexture()
 
 	if (FAILED(pGraphicdDevice->GetDevice()->CreateRenderTargetView(
 		m_pMapTexture,
-		NULL,
+		nullptr,
 		&m_pRenderTarget)))
 	{
 		OutputErrorLog("マップテクスチャのレンダーターゲットビューの設定に失敗しました");
@@ -163,7 +168,7 @@ bool MiniMap::CreateTexture()
 
 	if (FAILED(pGraphicdDevice->GetDevice()->CreateShaderResourceView(
 		m_pMapTexture,
-		NULL,
+		nullptr,
 		&m_pShaderResourceView)))
 	{
 		OutputErrorLog("シェーダーリソースビューの生成に失敗しました");
@@ -171,6 +176,7 @@ bool MiniMap::CreateTexture()
 	}
 
 
+	// 深度ステンシルテクスチャの生成.
 	D3D11_TEXTURE2D_DESC DepthStencilDesc;
 	DepthStencilDesc.Width = static_cast<UINT>(m_TextureWidth);
 	DepthStencilDesc.Height = static_cast<UINT>(m_TextureHeight);
@@ -186,7 +192,7 @@ bool MiniMap::CreateTexture()
 
 	if (FAILED(FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
 		&DepthStencilDesc,
-		NULL,
+		nullptr,
 		&m_pDepthStencilTexture))))
 	{
 		OutputErrorLog("深度ステンシルテクスチャ生成に失敗しました");
@@ -195,7 +201,7 @@ bool MiniMap::CreateTexture()
 
 	if (FAILED(FAILED(pGraphicdDevice->GetDevice()->CreateDepthStencilView(
 		m_pDepthStencilTexture,
-		NULL,
+		nullptr,
 		&m_pDepthStencilView))))
 	{
 		OutputErrorLog("深度ステンシルテクスチャのデプスステンシルビューの生成に失敗しました");
@@ -225,10 +231,10 @@ void MiniMap::ReleaseConstantBuffer()
 
 void MiniMap::ReleaseTexture()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(NULL, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(nullptr, m_RenderTargetStage);
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(0xffffffff, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(NULL, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(NULL, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(nullptr, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(nullptr, m_RenderTargetStage);
 
 	SafeRelease(m_pDepthStencilView);
 	SafeRelease(m_pDepthStencilTexture);
@@ -281,6 +287,7 @@ void MiniMap::MiniMapBeginScene()
 
 	pGraphicdDevice->BeginScene(m_RenderTargetStage);
 
+	// ミニマップ定数バッファの更新と設定.
 	WriteConstantBuffer();
 	pDeviceContext->VSSetConstantBuffers(4, 1, &m_pConstantBuffer);
 	pDeviceContext->GSSetConstantBuffers(4, 1, &m_pConstantBuffer);
@@ -293,12 +300,12 @@ void MiniMap::MiniMapBeginScene()
 //----------------------------------------------------------------------
 // Inner Class Constructor Destructor
 //----------------------------------------------------------------------
-MiniMap::BeginTask::BeginTask(MiniMap* _pMiniMap) :
+MiniMap::DrawBeginTask::DrawBeginTask(MiniMap* _pMiniMap) :
 	m_pMiniMap(_pMiniMap)
 {
 }
 
-MiniMap::BeginTask::~BeginTask()
+MiniMap::DrawBeginTask::~DrawBeginTask()
 {
 }
 
@@ -306,7 +313,7 @@ MiniMap::BeginTask::~BeginTask()
 //----------------------------------------------------------------------
 // Inner Class Public Function
 //----------------------------------------------------------------------
-void MiniMap::BeginTask::Run()
+void MiniMap::DrawBeginTask::Run()
 {
 	m_pMiniMap->MiniMapBeginScene();
 }

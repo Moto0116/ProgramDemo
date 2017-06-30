@@ -39,7 +39,7 @@ public:
 
 	/**
 	 * 初期化処理
-	 * @return 初期化に成功したか
+	 * @return 初期化に成功したらtrue 失敗したらfalse
 	*/
 	virtual bool Initialize();
 
@@ -85,7 +85,7 @@ protected:
 	 */
 	struct CONSTANT_BUFFER
 	{
-		D3DXMATRIX World;
+		D3DXMATRIX World;	//!< ワールド変換行列.
 	};
 
 	/**
@@ -115,37 +115,37 @@ protected:
 
 	/**
 	 * シェーダーの生成
-	 * @return 成功したらtrue失敗したらfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateShader();
 
 	/**
 	 * テクスチャの生成
-	 * @return 成功したらtrue失敗したらfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateTexture();
 
 	/**
 	 * 頂点入力レイアウトの生成
-	 * @return 成功したらtrue失敗したらfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateVertexLayout();
 
 	/**
 	 * 深度ステンシルステートの生成
-	 * @return 成功したらtrue失敗したらfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateDepthStencilState();
 
 	/**
 	 * 定数バッファの生成
-	 * @return 成功したらtrue失敗したらfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool CreateConstantBuffer();
 
 	/**
 	 * 定数バッファへの書き込み
-	 * @return 成功したらtrue失敗したらfalse
+	 * @return 成功したらtrue 失敗したらfalse
 	 */
 	bool WriteConstantBuffer();
 
@@ -197,4 +197,4 @@ protected:
 };
 
 
-#endif // OBJECT3DBASE_H
+#endif // !OBJECT3DBASE_H

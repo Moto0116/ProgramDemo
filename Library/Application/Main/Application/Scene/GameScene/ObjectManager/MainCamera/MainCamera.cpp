@@ -38,11 +38,12 @@ MainCamera::MainCamera() :
 	m_Pos(D3DXVECTOR3(0, 80, -70)),
 	m_LookPoint(D3DXVECTOR3(0.f, 0.f, 0.f)),
 	m_UpVec(D3DXVECTOR3(0.f, 1.f, 0.f)),
+	m_CameraAngle(0.f, 50.f),
 	m_MoveSpeed(0.f),
 	m_ZoomSpeed(0.f),
-	m_CameraAngle(0.f, 50.f),
 	m_CameraLength(70.f),
-	m_IsCameraControl(false)
+	m_IsCameraControl(false),
+	m_pConstantBuffer(nullptr)
 {
 }
 
@@ -112,7 +113,7 @@ void MainCamera::GetBillBoardRotation(D3DXVECTOR3* _pBillPos, D3DXMATRIX* _pRota
 {
 	D3DXMatrixIdentity(_pRotation);
 	D3DXMatrixLookAtLH(_pRotation, &m_Pos, _pBillPos, &D3DXVECTOR3(0, 1, 0));
-	D3DXMatrixInverse(_pRotation, NULL, _pRotation);
+	D3DXMatrixInverse(_pRotation, nullptr, _pRotation);
 
 	// 座標移動部分は消しておく.
 	_pRotation->_41 = 0.0f;
@@ -217,46 +218,46 @@ void MainCamera::Zoom()
 
 void MainCamera::MoveFront()
 {
-	float moveX = m_MoveSpeed * sin(static_cast<float>(D3DXToRadian(m_CameraAngle.x)));
-	float moveZ = m_MoveSpeed * cos(static_cast<float>(D3DXToRadian(m_CameraAngle.x)));
+	float MoveX = m_MoveSpeed * sin(static_cast<float>(D3DXToRadian(m_CameraAngle.x)));
+	float MoveZ = m_MoveSpeed * cos(static_cast<float>(D3DXToRadian(m_CameraAngle.x)));
 
-	m_Pos.x += moveX;
-	m_Pos.z += moveZ;
-	m_LookPoint.x += moveX;
-	m_LookPoint.z += moveZ;
+	m_Pos.x += MoveX;
+	m_Pos.z += MoveZ;
+	m_LookPoint.x += MoveX;
+	m_LookPoint.z += MoveZ;
 }
 
 void MainCamera::MoveLeft()
 {
-	float moveX = m_MoveSpeed * sin(static_cast<float>(D3DXToRadian(m_CameraAngle.x - 90)));
-	float moveZ = m_MoveSpeed * cos(static_cast<float>(D3DXToRadian(m_CameraAngle.x - 90)));
+	float MoveX = m_MoveSpeed * sin(static_cast<float>(D3DXToRadian(m_CameraAngle.x - 90)));
+	float MoveZ = m_MoveSpeed * cos(static_cast<float>(D3DXToRadian(m_CameraAngle.x - 90)));
 
-	m_Pos.x += moveX;
-	m_Pos.z += moveZ;
-	m_LookPoint.x += moveX;
-	m_LookPoint.z += moveZ;
+	m_Pos.x += MoveX;
+	m_Pos.z += MoveZ;
+	m_LookPoint.x += MoveX;
+	m_LookPoint.z += MoveZ;
 }
 
 void MainCamera::MoveBack()
 {
-	float moveX = m_MoveSpeed * sin(static_cast<float>(D3DXToRadian(m_CameraAngle.x + 180)));
-	float moveZ = m_MoveSpeed * cos(static_cast<float>(D3DXToRadian(m_CameraAngle.x + 180)));
+	float MoveX = m_MoveSpeed * sin(static_cast<float>(D3DXToRadian(m_CameraAngle.x + 180)));
+	float MoveZ = m_MoveSpeed * cos(static_cast<float>(D3DXToRadian(m_CameraAngle.x + 180)));
 
-	m_Pos.x += moveX;
-	m_Pos.z += moveZ;
-	m_LookPoint.x += moveX;
-	m_LookPoint.z += moveZ;
+	m_Pos.x += MoveX;
+	m_Pos.z += MoveZ;
+	m_LookPoint.x += MoveX;
+	m_LookPoint.z += MoveZ;
 }
 
 void MainCamera::MoveRight()
 {
-	float moveX = m_MoveSpeed * sin(static_cast<float>(D3DXToRadian(m_CameraAngle.x + 90)));
-	float moveZ = m_MoveSpeed * cos(static_cast<float>(D3DXToRadian(m_CameraAngle.x + 90)));
+	float MoveX = m_MoveSpeed * sin(static_cast<float>(D3DXToRadian(m_CameraAngle.x + 90)));
+	float MoveZ = m_MoveSpeed * cos(static_cast<float>(D3DXToRadian(m_CameraAngle.x + 90)));
 
-	m_Pos.x += moveX;
-	m_Pos.z += moveZ;
-	m_LookPoint.x += moveX;
-	m_LookPoint.z += moveZ;
+	m_Pos.x += MoveX;
+	m_Pos.z += MoveZ;
+	m_LookPoint.x += MoveX;
+	m_LookPoint.z += MoveZ;
 }
 
 void MainCamera::Transform()
@@ -287,7 +288,7 @@ bool MainCamera::CreateConstantBuffer()
 
 	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
 		&ConstantBufferDesc, 
-		NULL, 
+		nullptr,
 		&m_pConstantBuffer)))
 	{
 		OutputErrorLog("定数バッファ生成に失敗しました");
@@ -299,11 +300,7 @@ bool MainCamera::CreateConstantBuffer()
 
 void MainCamera::ReleaseConstantBuffer()
 {
-	if (m_pConstantBuffer != NULL)
-	{
-		m_pConstantBuffer->Release();
-		m_pConstantBuffer = NULL;
-	}
+	SafeRelease(m_pConstantBuffer);
 }
 
 bool MainCamera::WriteConstantBuffer()

@@ -45,4 +45,4 @@ namespace Lib
 }
 
 
-#endif
+#endif // !LIB_ISOUND_H

@@ -31,7 +31,7 @@ namespace Lib
 		 */
 		inline static void Create()
 		{
-			if (m_pInstance == NULL)
+			if (m_pInstance == nullptr)
 			{
 				m_pInstance = new Type();
 			}
@@ -52,9 +52,8 @@ namespace Lib
 		inline static void Delete()
 		{
 			delete m_pInstance;
-			m_pInstance = NULL;
+			m_pInstance = nullptr;
 		}
-	
 	
 	protected:
 		static Type* m_pInstance;	//!< シングルトンインスタンス.
@@ -79,20 +78,14 @@ namespace Lib
 #include "SingletonBase_private.h"
 
 
-/**
- * シングルトンオブジェクトの生成マクロ
- */
+// シングルトンオブジェクトの生成マクロ.
 #define SINGLETON_CREATE(Type) Lib::SingletonBase<Type>::Create()
 
-/**
- * シングルトンオブジェクトの取得マクロ
- */
+// シングルトンオブジェクトの取得マクロ.
 #define SINGLETON_INSTANCE(Type) Lib::SingletonBase<Type>::GetInstance()
 
-/**
- * シングルトンオブジェクトの破棄マクロ
- */
+// シングルトンオブジェクトの破棄マクロ.
 #define SINGLETON_DELETE(Type) Lib::SingletonBase<Type>::Delete()
 
 
-#endif // LIB_SINGLETONBASE_H
+#endif // !LIB_SINGLETONBASE_H

@@ -47,7 +47,7 @@ namespace Lib
 
 		/**
 		 * Fbxモデルを読み込む
-		 * @param[out] _pModel 読み込みに成功した場合はモデルデータが格納される、失敗したらNULL
+		 * @param[out] _pModel 読み込みに成功した場合はモデルデータが格納される、失敗したらnullptr
 		 * @param[in] _pFileName 読み込むモデルのファイルパス
 		 * @return 読み込みに成功したらtrue
 		 */
@@ -185,4 +185,4 @@ namespace Lib
 }
 
 
-#endif // LIB_FBXMODEL_H
+#endif // !LIB_FBXMODEL_H

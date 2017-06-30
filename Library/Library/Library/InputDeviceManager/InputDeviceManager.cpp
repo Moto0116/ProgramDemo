@@ -18,11 +18,11 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	InputDeviceManager::InputDeviceManager() : 
-		m_pGamePad(NULL),
-		m_pKeyDevice(NULL),
-		m_pMouseDevice(NULL),
-		m_pDInput8(NULL),
-		m_hWnd(NULL)
+		m_pGamePad(nullptr),
+		m_pKeyDevice(nullptr),
+		m_pMouseDevice(nullptr),
+		m_pDInput8(nullptr),
+		m_hWnd(nullptr)
 	{
 	}
 
@@ -38,11 +38,11 @@ namespace Lib
 	bool InputDeviceManager::Initialize(HWND _hWnd)
 	{
 		if (FAILED(DirectInput8Create(
-			GetModuleHandle(NULL),
+			GetModuleHandle(nullptr),
 			DIRECTINPUT_VERSION,
 			IID_IDirectInput8,
 			reinterpret_cast<void**>(&m_pDInput8),
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("DirectInput8オブジェクトの生成に失敗しました");
 			return false;
@@ -57,13 +57,13 @@ namespace Lib
 	{
 		SafeDelete(m_pGamePad);
 		
-		if (m_pKeyDevice != NULL)
+		if (m_pKeyDevice != nullptr)
 		{
 			m_pKeyDevice->Finalize();
 			SafeDelete(m_pKeyDevice);
 		}
 
-		if (m_pMouseDevice != NULL)
+		if (m_pMouseDevice != nullptr)
 		{
 			m_pMouseDevice->Finalize();
 			SafeDelete(m_pMouseDevice);
@@ -72,20 +72,20 @@ namespace Lib
 		SafeRelease(m_pDInput8);
 	}
 	
-	bool InputDeviceManager::CreateDevice(INPUTDEVICE_TYPE _deviceType)
+	bool InputDeviceManager::CreateDevice(INPUTDEVICE_TYPE _deviceType, bool _isDebug, bool _IsPlayDebugLog)
 	{
 		bool Result = false;
 
 		switch (_deviceType)
 		{
 		case GAMEPAD_TYPE:
-			Result = CreateGamePad();
+			Result = CreateGamePad(_isDebug, _IsPlayDebugLog);
 			break;
 		case KEYDEVICE_TYPE:
-			Result = CreateKeyDevice();
+			Result = CreateKeyDevice(_isDebug, _IsPlayDebugLog);
 			break;
 		case MOUSEDEVICE_TYPE:
-			Result = CreateMouseDevice();
+			Result = CreateMouseDevice(_isDebug, _IsPlayDebugLog);
 			break;
 		}
 
@@ -162,9 +162,9 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Private Functions
 	//----------------------------------------------------------------------
-	bool InputDeviceManager::CreateGamePad()
+	bool InputDeviceManager::CreateGamePad(bool _isDebug, bool _IsPlayDebugLog)
 	{
-		if (m_pGamePad != NULL)
+		if (m_pGamePad != nullptr)
 		{
 			OutputErrorLog("GamePadオブジェクトは既に生成されています");
 			return false;
@@ -175,16 +175,16 @@ namespace Lib
 		return true;
 	}
 
-	bool InputDeviceManager::CreateKeyDevice()
+	bool InputDeviceManager::CreateKeyDevice(bool _isDebug, bool _IsPlayDebugLog)
 	{
-		if (m_pKeyDevice != NULL)
+		if (m_pKeyDevice != nullptr)
 		{
 			OutputErrorLog("KeyDeviceオブジェクトは既に生成されています");
 			return false;
 		}
 
 		m_pKeyDevice = new KeyDevice();
-		if (!m_pKeyDevice->Initialize(m_pDInput8, m_hWnd))
+		if (!m_pKeyDevice->Initialize(m_pDInput8, m_hWnd, _isDebug, _IsPlayDebugLog))
 		{
 			SafeDelete(m_pKeyDevice);
 			return false;
@@ -193,9 +193,9 @@ namespace Lib
 		return true;
 	}
 
-	bool InputDeviceManager::CreateMouseDevice()
+	bool InputDeviceManager::CreateMouseDevice(bool _isDebug, bool _IsPlayDebugLog)
 	{
-		if (m_pMouseDevice != NULL)
+		if (m_pMouseDevice != nullptr)
 		{
 			OutputErrorLog("MouseDeviceオブジェクトは既に生成されています");
 			return false;
@@ -218,7 +218,7 @@ namespace Lib
 
 	void InputDeviceManager::ReleaseKeyDevice()
 	{
-		if (m_pKeyDevice != NULL)
+		if (m_pKeyDevice != nullptr)
 		{
 			m_pKeyDevice->Finalize();
 			SafeDelete(m_pKeyDevice);
@@ -227,7 +227,7 @@ namespace Lib
 
 	void InputDeviceManager::ReleaseMouseDevice()
 	{
-		if (m_pMouseDevice != NULL)
+		if (m_pMouseDevice != nullptr)
 		{
 			m_pMouseDevice->Finalize();
 			SafeDelete(m_pMouseDevice);

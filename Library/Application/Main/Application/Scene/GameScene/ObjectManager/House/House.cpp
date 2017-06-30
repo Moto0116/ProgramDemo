@@ -35,8 +35,10 @@ int	House::m_ReflectMapPixelShaderIndex = Lib::ShaderManager::m_InvalidIndex;
 //----------------------------------------------------------------------
 // Constructor	Destructor
 //----------------------------------------------------------------------
-House::House(MainCamera* _pCamera, D3DXVECTOR3 _Pos, float _rotate)
+House::House(MainCamera* _pCamera, D3DXVECTOR3 _Pos, float _rotate) : 
+	m_pSmoke(nullptr)
 {
+	// 座標と角度を計算.
 	D3DXVECTOR3 Pos = D3DXVECTOR3(4.6f, 25, 4.0f);
 	D3DXVECTOR3 TempPos = Pos;
 
@@ -124,8 +126,8 @@ void House::DepthDraw()
 	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
 	// シェーダーの設定.
-	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ShadowVertexShaderIndex), NULL, 0);
-	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_ShadowPixelShaderIndex), NULL, 0);
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ShadowVertexShaderIndex), nullptr, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_ShadowPixelShaderIndex), nullptr, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
@@ -140,8 +142,8 @@ void House::MapDraw()
 	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
 	// シェーダーの設定.
-	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), NULL, 0);
-	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_MapPixelShaderIndex), NULL, 0);
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), nullptr, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_MapPixelShaderIndex), nullptr, 0);
 
 	TextureSetup();
 	VertexLayoutSetup();
@@ -157,9 +159,9 @@ void House::CubeMapDraw()
 	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
 	// シェーダーの設定.
-	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_CubeMapVertexShaderIndex), NULL, 0);
-	pDeviceContext->GSSetShader(pShaderManager->GetGeometryShader(m_CubeMapGeometryShaderIndex), NULL, 0);
-	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_CubeMapPixelShaderIndex), NULL, 0);
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_CubeMapVertexShaderIndex), nullptr, 0);
+	pDeviceContext->GSSetShader(pShaderManager->GetGeometryShader(m_CubeMapGeometryShaderIndex), nullptr, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_CubeMapPixelShaderIndex), nullptr, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
@@ -174,9 +176,9 @@ void House::ReflectMapDraw()
 	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
 
 	// シェーダーの設定.
-	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ReflectMapVertexShaderIndex), NULL, 0);
-	pDeviceContext->GSSetShader(NULL, NULL, 0);
-	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_ReflectMapPixelShaderIndex), NULL, 0);
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ReflectMapVertexShaderIndex), nullptr, 0);
+	pDeviceContext->GSSetShader(nullptr, nullptr, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_ReflectMapPixelShaderIndex), nullptr, 0);
 
 	VertexLayoutSetup();
 	DepthStencilStateSetup();
@@ -208,7 +210,7 @@ bool House::CreateModel()
 			TEXT("Resource\\Model\\house_red.fbx"),
 			&m_ModelIndex))
 		{
-			OutputErrorLog("家オブジェクトのfbxモデル読み込みに失敗しました");
+			OutputErrorLog("モデル読み込みに失敗しました");
 			return false;
 		}
 	}

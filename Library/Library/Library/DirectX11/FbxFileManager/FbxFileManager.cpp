@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------
 #include "FbxFileManager.h"
 
+#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "Debugger\Debugger.h"
 #include "FbxLoader\FbxLoader.h"
 
@@ -25,9 +26,9 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------------------------------------
 	FbxFileManager::FbxFileManager() :
-		m_pFbxLoader(NULL)
+		m_pFbxLoader(nullptr)
 	{
-		m_pFbxModel.push_back(NULL);	// 読み込みに失敗した際に参照する値としてNULLを追加.
+		m_pFbxModel.push_back(nullptr);	// 読み込みに失敗した際に参照する値としてnullptrを追加.
 	}
 
 	FbxFileManager::~FbxFileManager()
@@ -40,7 +41,7 @@ namespace Lib
 	//----------------------------------------------------------------------------------------------------
 	bool FbxFileManager::Initialize(GraphicsDevice* _pGraphicsDevice)
 	{
-		MyAssert(m_pFbxLoader == NULL, "FbxFileManagerオブジェクトは既に初期化されています");
+		MyAssert(m_pFbxLoader != nullptr, "FbxFileManagerオブジェクトは既に初期化されています");
 
 		m_pGraphicsDevice = _pGraphicsDevice;
 		m_pFbxLoader = new FbxLoader(m_pGraphicsDevice);
@@ -50,7 +51,7 @@ namespace Lib
 
 	void FbxFileManager::Finalize()
 	{
-		if (m_pFbxLoader != NULL)
+		if (m_pFbxLoader != nullptr)
 		{
 			m_pFbxLoader->Finalize();
 			SafeDelete(m_pFbxLoader);
@@ -88,7 +89,7 @@ namespace Lib
 
 	void FbxFileManager::ReleaseFbxModel(int _index)
 	{
-		if (m_pFbxModel[_index] != NULL)
+		if (m_pFbxModel[_index] != nullptr)
 		{
 			m_pFbxModel[_index]->Finalize();
 			SafeDelete(m_pFbxModel[_index]);

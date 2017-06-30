@@ -44,9 +44,9 @@ public:
 
 
 private:
-	std::vector<Lib::ObjectManagerBase*> m_pObjectManagers;
+	std::vector<Lib::ObjectManagerBase*> m_pObjectManagers;	//!< オブジェクト管理クラス.
 
 };
 
 
-#endif // OBJECTMANAGER_H
+#endif // !OBJECTMANAGER_H

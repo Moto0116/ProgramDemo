@@ -58,7 +58,7 @@ namespace Lib
 	{
 		Sound* pSound = new Sound(m_pSoundDevice, _pSoundPath);
 
-		if (pSound->Get() == NULL)
+		if (pSound->Get() == nullptr)
 		{
 			SafeDelete(pSound);
 			*_pIndex = m_InvalidIndex;

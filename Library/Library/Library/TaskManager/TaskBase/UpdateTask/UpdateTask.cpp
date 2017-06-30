@@ -20,7 +20,7 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	UpdateTask::UpdateTask() :
-		m_pObject(NULL)
+		m_pObject(nullptr)
 	{
 	}
 

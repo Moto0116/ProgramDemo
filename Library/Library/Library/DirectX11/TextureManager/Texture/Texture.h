@@ -79,4 +79,4 @@ namespace Lib
 }
 
 
-#endif // LIB_TEXTURE_H
+#endif // !LIB_TEXTURE_H

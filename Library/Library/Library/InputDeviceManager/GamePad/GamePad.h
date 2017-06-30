@@ -91,7 +91,7 @@ namespace Lib
 
 		/**
 		 * GamePadの状態チェック関数
-		 * @param[in] _pad チェックするGamePad
+		 * @param[in] _pad チェックするパッド
 		 */
 		void Update(XINPUTPAD _pad);
 
@@ -106,14 +106,14 @@ namespace Lib
 		/**
 		 * GamePadのボタンの状態を取得する
 		 * @param[in] id チェックするボタン
-		 * @param[in] pad チェックするGamePad
+		 * @param[in] pad チェックするパッド
 		 */
 		PADSTATE GetButtonState(XINPUT_ID _buttonId, XINPUTPAD _pad);
 
 		/**
 		 * Lスティックの状態を取得する関数
 		 * @param[in] id チェックするスティック
-		 * @param[in] pad チェックするGamePad
+		 * @param[in] pad チェックするパッド
 		 * @return スティックの状態
 		 */
 		bool GetLAnalogState(ANALOGPAD _analogId, XINPUTPAD _pad);
@@ -121,7 +121,7 @@ namespace Lib
 		/**
 		 * Rスティックの状態を取得する関数
 		 * @param[in] id チェックするスティック
-		 * @param[in] pad チェックするGamePad
+		 * @param[in] pad チェックするパッド
 		 * @return スティックの状態
 		 */
 		bool GetRAnalogState(ANALOGPAD _analogId, XINPUTPAD _pad);
@@ -138,16 +138,16 @@ namespace Lib
 		};
 
 
-		static const float m_ControlerDeadZone;
+		static const float m_ControlerDeadZone;	//!< コントローラーのデッドゾーン値.
 
 
-		CONTROLER_STATE m_PadControlState[GAMEANALOG_MAX];
-		PADSTATE		m_PadOldState[GAMEANALOG_MAX][XINPUT_ID_MAX];
-		PADSTATE		m_PadState[GAMEANALOG_MAX][XINPUT_ID_MAX];
+		CONTROLER_STATE m_PadControlState[GAMEANALOG_MAX];				//!< コントローラステート構造体.
+		PADSTATE		m_PadOldState[GAMEANALOG_MAX][XINPUT_ID_MAX];	//!< 前回のパッド状態構造体.
+		PADSTATE		m_PadState[GAMEANALOG_MAX][XINPUT_ID_MAX];		//!< パッド状態構造体.
 
 
 	};
 }
 
 
-#endif // LIB_GAMEPAD_H
+#endif // !LIB_GAMEPAD_H

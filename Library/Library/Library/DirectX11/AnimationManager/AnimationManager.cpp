@@ -1,5 +1,5 @@
 ﻿/**
- * @file	AnimationManager.h
+ * @file	AnimationManager.cpp
  * @brief	アニメーションの管理クラス定義
  * @author	morimoto
  */
@@ -25,8 +25,8 @@ namespace Lib
 	//----------------------------------------------------------------------
 	AnimationManager::AnimationManager()
 	{
-		// 読み込みに失敗した際に参照する値としてNULLを追加.
-		m_pAnimation.push_back(NULL);
+		// 読み込みに失敗した際に参照する値としてnullptrを追加.
+		m_pAnimation.push_back(nullptr);
 	}
 
 	AnimationManager::~AnimationManager()
@@ -55,7 +55,7 @@ namespace Lib
 	{
 		Animation* pAnimation = new Animation(_pAnimationPath);
 
-		if (pAnimation->GetCurrentFrame() == NULL)	// 現在のフレームがなければ生成に失敗したと判断する.
+		if (pAnimation->GetCurrentFrame() == nullptr)	// 現在のフレームがなければ生成に失敗したと判断する.
 		{
 			delete pAnimation;
 			*_pIndex = m_InvalidIndex;

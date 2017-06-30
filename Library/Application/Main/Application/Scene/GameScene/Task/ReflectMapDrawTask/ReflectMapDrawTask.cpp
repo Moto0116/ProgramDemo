@@ -16,7 +16,7 @@
 // Constructor	Destructor
 //----------------------------------------------------------------------
 ReflectMapDrawTask::ReflectMapDrawTask() :
-	m_pObject(NULL)
+	m_pObject(nullptr)
 {
 }
 

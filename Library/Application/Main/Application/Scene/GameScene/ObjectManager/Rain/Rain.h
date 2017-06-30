@@ -45,7 +45,7 @@ public:
 
 	/**
 	 * 初期化処理
-	 * @return 初期化に成功したか
+	 * @return 初期化に成功したらtrue 失敗したらfalse
 	 */
 	virtual bool Initialize();
 
@@ -69,7 +69,7 @@ private:
 	enum
 	{
 		VERTEX_NUM = 4,	//!< 頂点数.
-		RAIN_NUM = 2500	//!< 雨の数.
+		RAIN_NUM = 2000	//!< 雨の数.
 	};
 
 
@@ -89,7 +89,7 @@ private:
 	struct INSTANCE_DATA
 	{
 		D3DXMATRIX Mat;		//!< 変換行列.
-		D3DXVECTOR3 Pos;	//!< 位置座標.
+		D3DXVECTOR4 Pos;	//!< 位置座標.
 	};
 
 	/**
@@ -222,10 +222,22 @@ private:
 	bool WriteInstanceBuffer();
 
 
+
+	//--------------------タスクオブジェクト--------------------
 	Lib::DrawTask*				m_pDrawTask;				//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*			m_pUpdateTask;				//!< 更新タスクオブジェクト.
+
+
+	//--------------------その他オブジェクト--------------------
+	MainCamera*					m_pCamera;					//!< カメラオブジェクト.
+	Lib::Font*					m_pFont;					//!< フォント描画オブジェクト.
+
+	
+	//--------------------描画関連--------------------
 	int							m_VertexShaderIndex;		//!< 頂点シェーダーインデックス.
 	int							m_PixelShaderIndex;			//!< ピクセルシェーダーインデックス.
+	int							m_TextureIndex;				//!< テクスチャインデックス.
+	int							m_SoundIndex;				//!< サウンドインデックス.
 	ID3D11Buffer*				m_pVertexBuffer;			//!< 頂点バッファ.
 	ID3D11Buffer*				m_pInstanceBuffer;			//!< インスタンシングバッファ.
 	ID3D11InputLayout*			m_pVertexLayout;			//!< 頂点入力レイアウト.
@@ -234,21 +246,20 @@ private:
 	VERTEX						m_pVertexData[VERTEX_NUM];	//!< 頂点データ.
 	INSTANCE_DATA				m_pInstanceData[RAIN_NUM];	//!< インスタンスデータ.
 
+
+	//--------------------パーティクル処理のデータ--------------------
 	RAIN_DATA					m_RainData[RAIN_NUM];		//!< 雨粒のデータ配列.
-	MainCamera*					m_pCamera;					//!< カメラオブジェクト.
 	std::random_device			m_RandDevice;				//!< 乱数生成デバイス.
 	std::mt19937				m_MersenneTwister;			//!< 乱数生成オブジェクト.
+	bool						m_IsActive;					//!< このオブジェクトの活動状態.
 
-	int							m_TextureIndex;				//!< テクスチャインデックス.
-	int							m_SoundIndex;				//!< サウンドインデックス.
 
+	//--------------------入力デバイスの状態--------------------
 	const Lib::KeyDevice::KEYSTATE* m_pKeyState;			//!< キーの状態.
-	bool							m_IsActive;				//!< このオブジェクトの活動状態.
 
-	Lib::Font*					m_pFont;
 
 };
 
 
 
-#endif // RAIN_H
+#endif // !RAIN_H

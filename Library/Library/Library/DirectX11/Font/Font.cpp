@@ -24,17 +24,17 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	Font::Font() :
-		m_pGraphicsDevice(NULL),
-		m_pVertexShader(NULL),
-		m_pVertexCompiledShader(NULL),
-		m_pVertexLayout(NULL),
-		m_pPixelShader(NULL),
-		m_pPixelCompiledShader(NULL),
-		m_pBlendState(NULL),
-		m_pSamplerState(NULL),
-		m_pVertexBuffer(NULL),
-		m_pConstantBuffer(NULL),
-		m_pShaderResource(NULL),
+		m_pGraphicsDevice(nullptr),
+		m_pVertexShader(nullptr),
+		m_pVertexCompiledShader(nullptr),
+		m_pVertexLayout(nullptr),
+		m_pPixelShader(nullptr),
+		m_pPixelCompiledShader(nullptr),
+		m_pBlendState(nullptr),
+		m_pSamplerState(nullptr),
+		m_pVertexBuffer(nullptr),
+		m_pConstantBuffer(nullptr),
+		m_pShaderResource(nullptr),
 		m_WindowWidth(0),
 		m_WindowHeight(0)
 	{
@@ -51,7 +51,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool Font::Initialize(GraphicsDevice* _pGraphicsDevice)
 	{
-		if (m_pGraphicsDevice != NULL)
+		if (m_pGraphicsDevice != nullptr)
 		{
 			OutputErrorLog("フォントオブジェクトは既に初期化されています");
 			return false;
@@ -156,8 +156,8 @@ namespace Lib
 
 	void Font::Draw(const D3DXVECTOR2* _pDrawPos, LPCTSTR _pStr)
 	{
-		m_pGraphicsDevice->GetDeviceContext()->VSSetShader(m_pVertexShader, NULL, 0);
-		m_pGraphicsDevice->GetDeviceContext()->PSSetShader(m_pPixelShader, NULL, 0);
+		m_pGraphicsDevice->GetDeviceContext()->VSSetShader(m_pVertexShader, nullptr, 0);
+		m_pGraphicsDevice->GetDeviceContext()->PSSetShader(m_pPixelShader, nullptr, 0);
 
 		m_pGraphicsDevice->GetDeviceContext()->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 		m_pGraphicsDevice->GetDeviceContext()->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
@@ -168,7 +168,7 @@ namespace Lib
 		m_pGraphicsDevice->GetDeviceContext()->PSSetSamplers(0, 1, &m_pSamplerState);
 		m_pGraphicsDevice->GetDeviceContext()->PSSetShaderResources(0, 1, &m_pShaderResource);
 
-		m_pGraphicsDevice->GetDeviceContext()->OMSetBlendState(m_pBlendState, NULL, 0xffffffff);
+		m_pGraphicsDevice->GetDeviceContext()->OMSetBlendState(m_pBlendState, nullptr, 0xffffffff);
 
 		UINT Stride = sizeof(FONT_VERTEX);
 		UINT Offset = 0;
@@ -223,19 +223,19 @@ namespace Lib
 	bool Font::CreateVertexShader()
 	{
 		// fxファイルの読み込み.
-		ID3DBlob* pShaderErrors = NULL;
+		ID3DBlob* pShaderErrors = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			TEXT("Library\\DirectX11\\Font\\Effect\\Font.fx"),
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			"VS",
 			"vs_5_0",
 			D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION,
 			0,
-			NULL,
+			nullptr,
 			&m_pVertexCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			SafeRelease(pShaderErrors);
 			return false;
@@ -247,7 +247,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateVertexShader(
 			m_pVertexCompiledShader->GetBufferPointer(),
 			m_pVertexCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&m_pVertexShader)))
 		{
 			SafeRelease(m_pVertexCompiledShader);
@@ -284,19 +284,19 @@ namespace Lib
 	bool Font::CreatePixelShader()
 	{
 		// fxファイルの読み込み.
-		ID3DBlob* pShaderErrors = NULL;
+		ID3DBlob* pShaderErrors = nullptr;
 		if (FAILED(D3DX11CompileFromFile(
 			TEXT("Library\\DirectX11\\Font\\Effect\\Font.fx"),
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			"PS",
 			"ps_5_0",
 			D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION,
 			0,
-			NULL,
+			nullptr,
 			&m_pPixelCompiledShader,
 			&pShaderErrors,
-			NULL)))
+			nullptr)))
 		{
 			SafeRelease(pShaderErrors);
 			return false;
@@ -308,7 +308,7 @@ namespace Lib
 		if (FAILED(m_pGraphicsDevice->GetDevice()->CreatePixelShader(
 			m_pPixelCompiledShader->GetBufferPointer(),
 			m_pPixelCompiledShader->GetBufferSize(),
-			NULL,
+			nullptr,
 			&m_pPixelShader)))
 		{
 			SafeRelease(m_pPixelCompiledShader);
@@ -367,7 +367,7 @@ namespace Lib
 		ConstantBufferDesc.StructureByteStride = 0;
 
 		// 定数バッファの生成.
-		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, NULL, &m_pConstantBuffer)))
+		if (FAILED(m_pGraphicsDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, nullptr, &m_pConstantBuffer)))
 		{
 			ReleaseState();
 			return false;
@@ -393,16 +393,16 @@ namespace Lib
 		LoadInfo.Format = DXGI_FORMAT_FROM_FILE;
 		LoadInfo.Filter = D3DX11_FILTER_POINT;
 		LoadInfo.MipFilter = D3DX11_FILTER_POINT;
-		LoadInfo.pSrcInfo = NULL;
+		LoadInfo.pSrcInfo = nullptr;
 
 		// テクスチャ読み込み.
 		if (FAILED(D3DX11CreateShaderResourceViewFromFile(
 			m_pGraphicsDevice->GetDevice(),
 			TEXT("Library\\DirectX11\\Font\\Texture\\Font.png"),
 			&LoadInfo,
-			NULL,
+			nullptr,
 			&m_pShaderResource,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("テクスチャの読み込みに失敗しました");
 			return false;

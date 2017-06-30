@@ -54,7 +54,7 @@ namespace Lib
 		/**
 		 * デストラクタ
 		 */
-		~SoundDevice();
+		virtual ~SoundDevice();
 
 
 		IDirectSound8*	m_pDSound8;	//!< サウンドオブジェクト.
@@ -67,4 +67,4 @@ namespace Lib
 }
 
 
-#endif // LIB_SOUNDDEVICE_H
+#endif // !LIB_SOUNDDEVICE_H

@@ -16,15 +16,18 @@
 #include "DirectX11\TextureManager\ITexture\ITexture.h"
 
 
+//----------------------------------------------------------------------
+// Constructor	Destructor
+//----------------------------------------------------------------------
 Object3DBase::Object3DBase() : 
-	m_pVertexLayout(NULL),
-	m_pDepthStencilState(NULL),
-	m_pConstantBuffer(NULL),
+	m_pVertexLayout(nullptr),
+	m_pDepthStencilState(nullptr),
+	m_pConstantBuffer(nullptr),
 	m_Pos(D3DXVECTOR3(0, 0, 0)),
 	m_Scale(D3DXVECTOR3(1, 1, 1)),
 	m_Rotate(D3DXVECTOR3(0, 0, 0))
 {
-	// タスク生成処理
+	// タスク生成処理.
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 	m_pDepthDrawTask = new DepthDrawTask();
@@ -32,7 +35,7 @@ Object3DBase::Object3DBase() :
 	m_pCubeMapDrawTask = new CubeMapDrawTask();
 	m_pReflectMapDrawTask = new ReflectMapDrawTask();
 
-	// タスクにオブジェクト設定
+	// タスクにオブジェクト設定.
 	m_pDrawTask->SetDrawObject(this);
 	m_pUpdateTask->SetUpdateObject(this);
 	m_pDepthDrawTask->SetDrawObject(this);
@@ -51,6 +54,10 @@ Object3DBase::~Object3DBase()
 	delete m_pDrawTask;
 }
 
+
+//----------------------------------------------------------------------
+// Public Functions
+//----------------------------------------------------------------------
 bool Object3DBase::Initialize()
 {
 	return true;
@@ -84,23 +91,27 @@ void Object3DBase::ReflectMapDraw()
 {
 }
 
+
+//----------------------------------------------------------------------
+// Protected Functions
+//----------------------------------------------------------------------
 void Object3DBase::ShaderSetup()
 {
 	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 
 	pContext->VSSetShader(
 		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), 
-		NULL, 
+		nullptr, 
 		0);
 	
 	pContext->PSSetShader(
 		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), 
-		NULL,
+		nullptr,
 		0);
 
 	pContext->GSSetShader(
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		0);
 }
 
@@ -132,30 +143,51 @@ void Object3DBase::ConstantBufferSetup()
 
 bool Object3DBase::CreateShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(TEXT("Resource\\Effect\\DefaultEffect.fx"), "VS", &m_VertexShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(TEXT("Resource\\Effect\\DefaultEffect.fx"), "PS", &m_PixelShaderIndex);
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		TEXT("Resource\\Effect\\DefaultEffect.fx"), 
+		"VS", 
+		&m_VertexShaderIndex))
+	{
+		OutputErrorLog("頂点シェーダーの読み込みに失敗しました");
+		return false;
+	}
+
+	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		TEXT("Resource\\Effect\\DefaultEffect.fx"),
+		"PS",
+		&m_PixelShaderIndex))
+	{
+		OutputErrorLog("ピクセルシェーダの読み込みに失敗しました");
+		return false;
+	}
 
 	return true;
 }
 
 bool Object3DBase::CreateTexture()
 {
-	SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(TEXT("Resource\\Texture\\MainLightCLUT.png"), &m_SkyCLUTIndex);
+	if (!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+		TEXT("Resource\\Texture\\MainLightCLUT.png"),
+		&m_SkyCLUTIndex))
+	{
+		OutputErrorLog("テクスチャの読み込みに失敗しました");
+		return false;
+	}
 
 	return true;
 }
 
 bool Object3DBase::CreateVertexLayout()
 {
-	// 入力レイアウトの設定
+	// 入力レイアウトの設定.
 	D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,                                         D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(D3DXVECTOR3),                       D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, sizeof(D3DXVECTOR3) + sizeof(D3DXVECTOR3), D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
-	// 入力レイアウトの生成
+	// 入力レイアウトの生成.
 	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateInputLayout(
 		InputElementDesc,
 		sizeof(InputElementDesc) / sizeof(InputElementDesc[0]),
@@ -172,7 +204,7 @@ bool Object3DBase::CreateVertexLayout()
 
 bool Object3DBase::CreateDepthStencilState()
 {
-	// 深度ステンシルステートの設定
+	// 深度ステンシルステートの設定.
 	D3D11_DEPTH_STENCIL_DESC DepthStencilDesc;
 	ZeroMemory(&DepthStencilDesc, sizeof(DepthStencilDesc));
 	DepthStencilDesc.DepthEnable = TRUE;
@@ -180,7 +212,7 @@ bool Object3DBase::CreateDepthStencilState()
 	DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	DepthStencilDesc.StencilEnable = FALSE;
 
-	// 深度ステンシルステートの生成
+	// 深度ステンシルステートの生成.
 	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
 		&DepthStencilDesc,
 		&m_pDepthStencilState)))
@@ -194,7 +226,7 @@ bool Object3DBase::CreateDepthStencilState()
 
 bool Object3DBase::CreateConstantBuffer()
 {
-	// 定数バッファの設定
+	// 定数バッファの設定.
 	D3D11_BUFFER_DESC ConstantBufferDesc;
 	ConstantBufferDesc.ByteWidth = sizeof(CONSTANT_BUFFER);
 	ConstantBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -203,10 +235,10 @@ bool Object3DBase::CreateConstantBuffer()
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
-	// 定数バッファの生成
+	// 定数バッファの生成.
 	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
 		&ConstantBufferDesc,
-		NULL,
+		nullptr,
 		&m_pConstantBuffer)))
 	{
 		OutputErrorLog("定数バッファ生成に失敗しました");
@@ -219,7 +251,12 @@ bool Object3DBase::CreateConstantBuffer()
 bool Object3DBase::WriteConstantBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResourceData)))
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+		m_pConstantBuffer,
+		0,
+		D3D11_MAP_WRITE_DISCARD,
+		0,
+		&SubResourceData)))
 	{
 		D3DXMATRIX MatWorld, MatTranslate, MatRotateX, MatRotateY;
 		D3DXMatrixIdentity(&MatWorld);

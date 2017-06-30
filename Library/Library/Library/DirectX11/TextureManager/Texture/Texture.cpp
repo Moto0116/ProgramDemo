@@ -19,14 +19,14 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	Texture::Texture() : 
-		m_pGraphicsDevice(NULL),
-		m_pTexture(NULL)
+		m_pGraphicsDevice(nullptr),
+		m_pTexture(nullptr)
 	{
 	}
 
 	Texture::Texture(GraphicsDevice* _pGraphicsDevice, LPCTSTR _pTexturePath) :
 		m_pGraphicsDevice(_pGraphicsDevice),
-		m_pTexture(NULL)
+		m_pTexture(nullptr)
 	{
 		Load(_pTexturePath);
 	}
@@ -57,7 +57,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	void Texture::Load(LPCTSTR _pTexturePath)
 	{
-		MyAssert(m_pGraphicsDevice != NULL, "GraphicsDeviceがありません");
+		MyAssert(m_pGraphicsDevice == nullptr, "GraphicsDeviceがありません");
 
 
 		D3DX11_IMAGE_LOAD_INFO LoadInfo;
@@ -74,15 +74,15 @@ namespace Lib
 		LoadInfo.Format = DXGI_FORMAT_FROM_FILE;
 		LoadInfo.Filter = D3DX11_FILTER_POINT;
 		LoadInfo.MipFilter = D3DX11_FILTER_POINT;
-		LoadInfo.pSrcInfo = NULL;
+		LoadInfo.pSrcInfo = nullptr;
 
 		if (FAILED(D3DX11CreateShaderResourceViewFromFile(
 			m_pGraphicsDevice->GetDevice(),
 			_pTexturePath,
 			&LoadInfo,
-			NULL,
+			nullptr,
 			&m_pTexture,
-			NULL)))
+			nullptr)))
 		{
 			OutputErrorLog("テクスチャの読み込みに失敗しました");
 		}

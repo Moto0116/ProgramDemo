@@ -89,4 +89,4 @@ namespace Lib
 }
 
 
-#endif // LIB_TEXTUREMANAGER_H
+#endif // !LIB_TEXTUREMANAGER_H

@@ -14,7 +14,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	template <typename Data>
 	GameDataManager<Data>::GameDataManager() :
-		m_pSaveDataFile(NULL)
+		m_pSaveDataFile(nullptr)
 	{
 	}
 
@@ -101,4 +101,4 @@ namespace Lib
 }
 
 
-#endif // LIB_GAMEDATAMANAGER_PRIVATE_H
+#endif // !LIB_GAMEDATAMANAGER_PRIVATE_H

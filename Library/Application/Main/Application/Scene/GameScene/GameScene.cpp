@@ -68,14 +68,12 @@ bool GameScene::Initialize()
 		return false;
 	}
 
-
 	SINGLETON_CREATE(Lib::ShaderManager);
 	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
 	{
 		OutputErrorLog("シェーダー管理クラスの生成に失敗しました");
 		return false;
 	}
-
 
 	SINGLETON_CREATE(Lib::TextureManager);
 	if (!SINGLETON_INSTANCE(Lib::TextureManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
@@ -88,8 +86,8 @@ bool GameScene::Initialize()
 	if (!SINGLETON_INSTANCE(Lib::SoundDevice)->Initialize(
 		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowHandle()))
 	{
-		OutputErrorLog("サウンドデバイスの生成に失敗しました")
-			return false;
+		OutputErrorLog("サウンドデバイスの生成に失敗しました");
+		return false;
 	}
 
 	SINGLETON_CREATE(Lib::SoundManager);
@@ -126,45 +124,45 @@ bool GameScene::Initialize()
 
 void GameScene::Finalize()
 {
-	if (m_pFont != NULL)
+	if (m_pFont != nullptr)
 	{
 		m_pFont->ReleaseVertexBuffer();
 		m_pFont->Finalize();
 		SafeDelete(m_pFont);
 	}
 
-	if (m_pObjectManager != NULL)
+	if (m_pObjectManager != nullptr)
 	{
 		m_pObjectManager->Finalize();
 		SafeDelete(m_pObjectManager);
 	}
 
 
-	if (SINGLETON_INSTANCE(Lib::SoundManager) != NULL)
+	if (SINGLETON_INSTANCE(Lib::SoundManager) != nullptr)
 	{
 		SINGLETON_INSTANCE(Lib::SoundManager)->Finalize();
 		SINGLETON_DELETE(Lib::SoundManager);
 	}
 
-	if (SINGLETON_INSTANCE(Lib::SoundDevice) != NULL)
+	if (SINGLETON_INSTANCE(Lib::SoundDevice) != nullptr)
 	{
 		SINGLETON_INSTANCE(Lib::SoundDevice)->Finalize();
 		SINGLETON_DELETE(Lib::SoundDevice);
 	}
 
-	if (SINGLETON_INSTANCE(Lib::TextureManager) != NULL)
+	if (SINGLETON_INSTANCE(Lib::TextureManager) != nullptr)
 	{
 		SINGLETON_INSTANCE(Lib::TextureManager)->Finalize();
 		SINGLETON_DELETE(Lib::TextureManager);
 	}
 
-	if (SINGLETON_INSTANCE(Lib::ShaderManager) != NULL)
+	if (SINGLETON_INSTANCE(Lib::ShaderManager) != nullptr)
 	{
 		SINGLETON_INSTANCE(Lib::ShaderManager)->Finalize();
 		SINGLETON_DELETE(Lib::ShaderManager);
 	}
 
-	if (SINGLETON_INSTANCE(Lib::FbxFileManager) != NULL)
+	if (SINGLETON_INSTANCE(Lib::FbxFileManager) != nullptr)
 	{
 		SINGLETON_INSTANCE(Lib::FbxFileManager)->Finalize();
 		SINGLETON_DELETE(Lib::FbxFileManager);
@@ -180,6 +178,7 @@ void GameScene::Finalize()
 
 void GameScene::Update()
 {
+	// デバイスの入力チェック.
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyUpdate();
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_W);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_A);
@@ -195,7 +194,7 @@ void GameScene::Update()
 	Lib::Debugger::StartTimer();
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
 	Lib::Debugger::EndTimer();
-	m_UpdateTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した更新時間を取得
+	m_UpdateTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した更新時間を取得.
 
 
 	Lib::Debugger::StartTimer();
@@ -207,7 +206,7 @@ void GameScene::Update()
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(Lib::GraphicsDevice::BACKBUFFER_TARGET);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
 
-	// 計測時間の描画
+	// 計測時間の描画.
 	char UpdateStr[32];
 	char DrawStr[32];
 	sprintf_s(UpdateStr, 32, "Update : %dms", m_UpdateTime);
@@ -218,7 +217,7 @@ void GameScene::Update()
 
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->EndScene();
 	Lib::Debugger::EndTimer();
-	m_DrawTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した描画時間を取得
+	m_DrawTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した描画時間を取得.
 
 #else
 
@@ -233,6 +232,6 @@ void GameScene::Update()
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
 	SINGLETON_INSTANCE(Lib::GraphicsDevice)->EndScene();
 
-#endif
+#endif // _DEBUG
 
 }

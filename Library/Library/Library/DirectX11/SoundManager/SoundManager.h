@@ -94,7 +94,7 @@ namespace Lib
 		/**
 		 * デストラクタ
 		 */
-		~SoundManager();
+		virtual ~SoundManager();
 
 
 		std::vector<ISound*>	m_pSounds;		//!< サウンドオブジェクトを管理するコンテナ.
@@ -107,4 +107,4 @@ namespace Lib
 }
 
 
-#endif // LIB_SOUNDMANAGER_H
+#endif // !LIB_SOUNDMANAGER_H

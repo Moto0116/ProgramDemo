@@ -122,14 +122,14 @@ namespace Lib
 	//----------------------------------------------------------------------
 	void Animation::Load(LPCTSTR _pAnimationPath)
 	{
-		///@todo 読み込みに失敗した場合は現在のフレームをNULLに設定するように修正する.
+		///@todo 読み込みに失敗した場合は現在のフレームをnullptrに設定するように修正する.
 
-		FILE* pAnimationFile = NULL;
+		FILE* pAnimationFile = nullptr;
 		std::vector<float> AnimationData;
 		long FileSize = 0;
-		char* pBuffer = NULL;
-		char* pContext = NULL;
-		char* pDataStr = NULL;
+		char* pBuffer = nullptr;
+		char* pContext = nullptr;
+		char* pDataStr = nullptr;
 
 		fopen_s(&pAnimationFile, _pAnimationPath, "r");
 
@@ -153,7 +153,7 @@ namespace Lib
 
 		while (1)
 		{
-			if (pDataStr == NULL)
+			if (pDataStr == nullptr)
 			{
 				break;	// データ全てを取り出すまでループ
 			}
@@ -162,7 +162,7 @@ namespace Lib
 				AnimationData.push_back(static_cast<float>(atof(pDataStr)));
 			}
 
-			pDataStr = strtok_s(NULL, "{},\n", &pContext);
+			pDataStr = strtok_s(nullptr, "{},\n", &pContext);
 		}
 
 		fclose(pAnimationFile);

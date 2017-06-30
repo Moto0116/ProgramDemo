@@ -43,4 +43,4 @@ namespace Lib
 }
 
 
-#endif // LIB_EVENTBASE_H
+#endif // !LIB_EVENTBASE_H

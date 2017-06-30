@@ -70,13 +70,6 @@ VS_OUTPUT VS(VS_INPUT In)
 
 	Out.EyeRay = In.Pos - g_CameraPos.xyz;
 
-	// オブジェクトからカメラへの向き
-	float3 Eye = normalize(g_CameraPos.xyz - In.Pos);
-	Out.Eye.x = dot(Eye, In.Tangent.xyz);
-	Out.Eye.y = dot(Eye, In.Binormal.xyz);
-	Out.Eye.z = dot(Eye, In.Normal.xyz);
-	Out.Eye = normalize(Out.Eye);
-
 	float4x4 InvMat = mul(g_World, g_ReflectView);
 	InvMat = mul(InvMat, g_ReflectProj);
 	InvMat = mul(InvMat, g_ScalingMat);

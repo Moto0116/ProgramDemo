@@ -45,7 +45,7 @@ namespace Lib
 		void SetDrawObject(ObjectBase* _pObject);
 
 	private:
-		ObjectBase* m_pObject;	//!< 描画を行うオブジェクト
+		ObjectBase* m_pObject;	//!< 描画を行うオブジェクト.
 	
 	};
 
@@ -54,4 +54,4 @@ namespace Lib
 }
 
 
-#endif // LIB_DRAWTASK_H
+#endif // !LIB_DRAWTASK_H

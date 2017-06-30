@@ -18,7 +18,7 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	BinaryFile::BinaryFile() :
-		m_pBinary(NULL),
+		m_pBinary(nullptr),
 		m_BinarySize(0)
 	{
 	}
@@ -34,16 +34,16 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool BinaryFile::Read(TCHAR* _pFileName)
 	{
-		MyAssert(m_pBinary == NULL, "既にファイルが読み込まれています");
+		MyAssert(m_pBinary != nullptr, "既にファイルが読み込まれています");
 
-		HANDLE FileHandle = CreateFile(_pFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		HANDLE FileHandle = CreateFile(_pFileName, GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 		if (FileHandle == INVALID_HANDLE_VALUE)
 		{
 			OutputErrorLog("ファイルオープンに失敗しました");
 			return false;
 		}
 
-		m_BinarySize = GetFileSize(FileHandle, NULL);
+		m_BinarySize = GetFileSize(FileHandle, nullptr);
 		if (m_BinarySize == 0)
 		{
 			OutputErrorLog("ファイルサイズが0でした");
@@ -53,7 +53,7 @@ namespace Lib
 
 		m_pBinary = malloc(m_BinarySize);
 		DWORD ReadSize;
-		if (!ReadFile(FileHandle, m_pBinary, m_BinarySize, &ReadSize, NULL))
+		if (!ReadFile(FileHandle, m_pBinary, m_BinarySize, &ReadSize, nullptr))
 		{
 			OutputErrorLog("ファイルの読み込みに失敗しました");
 			CloseHandle(FileHandle);
@@ -67,10 +67,10 @@ namespace Lib
 
 	void BinaryFile::Destroy()
 	{
-		if (m_pBinary !=NULL)
+		if (m_pBinary != nullptr)
 		{
 			free(m_pBinary);
-			m_pBinary = NULL;
+			m_pBinary = nullptr;
 			m_BinarySize = 0;
 		}
 	}

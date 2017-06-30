@@ -18,8 +18,8 @@ namespace Lib
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
 	SoundDevice::SoundDevice() : 
-		m_pDSound8(NULL),
-		m_hWnd(NULL)
+		m_pDSound8(nullptr),
+		m_hWnd(nullptr)
 	{
 	}
 
@@ -34,10 +34,10 @@ namespace Lib
 	//----------------------------------------------------------------------
 	bool SoundDevice::Initialize(HWND _hWnd)
 	{
-		MyAssert(m_pDSound8 == NULL, "SoundDeviceオブジェクトは既に初期化されています");
+		MyAssert(m_pDSound8 != nullptr, "SoundDeviceオブジェクトは既に初期化されています");
 
 		m_hWnd = _hWnd;
-		DirectSoundCreate8(NULL, &m_pDSound8, NULL);
+		DirectSoundCreate8(nullptr, &m_pDSound8, nullptr);
 		m_pDSound8->SetCooperativeLevel(m_hWnd, DSSCL_NORMAL);
 
 		return true;
