@@ -9,7 +9,7 @@
 //----------------------------------------------------------------------
 #include "EventManager.h"
 
-#include "EventListenerBase\EventListenerBase.h"
+#include "EventListener\EventListener.h"
 
 
 namespace Lib
@@ -17,13 +17,13 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
-	template <typename Listener, typename Event>
-	EventManager<Listener, Event>::EventManager()
+	template <typename Event>
+	EventManager<Event>::EventManager()
 	{
 	}
 
-	template <typename Listener, typename Event>
-	EventManager<Listener, Event>::~EventManager()
+	template <typename Event>
+	EventManager<Event>::~EventManager()
 	{
 	}
 
@@ -31,14 +31,14 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------
-	template <typename Listener, typename Event>
-	void EventManager<Listener, Event>::AddEventListener(Listener* _pEventListener)
+	template <typename Event>
+	void EventManager<Event>::AddEventListener(EventListener* _pEventListener)
 	{
 		m_pEventListener.push_back(_pEventListener);
 	}
 
-	template <typename Listener, typename Event>
-	void EventManager<Listener, Event>::RemoveEventListener(Listener* _pEventListener)
+	template <typename Event>
+	void EventManager<Event>::RemoveEventListener(EventListener* _pEventListener)
 	{
 		for (auto itr = m_pEventListener.begin(); itr != m_pEventListener.end(); itr++)
 		{
@@ -50,8 +50,8 @@ namespace Lib
 		}
 	}
 
-	template <typename Listener, typename Event>
-	void EventManager<Listener, Event>::SendEventMessage(Event* _pEvent)
+	template <typename Event>
+	void EventManager<Event>::SendEventMessage(Event* _pEvent)
 	{
 		for (auto itr = m_pEventListener.begin(); itr != m_pEventListener.end(); itr++)
 		{

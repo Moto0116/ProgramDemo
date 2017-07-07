@@ -190,9 +190,6 @@
     <ClCompile Include="Library\EventManager\EventBase\EventBase.cpp">
       <Filter>Library\EventManagerBase\EventBase</Filter>
     </ClCompile>
-    <ClCompile Include="Library\EventManager\EventListenerBase\EventListenerBase.cpp">
-      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
-    </ClCompile>
     <ClCompile Include="Library\EventManager\EventManager.cpp">
       <Filter>Library\EventManagerBase</Filter>
     </ClCompile>
@@ -221,6 +218,9 @@
     <ClCompile Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.cpp" />
     <ClCompile Include="Library\Math\Vector\Vector.cpp" />
     <ClCompile Include="Library\Math\Math.cpp" />
+    <ClCompile Include="Library\EventManager\EventListener\EventListener.cpp">
+      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\Debugger\Debugger.h">
@@ -304,9 +304,6 @@
     <ClInclude Include="Library\EventManager\EventBase\EventBase.h">
       <Filter>Library\EventManagerBase\EventBase</Filter>
     </ClInclude>
-    <ClInclude Include="Library\EventManager\EventListenerBase\EventListenerBase.h">
-      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
-    </ClInclude>
     <ClInclude Include="Library\EventManager\EventManager.h">
       <Filter>Library\EventManagerBase</Filter>
     </ClInclude>
@@ -335,6 +332,9 @@
     <ClInclude Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.h" />
     <ClInclude Include="Library\Math\Vector\Vector.h" />
     <ClInclude Include="Library\Math\Math.h" />
+    <ClInclude Include="Library\EventManager\EventListener\EventListener.h">
+      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Vertex2D\Effect\Vertex2D.fx">
