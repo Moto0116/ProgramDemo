@@ -68,6 +68,8 @@ namespace Lib
 		}
 		else if (m_IsDebug && m_IsDebugLogPlay)
 		{
+			//m_pUpdateFunc = &KeyDevice::DebugLogPlay;
+			//fopen_s(&m_pDebugFile, m_pDebugFileName, "r");
 			///@todo デバッグログを再生する機能は未実装.
 		}
 #endif // _DEBUG

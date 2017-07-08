@@ -98,6 +98,9 @@
     <ClInclude Include="Library\Define\Define.h" />
     <ClInclude Include="Library\DirectX11\AnimationManager\Animation\Animation.h" />
     <ClInclude Include="Library\DirectX11\AnimationManager\AnimationManager.h" />
+    <ClInclude Include="Library\SmartPointer\SharedPtr\SharedPtr.h" />
+    <ClInclude Include="Library\SmartPointer\UniquePtr\UniquePtr.h" />
+    <ClInclude Include="Library\SmartPointer\WeakPtr\WeakPtr.h" />
     <None Include="Library\EventManager\EventManager_private.inl" />
     <ClInclude Include="Library\InputDeviceManager\GamePad\GamePad.h" />
     <ClInclude Include="Library\InputDeviceManager\KeyDevice\KeyDevice.h" />
@@ -120,6 +123,8 @@
     <ClInclude Include="Library\SceneManager\SceneManager.h" />
     <ClInclude Include="Library\SceneManager\SceneBase\SceneBase.h" />
     <ClInclude Include="Library\SingletonBase\SingletonBase.h" />
+    <None Include="Library\SmartPointer\SharedPtr\SharedPtr_private.inl" />
+    <None Include="Library\SmartPointer\UniquePtr\UniquePtr_private.inl" />
     <None Include="Library\TaskManager\TaskBase\TaskBase_private.inl" />
     <ClInclude Include="Library\Window\Window.h" />
     <ClInclude Include="Library\InputDeviceManager\MouseDevice\MouseDevice.h" />
@@ -187,6 +192,9 @@
     <ClCompile Include="Library\DirectX11\Light\Light.cpp" />
     <ClCompile Include="Library\ObjectManagerBase\ObjectManagerBase.cpp" />
     <ClCompile Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.cpp" />
+    <ClCompile Include="Library\SmartPointer\UniquePtr\UniquePtr.cpp" />
+    <ClCompile Include="Library\SmartPointer\SharedPtr\SharedPtr.cpp" />
+    <ClCompile Include="Library\SmartPointer\WeakPtr\WeakPtr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Font\Effect\Font.fx">

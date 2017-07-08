@@ -56,7 +56,8 @@ private:
 	enum SCENE_ID
 	{
 		TITLE_SCENE_ID,	//!< タイトルシーンID.
-		GAME_SCENE_ID	//!< ゲームシーンID.
+		GAME_SCENE_ID,	//!< ゲームシーンID.
+		END_SCENE_ID	//!< 終了ID.
 	};
 
 	static const int m_WindowWidth;		//!< ウィンドウの幅.
