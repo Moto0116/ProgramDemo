@@ -91,12 +91,6 @@ namespace Lib
 			return m_Ptr != _ptr;
 		}
 
-		// 添字演算子.
-		Type& operator [] (int _index)
-		{
-			return m_Ptr[_index];	// 配列であるかどうかは考慮しない.
-		}
-
 	private:
 		/**
 		 * ポインタを設定

@@ -56,4 +56,39 @@ inline void SafeDestroy(Type*& _type)
 }
 
 
+//----------------------------------------------------------------------
+// Template Functor
+//----------------------------------------------------------------------
+
+/**
+ * オブジェクト生成ファンクタ
+ * @tparam Type 生成するオブジェクト型
+ * @tparam Args 生成するオブジェクトを構築するための引数
+ */
+template <typename Type, typename... Args>
+struct CreateFunctor
+{
+public:
+	Type* operator()(Args... _args) const
+	{
+		return new Type(_args...);
+	}
+};
+
+/**
+ * オブジェクト解放ファンクタ
+ * @tparam Type 解放するオブジェクト型
+ */
+template <typename Type>
+struct SafeDeleteFunctor
+{
+public:
+	void operator()(Type*& _type) const
+	{
+		delete _type;
+		_type = nullptr;
+	}
+};
+
+
 #endif // !DEFINE_H

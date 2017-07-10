@@ -13,32 +13,7 @@ namespace Lib
 	template <typename Type>
 	SharedPtr<Type>::SharedPtr(Type* _ptr) :
 		m_Ptr(_ptr),
-		m_pRefCount(new int),
-		m_pReleaseFunc(&SafeDelete<Type>)
-	{
-		*m_pRefCount = 0;
-		AddRef();
-	}
-
-	template <typename Type>
-	SharedPtr<Type>::SharedPtr(Type* _ptr, bool _isArray) :
-		m_Ptr(_ptr),
 		m_pRefCount(new int)
-	{
-		*m_pRefCount = 0;
-		AddRef();
-
-		if (_isArray)	// 配列かどうかで解放関数を切り替える.
-			m_pReleaseFunc = &SafeDeleteArray<Type>;
-		else
-			m_pReleaseFunc = &SafeDelete<Type>;
-	}
-
-	template <typename Type>
-	SharedPtr<Type>::SharedPtr(Type* _ptr, void(*_pReleaseFunc)(Type*&)) :
-		m_Ptr(_ptr),
-		m_pRefCount(new int),
-		m_pReleaseFunc(_pReleaseFunc)
 	{
 		*m_pRefCount = 0;
 		AddRef();
@@ -53,7 +28,6 @@ namespace Lib
 	{
 		m_Ptr = _src.m_Ptr;
 		m_pRefCount = _src.m_pRefCount;
-		m_pReleaseFunc = _src.m_pReleaseFunc;
 
 		AddRef();
 	}
@@ -67,7 +41,6 @@ namespace Lib
 	{
 		m_Ptr = _src.m_Ptr;
 		m_pRefCount = _src.m_pRefCount;
-		m_pReleaseFunc = _src.m_pReleaseFunc;
 
 		AddRef();
 	}
@@ -128,8 +101,8 @@ namespace Lib
 
 		if ((*m_pRefCount) == 0)
 		{
-			// 参照カウンタが0なら解放関数を呼び出す.
-			m_pReleaseFunc(m_Ptr);
+			// 参照カウンタが0なら解放処理を行う.
+			SafeDelete(m_Ptr);
 			SafeDelete(m_pRefCount);
 		}
 
@@ -166,10 +139,11 @@ namespace Lib
 		return _ptr.GetCounter();
 	}
 
-	template <typename Type, typename... Args>
-	SharedPtr<Type> CreateSharedPtr(Args... args)
+	template <typename Type, typename CreateFunctor, typename... Args>
+	SharedPtr<Type> CreateSharedPtr(Args... _args)
 	{
-		Type* pType = new Type(args...);
+		CreateFunctor<Type, Args...> Functor;
+		Type* pType = Functor(_args...);
 		SharedPtr<Type> pSmartPtr(pType);
 
 		return pSmartPtr;

@@ -45,20 +45,6 @@ namespace Lib
 		SharedPtr(Type* _ptr = nullptr);
 
 		/**
-		 * コンストラクタ
-		 * @param[in] _ptr 設定するポインタ
-		 * @param[in] _isArray 設定するポインタが配列であるか
-		 */
-		SharedPtr(Type* _ptr, bool _isArray);
-
-		/**
-		 * コンストラクタ
-		 * @param[in] _ptr 設定するポインタ
-		 * @param[in] _pReleaseFunc ポインタの解放関数
-		 */
-		SharedPtr(Type* _ptr, void(*_pReleaseFunc)(Type*&));
-
-		/**
 		 * コピーコンストラクタ
 		 * @param[in] _src コピー元
 		 */
@@ -123,12 +109,6 @@ namespace Lib
 			return m_Ptr != _ptr;
 		}
 
-		// 添字演算子.
-		Type& operator [] (int _index)
-		{
-			return m_Ptr[_index];	// 配列であるかどうかは考慮しない.
-		}
-
 	private:
 		/**
 		 * ポインタを設定
@@ -167,7 +147,6 @@ namespace Lib
 
 		Type*		m_Ptr;				//!< 管理するポインタ.
 		int*		m_pRefCount;		//!< 参照カウンタ.
-		void(*m_pReleaseFunc)(Type*&);	//!< 解放関数.
 
 	};
 
@@ -204,10 +183,15 @@ namespace Lib
 	/**
  	 * シェアドポインタ生成関数
 	 * @tparam Type 生成するポインタ型
-	 * @tparam Args 生成する型のコンストラクタ引数
+	 * @tparam CreateFunctor 生成処理ファンクタ
+	 * @tparam Args 生成する型のコンストラクタ引数の型
+	 * @param _args 生成する型のコンストラクタ引数
 	 */
-	template <typename Type, typename... Args>
-	SharedPtr<Type> CreateSharedPtr(Args... args);
+	template <
+		typename Type,
+		typename CreateFunctor = CreateFunctor,
+		typename... Args>
+	SharedPtr<Type> CreateSharedPtr(Args... _args);
 
 }
 

@@ -12,25 +12,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	template <typename Type>
 	UniquePtr<Type>::UniquePtr(Type* _ptr) :
-		m_Ptr(_ptr),
-		m_pReleaseFunc(&SafeDelete<Type>)
-	{
-	}
-
-	template <typename Type>
-	UniquePtr<Type>::UniquePtr(Type* _ptr, bool _isArray) :
 		m_Ptr(_ptr)
-	{
-		if (_isArray)	// 配列かどうかで解放関数を切り替える.
-			m_pReleaseFunc = &SafeDeleteArray<Type>;
-		else
-			m_pReleaseFunc = &SafeDelete<Type>;
-	}
-
-	template <typename Type>
-	UniquePtr<Type>::UniquePtr(Type* _ptr, void(*_pReleaseFunc)(Type*&)) :
-		m_Ptr(_ptr),
-		m_pReleaseFunc(_pReleaseFunc)
 	{
 	}
 
@@ -42,7 +24,6 @@ namespace Lib
 	UniquePtr<Type>::UniquePtr(UniquePtr<Type>&& _src)
 	{
 		m_Ptr = _src.m_Ptr;
-		m_pReleaseFunc = _src.m_pReleaseFunc;
 
 		_src.m_Ptr = nullptr;	// 所有権を放棄.
 	}
@@ -84,7 +65,7 @@ namespace Lib
 	template <typename Type>
 	void UniquePtr<Type>::Release()
 	{
-		m_pReleaseFunc(m_Ptr);
+		SafeDelete(m_Ptr);
 	}
 
 
@@ -109,10 +90,11 @@ namespace Lib
 		return _ptr.GetPtrPtr();
 	}
 
-	template <typename Type, typename... Args>
-	UniquePtr<Type> CreateUniquePtr(Args... args)
+	template <typename Type, typename CreateFunctor, typename... Args>
+	UniquePtr<Type> CreateUniquePtr(Args... _args)
 	{
-		Type* pType = new Type(args...);
+		CreateFunctor<Type, Args...> Functor;
+		Type* pType = Functor(_args...);
 		UniquePtr<Type> pSmartPtr(pType);
 
 		return pSmartPtr;

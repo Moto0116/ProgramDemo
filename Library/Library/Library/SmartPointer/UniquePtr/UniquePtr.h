@@ -39,20 +39,6 @@ namespace Lib
 		UniquePtr(Type* _ptr = nullptr);
 
 		/**
-		 * コンストラクタ
-		 * @param[in] _ptr 設定するポインタ
-		 * @param[in] _isArray 設定するポインタが配列であるか
-		 */
-		UniquePtr(Type* _ptr, bool _isArray);
-
-		/**
-		 * コンストラクタ
-		 * @param[in] _ptr 設定するポインタ
-		 * @param[in] _pReleaseFunc ポインタの解放関数
-		 */
-		UniquePtr(Type* _ptr, void(*_pReleaseFunc)(Type*&));
-
-		/**
 		 * ムーブコンストラクタ
 		 * @param[in] _src ムーブ元
 		 */
@@ -94,13 +80,6 @@ namespace Lib
 			return m_Ptr != _ptr;
 		}
 
-		// 添字演算子.
-		Type& operator [] (int _index)
-		{
-			return m_Ptr[_index];	// 配列であるかどうかは考慮しない.
-		}
-
-
 	private:
 		/**
 		 * ポインタを設定
@@ -126,8 +105,7 @@ namespace Lib
 		void Release();
 
 
-		Type*		m_Ptr;				//!< 管理するポインタ.
-		void(*m_pReleaseFunc)(Type*&);	//!< 解放関数.
+		Type* m_Ptr; //!< 管理するポインタ.
 
 
 		DISALLOW_COPY_AND_ASSIGN(UniquePtr<Type>);	// コピー禁止.
@@ -160,10 +138,15 @@ namespace Lib
 	/**
  	 * ユニークポインタ生成関数
 	 * @tparam Type 生成するポインタ型
-	 * @tparam Args 生成する型のコンストラクタ引数
+	 * @tparam CreateFunctor 生成処理ファンクタ
+	 * @tparam Args 生成する型のコンストラクタ引数の型
+	 * @param _args 生成する型のコンストラクタ引数
 	 */
-	template <typename Type, typename... Args>
-	UniquePtr<Type> CreateUniquePtr(Args... args);
+	template <
+		typename Type, 
+		typename CreateFunctor = CreateFunctor,
+		typename... Args>
+	UniquePtr<Type> CreateUniquePtr(Args... _args);
 
 }
 
