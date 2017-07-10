@@ -14,10 +14,17 @@
 
 namespace Lib
 {
+	/**
+	 * シェアドポインタクラス
+	 * @tparam Type 管理させるポインタの型
+	 */
 	template <typename Type>
 	class SharedPtr
 	{
 	public:
+		template <typename Type>
+		friend class WeakPtr;
+
 		template <typename Type>
 		friend void Reset(SharedPtr<Type>& _ptr, Type* _src);
 
@@ -35,7 +42,7 @@ namespace Lib
 		 * コンストラクタ
 		 * @param[in] _ptr 設定するポインタ
 		 */
-		SharedPtr(Type* _ptr);
+		SharedPtr(Type* _ptr = nullptr);
 
 		/**
 		 * コンストラクタ
@@ -53,8 +60,15 @@ namespace Lib
 
 		/**
 		 * コピーコンストラクタ
+		 * @param[in] _src コピー元
 		 */
 		SharedPtr(const SharedPtr<Type>& _src);
+
+		/**
+		 * ムーブコンストラクタ
+		 * @param[in] _src ムーブ元
+		 */
+		SharedPtr(SharedPtr<Type>&& _src);
 
 		/**
 		 * デストラクタ
@@ -63,7 +77,7 @@ namespace Lib
 
 
 		// キャスト.
-		operator bool()
+		explicit operator bool()
 		{
 			return m_Ptr != NULL;
 		}
@@ -186,6 +200,14 @@ namespace Lib
 	 */
 	template <typename Type>
 	int GetCounter(SharedPtr<Type>& _ptr);
+
+	/**
+ 	 * シェアドポインタ生成関数
+	 * @tparam Type 生成するポインタ型
+	 * @tparam Args 生成する型のコンストラクタ引数
+	 */
+	template <typename Type, typename... Args>
+	SharedPtr<Type> CreateSharedPtr(Args... args);
 
 }
 

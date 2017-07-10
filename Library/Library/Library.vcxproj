@@ -99,6 +99,7 @@
     <ClInclude Include="Library\DirectX11\AnimationManager\Animation\Animation.h" />
     <ClInclude Include="Library\DirectX11\AnimationManager\AnimationManager.h" />
     <ClInclude Include="Library\SmartPointer\SharedPtr\SharedPtr.h" />
+    <ClInclude Include="Library\SmartPointer\SmartPointer.h" />
     <ClInclude Include="Library\SmartPointer\UniquePtr\UniquePtr.h" />
     <ClInclude Include="Library\SmartPointer\WeakPtr\WeakPtr.h" />
     <None Include="Library\EventManager\EventManager_private.inl" />
@@ -125,6 +126,7 @@
     <ClInclude Include="Library\SingletonBase\SingletonBase.h" />
     <None Include="Library\SmartPointer\SharedPtr\SharedPtr_private.inl" />
     <None Include="Library\SmartPointer\UniquePtr\UniquePtr_private.inl" />
+    <None Include="Library\SmartPointer\WeakPtr\WeakPtr_private.inl" />
     <None Include="Library\TaskManager\TaskBase\TaskBase_private.inl" />
     <ClInclude Include="Library\Window\Window.h" />
     <ClInclude Include="Library\InputDeviceManager\MouseDevice\MouseDevice.h" />

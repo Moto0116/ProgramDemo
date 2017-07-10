@@ -216,13 +216,13 @@
     <ClCompile Include="Library\DirectX11\Billboard2D\Billboard2D.cpp" />
     <ClCompile Include="Library\BinaryFile\BinaryFile.cpp" />
     <ClCompile Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.cpp" />
-    <ClCompile Include="Library\Math\Vector\Vector.cpp" />
-    <ClCompile Include="Library\Math\Math.cpp" />
     <ClCompile Include="Library\EventManager\EventListener\EventListener.cpp">
       <Filter>Library\EventManagerBase\EventListenerBase</Filter>
     </ClCompile>
-    <ClCompile Include="Library\SmartPointer\UniquePtr\UniquePtr.cpp" />
+    <ClCompile Include="Library\Math\Vector\Vector.cpp" />
+    <ClCompile Include="Library\Math\Math.cpp" />
     <ClCompile Include="Library\SmartPointer\SharedPtr\SharedPtr.cpp" />
+    <ClCompile Include="Library\SmartPointer\UniquePtr\UniquePtr.cpp" />
     <ClCompile Include="Library\SmartPointer\WeakPtr\WeakPtr.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -333,14 +333,15 @@
     <ClInclude Include="Library\DirectX11\Billboard2D\Billboard2D.h" />
     <ClInclude Include="Library\BinaryFile\BinaryFile.h" />
     <ClInclude Include="Library\MemoryAllocator\TlsfAllocator\TlsfAllocator.h" />
-    <ClInclude Include="Library\Math\Vector\Vector.h" />
-    <ClInclude Include="Library\Math\Math.h" />
     <ClInclude Include="Library\EventManager\EventListener\EventListener.h">
       <Filter>Library\EventManagerBase\EventListenerBase</Filter>
     </ClInclude>
-    <ClInclude Include="Library\SmartPointer\UniquePtr\UniquePtr.h" />
+    <ClInclude Include="Library\Math\Vector\Vector.h" />
+    <ClInclude Include="Library\Math\Math.h" />
     <ClInclude Include="Library\SmartPointer\SharedPtr\SharedPtr.h" />
+    <ClInclude Include="Library\SmartPointer\UniquePtr\UniquePtr.h" />
     <ClInclude Include="Library\SmartPointer\WeakPtr\WeakPtr.h" />
+    <ClInclude Include="Library\SmartPointer\SmartPointer.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Vertex2D\Effect\Vertex2D.fx">
@@ -356,5 +357,6 @@
     <None Include="Library\TaskManager\TaskManager_private.inl" />
     <None Include="Library\SmartPointer\SharedPtr\SharedPtr_private.inl" />
     <None Include="Library\SmartPointer\UniquePtr\UniquePtr_private.inl" />
+    <None Include="Library\SmartPointer\WeakPtr\WeakPtr_private.inl" />
   </ItemGroup>
 </Project>

@@ -60,6 +60,20 @@ namespace Lib
 
 
 	//----------------------------------------------------------------------
+	// Move Constructor
+	//----------------------------------------------------------------------
+	template <typename Type>
+	SharedPtr<Type>::SharedPtr(SharedPtr<Type>&& _src)
+	{
+		m_Ptr = _src.m_Ptr;
+		m_pRefCount = _src.m_pRefCount;
+		m_pReleaseFunc = _src.m_pReleaseFunc;
+
+		AddRef();
+	}
+
+
+	//----------------------------------------------------------------------
 	// Destructor
 	//----------------------------------------------------------------------
 	template <typename Type>
@@ -150,5 +164,14 @@ namespace Lib
 	int GetCounter(SharedPtr<Type>& _ptr)
 	{
 		return _ptr.GetCounter();
+	}
+
+	template <typename Type, typename... Args>
+	SharedPtr<Type> CreateSharedPtr(Args... args)
+	{
+		Type* pType = new Type(args...);
+		SharedPtr<Type> pSmartPtr(pType);
+
+		return pSmartPtr;
 	}
 }

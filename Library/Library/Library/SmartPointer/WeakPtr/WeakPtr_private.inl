@@ -1,6 +1,6 @@
 ﻿/**
- * @file	UniquePtr_private.inl
- * @brief	ユニークポインタクラス実装
+ * @file	WeakPtr_private.inl
+ * @brief	ウィークポインタクラス実装
  * @author	morimoto
  */
 
@@ -11,27 +11,25 @@ namespace Lib
 	// Constructor
 	//----------------------------------------------------------------------
 	template <typename Type>
-	UniquePtr<Type>::UniquePtr(Type* _ptr) :
-		m_Ptr(_ptr),
-		m_pReleaseFunc(&SafeDelete<Type>)
+	WeakPtr<Type>::WeakPtr() :
+		m_Ptr(nullptr)
 	{
 	}
 
 	template <typename Type>
-	UniquePtr<Type>::UniquePtr(Type* _ptr, bool _isArray) :
-		m_Ptr(_ptr)
+	WeakPtr<Type>::WeakPtr(SharedPtr<Type>& _ptr) :
+		m_Ptr(_ptr.m_Ptr)
 	{
-		if (_isArray)	// 配列かどうかで解放関数を切り替える.
-			m_pReleaseFunc = &SafeDeleteArray<Type>;
-		else
-			m_pReleaseFunc = &SafeDelete<Type>;
 	}
 
+
+	//----------------------------------------------------------------------
+	// Copy Constructor
+	//----------------------------------------------------------------------
 	template <typename Type>
-	UniquePtr<Type>::UniquePtr(Type* _ptr, void(*_pReleaseFunc)(Type*&)) :
-		m_Ptr(_ptr),
-		m_pReleaseFunc(_pReleaseFunc)
+	WeakPtr<Type>::WeakPtr(WeakPtr<Type>& _src)
 	{
+		m_Ptr = _src.m_Ptr;
 	}
 
 
@@ -39,10 +37,9 @@ namespace Lib
 	// Move Constructor
 	//----------------------------------------------------------------------
 	template <typename Type>
-	UniquePtr<Type>::UniquePtr(UniquePtr<Type>&& _src)
+	WeakPtr<Type>::WeakPtr(WeakPtr<Type>&& _src)
 	{
 		m_Ptr = _src.m_Ptr;
-		m_pReleaseFunc = _src.m_pReleaseFunc;
 
 		_src.m_Ptr = nullptr;	// 所有権を放棄.
 	}
@@ -52,9 +49,8 @@ namespace Lib
 	// Destructor
 	//----------------------------------------------------------------------
 	template <typename Type>
-	UniquePtr<Type>::~UniquePtr()
+	WeakPtr<Type>::~WeakPtr()
 	{
-		Release();
 	}
 
 
@@ -62,29 +58,21 @@ namespace Lib
 	// Private Functions
 	//----------------------------------------------------------------------
 	template <typename Type>
-	void UniquePtr<Type>::Reset(Type* _ptr)
+	void WeakPtr<Type>::Reset(Type* _ptr)
 	{
-		Release();	// 既に所有しているポインタは解放.
-
 		m_Ptr = _ptr;
 	}
 
 	template <typename Type>
-	Type* UniquePtr<Type>::GetPtr()
+	Type* WeakPtr<Type>::GetPtr()
 	{
 		return m_Ptr;
 	}
 
 	template <typename Type>
-	Type** UniquePtr<Type>::GetPtrPtr()
+	Type** WeakPtr<Type>::GetPtrPtr()
 	{
 		return &m_Ptr;
-	}
-
-	template <typename Type>
-	void UniquePtr<Type>::Release()
-	{
-		m_pReleaseFunc(m_Ptr);
 	}
 
 
@@ -92,30 +80,20 @@ namespace Lib
 	// Friend Functions
 	//----------------------------------------------------------------------
 	template <typename Type>
-	void Reset(UniquePtr<Type>& _ptr, Type* _src)
+	void Reset(WeakPtr<Type>& _ptr, Type* _src)
 	{
 		_ptr.Reset(_src);
 	}
 
 	template <typename Type>
-	Type* GetPtr(UniquePtr<Type>& _ptr)
+	Type* GetPtr(WeakPtr<Type>& _ptr)
 	{
 		return _ptr.GetPtr();
 	}
 
 	template <typename Type>
-	Type** GetPtrPtr(UniquePtr<Type>& _ptr)
+	Type** GetPtrPtr(WeakPtr<Type>& _ptr)
 	{
 		return _ptr.GetPtrPtr();
 	}
-
-	template <typename Type, typename... Args>
-	UniquePtr<Type> CreateUniquePtr(Args... args)
-	{
-		Type* pType = new Type(args...);
-		UniquePtr<Type> pSmartPtr(pType);
-
-		return pSmartPtr;
-	}
 }
-

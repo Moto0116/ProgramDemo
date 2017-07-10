@@ -16,6 +16,7 @@ namespace Lib
 {
 	/**
 	 * ユニークポインタクラス
+	 * @tparam Type 管理させるポインタの型
 	 */
 	template <typename Type>
 	class UniquePtr
@@ -35,7 +36,7 @@ namespace Lib
 		 * コンストラクタ
 		 * @param[in] _ptr 設定するポインタ
 		 */
-		UniquePtr(Type* _ptr);
+		UniquePtr(Type* _ptr = nullptr);
 
 		/**
 		 * コンストラクタ
@@ -52,13 +53,19 @@ namespace Lib
 		UniquePtr(Type* _ptr, void(*_pReleaseFunc)(Type*&));
 
 		/**
+		 * ムーブコンストラクタ
+		 * @param[in] _src ムーブ元
+		 */
+		UniquePtr(UniquePtr<Type>&& _src);
+
+		/**
 		 * デストラクタ
 		 */
 		~UniquePtr();
 
 
 		// キャスト.
-		operator bool()
+		explicit operator bool()
 		{
 			return m_Ptr != NULL;
 		}
@@ -149,6 +156,14 @@ namespace Lib
 	 */
 	template <typename Type>
 	Type** GetPtrPtr(UniquePtr<Type>& _ptr);
+
+	/**
+ 	 * ユニークポインタ生成関数
+	 * @tparam Type 生成するポインタ型
+	 * @tparam Args 生成する型のコンストラクタ引数
+	 */
+	template <typename Type, typename... Args>
+	UniquePtr<Type> CreateUniquePtr(Args... args);
 
 }
 
