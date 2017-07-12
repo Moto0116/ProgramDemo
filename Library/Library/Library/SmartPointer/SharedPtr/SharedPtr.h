@@ -69,6 +69,15 @@ namespace Lib
 		 */
 		SharedPtr(const SharedPtr<Type, ReleaseFunc>& _src);
 
+
+		///@todo 引数で受け取るオブジェクトにconstをつけれるようにする.
+		/**
+		 * コピーコンストラクタ
+		 * @param[in] _src コピー元
+		 */
+		template <typename MoveType, typename MoveReleaseFunc>
+		SharedPtr(SharedPtr<MoveType, MoveReleaseFunc>& _src);
+
 		/**
 		 * ムーブコンストラクタ
 		 * @param[in] _src ムーブ元

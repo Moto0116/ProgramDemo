@@ -32,6 +32,16 @@ namespace Lib
 		AddRef();
 	}
 
+	template <typename Type, typename ReleaseFunc>
+	template <typename MoveType, typename MoveReleaseFunc>
+	SharedPtr<Type, ReleaseFunc>::SharedPtr(SharedPtr<MoveType, MoveReleaseFunc>& _src)
+	{
+		m_Ptr = GetPtr(_src);
+		m_pRefCount = GetCounterPtr(_src);
+
+		AddRef();
+	}
+
 
 	//----------------------------------------------------------------------
 	// Move Constructor
