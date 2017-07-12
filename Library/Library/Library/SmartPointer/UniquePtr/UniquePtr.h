@@ -17,19 +17,28 @@ namespace Lib
 	/**
 	 * ユニークポインタクラス
 	 * @tparam Type 管理させるポインタの型
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 */
-	template <typename Type>
+	template <
+		typename Type,
+		typename ReleaseFunc = DefaultDelete<Type>>
 	class UniquePtr
 	{
 	public:
-		template <typename Type>
-		friend void Reset(UniquePtr<Type>& _ptr, Type* _src);
+		template <
+			typename Type,
+			typename ReleaseFunc>
+		friend void Reset(UniquePtr<Type, ReleaseFunc>& _ptr, Type* _src);
 
-		template <typename Type>
-		friend Type* GetPtr(UniquePtr<Type>& _ptr);
+		template <
+			typename Type,
+			typename ReleaseFunc>
+		friend Type* GetPtr(UniquePtr<Type, ReleaseFunc>& _ptr);
 
-		template <typename Type>
-		friend Type** GetPtrPtr(UniquePtr<Type>& _ptr);
+		template <
+			typename Type,
+			typename ReleaseFunc>
+		friend Type** GetPtrPtr(UniquePtr<Type, ReleaseFunc>& _ptr);
 
 
 		/**
@@ -42,7 +51,14 @@ namespace Lib
 		 * ムーブコンストラクタ
 		 * @param[in] _src ムーブ元
 		 */
-		UniquePtr(UniquePtr<Type>&& _src);
+		UniquePtr(UniquePtr<Type, ReleaseFunc>&& _src);
+
+		/**
+		 * ムーブコンストラクタ
+		 * @param[in] _src ムーブ元
+		 */
+		template <typename MoveType, typename MoveReleaseFunc>
+		UniquePtr(UniquePtr<MoveType, MoveReleaseFunc>&& _src);
 
 		/**
 		 * デストラクタ
@@ -85,19 +101,19 @@ namespace Lib
 		 * ポインタを設定
 		 * @param[in] _ptr 設定するポインタ
 		 */
-		void Reset(Type* _ptr);
+		void ResetResource(Type* _ptr);
 
 		/**
 		 * ポインタを取得
 		 * @return 管理しているポインタ取得
 		 */
-		Type* GetPtr();
+		Type* GetResource();
 
 		/**
 		 * ポインタのアドレスを取得
 		 * @return 管理しているポインタアドレス取得
 		 */
-		Type** GetPtrPtr();
+		Type** GetResourceAddress();
 
 		/**
 		 * ポインタの解放
@@ -108,45 +124,61 @@ namespace Lib
 		Type* m_Ptr; //!< 管理するポインタ.
 
 
-		DISALLOW_COPY_AND_ASSIGN(UniquePtr<Type>);	// コピー禁止.
+		// コピー禁止.
+		UniquePtr<Type, ReleaseFunc>(const UniquePtr<Type, ReleaseFunc>&);
+		void operator=(const UniquePtr<Type, ReleaseFunc>&);
 
 	};
 
 
 	/**
 	 * ポインタの所有権を再設定
+	 * @tparam Type 生成するポインタ型
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 再設定するポインタ管理オブジェクト
 	 * @param[in] _src 設定するポインタ
 	 */
-	template <typename Type>
-	void Reset(UniquePtr<Type>& _ptr, Type* _src = nullptr);
+	template <
+		typename Type,
+		typename ReleaseFunc>
+	void Reset(UniquePtr<Type, ReleaseFunc>& _ptr, Type* _src = nullptr);
 
 	/**
 	 * ポインタの取得
+	 * @tparam Type 生成するポインタ型
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 取得するポインタの管理オブジェクト
 	 */
-	template <typename Type>
-	Type* GetPtr(UniquePtr<Type>& _ptr);
+	template <
+		typename Type, 
+		typename ReleaseFunc>
+	Type* GetPtr(UniquePtr<Type, ReleaseFunc>& _ptr);
 
 	/**
 	 * ポインタアドレスの取得
+	 * @tparam Type 生成するポインタ型
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 取得するポインタアドレスの管理オブジェクト
 	 */
-	template <typename Type>
-	Type** GetPtrPtr(UniquePtr<Type>& _ptr);
+	template <
+		typename Type, 
+		typename ReleaseFunc>
+	Type** GetPtrPtr(UniquePtr<Type, ReleaseFunc>& _ptr);
 
 	/**
  	 * ユニークポインタ生成関数
 	 * @tparam Type 生成するポインタ型
-	 * @tparam CreateFunctor 生成処理ファンクタ
+	 * @tparam CreateFunc 生成処理ファンクタ
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @tparam Args 生成する型のコンストラクタ引数の型
 	 * @param _args 生成する型のコンストラクタ引数
 	 */
 	template <
 		typename Type, 
-		typename CreateFunctor = CreateFunctor,
+		typename CreateFunc = DefaultCreate<Type>,
+		typename ReleaseFunc = DefaultDelete<Type>,
 		typename... Args>
-	UniquePtr<Type> CreateUniquePtr(Args... _args);
+	UniquePtr<Type, ReleaseFunc> CreateUniquePtr(Args... _args);
 
 }
 

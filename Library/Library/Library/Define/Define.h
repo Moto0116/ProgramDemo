@@ -19,6 +19,15 @@
 
 
 //----------------------------------------------------------------------
+// Type
+//----------------------------------------------------------------------
+namespace Lib
+{
+	using NullType = decltype(nullptr);
+}
+
+
+//----------------------------------------------------------------------
 // Template Functions
 //----------------------------------------------------------------------
 template <typename Type>
@@ -63,12 +72,12 @@ inline void SafeDestroy(Type*& _type)
 /**
  * オブジェクト生成ファンクタ
  * @tparam Type 生成するオブジェクト型
- * @tparam Args 生成するオブジェクトを構築するための引数
  */
-template <typename Type, typename... Args>
-struct CreateFunctor
+template <typename Type>
+struct DefaultCreate
 {
 public:
+	template <typename... Args>
 	Type* operator()(Args... _args) const
 	{
 		return new Type(_args...);
@@ -80,7 +89,7 @@ public:
  * @tparam Type 解放するオブジェクト型
  */
 template <typename Type>
-struct SafeDeleteFunctor
+struct DefaultDelete
 {
 public:
 	void operator()(Type*& _type) const

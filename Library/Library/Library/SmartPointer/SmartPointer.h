@@ -14,11 +14,15 @@
 #include "WeakPtr\WeakPtr.h"
 
 
-template <typename Type>
-using SharedPtr = Lib::SharedPtr<Type>;
+template <
+	typename Type,
+	typename ReleaseFunc = DefaultDelete<Type >>
+using SharedPtr = Lib::SharedPtr<Type, ReleaseFunc>;
 
-template <typename Type>
-using UniquePtr = Lib::UniquePtr<Type>;
+template <
+	typename Type, 
+	typename ReleaseFunc = DefaultDelete<Type>>
+using UniquePtr = Lib::UniquePtr<Type, ReleaseFunc>;
 
 template <typename Type>
 using WeakPtr = Lib::WeakPtr<Type>;

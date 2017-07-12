@@ -14,28 +14,47 @@
 
 namespace Lib
 {
+	template <typename Type>
+	class WeakPtr;
+
 	/**
 	 * シェアドポインタクラス
 	 * @tparam Type 管理させるポインタの型
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 */
-	template <typename Type>
+	template <
+		typename Type,
+		typename ReleaseFunc = DefaultDelete<Type>>
 	class SharedPtr
 	{
 	public:
 		template <typename Type>
 		friend class WeakPtr;
 
-		template <typename Type>
-		friend void Reset(SharedPtr<Type>& _ptr, Type* _src);
+		template <
+			typename Type,
+			typename ReleaseFunc>
+		friend void Reset(SharedPtr<Type, ReleaseFunc>& _ptr, Type* _src);
 
-		template <typename Type>
-		friend Type* GetPtr(SharedPtr<Type>& _ptr);
+		template <
+			typename Type,
+			typename ReleaseFunc>
+		friend Type* GetPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
-		template <typename Type>
-		friend Type** GetPtrPtr(SharedPtr<Type>& _ptr);
+		template <
+			typename Type, 
+			typename ReleaseFunc>
+		friend Type** GetPtrPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
-		template <typename Type>
-		friend int GetCounter(SharedPtr<Type>& _ptr);
+		template <
+			typename Type,
+			typename ReleaseFunc>
+		friend int GetCounter(SharedPtr<Type, ReleaseFunc>& _ptr);
+
+		template <
+			typename Type,
+			typename ReleaseFunc>
+		friend int* GetCounterPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
 
 		/**
@@ -48,13 +67,20 @@ namespace Lib
 		 * コピーコンストラクタ
 		 * @param[in] _src コピー元
 		 */
-		SharedPtr(const SharedPtr<Type>& _src);
+		SharedPtr(const SharedPtr<Type, ReleaseFunc>& _src);
 
 		/**
 		 * ムーブコンストラクタ
 		 * @param[in] _src ムーブ元
 		 */
-		SharedPtr(SharedPtr<Type>&& _src);
+		SharedPtr(SharedPtr<Type, ReleaseFunc>&& _src);
+
+		/**
+		 * ムーブコンストラクタ
+		 * @param[in] _src ムーブ元
+		 */
+		template <typename MoveType, typename MoveReleaseFunc>
+		SharedPtr(SharedPtr<MoveType, MoveReleaseFunc>&& _src);
 
 		/**
 		 * デストラクタ
@@ -70,7 +96,7 @@ namespace Lib
 
 
 		// 代入演算子.
-		SharedPtr<Type>& operator = (const SharedPtr<Type>& _src)
+		SharedPtr<Type, ReleaseFunc>& operator = (const SharedPtr<Type, ReleaseFunc>& _src)
 		{
 			// 同じポインタ同士のコピーは行わない.
 			if (m_Ptr == _src.m_Ptr) return (*this);
@@ -114,25 +140,31 @@ namespace Lib
 		 * ポインタを設定
 		 * @param[in] _ptr 設定するポインタ
 		 */
-		void Reset(Type* _ptr);
+		void ResetResource(Type* _ptr);
 
 		/**
 		 * ポインタを取得
 		 * @return 管理しているポインタ取得
 		 */
-		Type* GetPtr();
+		Type* GetResource();
 
 		/**
 		 * ポインタのアドレスを取得
 		 * @return 管理しているポインタアドレス取得
 		 */
-		Type** GetPtrPtr();
+		Type** GetResourceAddress();
+
+		/**
+		 * 参照カウントの取得
+		 * @return 参照カウンタ
+		 */
+		int GetRefCounter();
 
 		/**
 		 * 参照カウンタの取得
 		 * @return 参照カウンタ
 		 */
-		int GetCounter();
+		int* GetRefCounterPtr();
 
 		/**
 		 * 参照カウンタの増分
@@ -156,42 +188,59 @@ namespace Lib
 	 * @param[in] _ptr 再設定するポインタ管理オブジェクト
 	 * @param[in] _src 設定するポインタ
 	 */
-	template <typename Type>
-	void Reset(SharedPtr<Type>& _ptr, Type* _src = nullptr);
+	template <typename Type, typename ReleaseFunc>
+	void Reset(SharedPtr<Type, ReleaseFunc>& _ptr, Type* _src = nullptr);
 
 	/**
 	 * ポインタの取得
+	 * @tparam Type 生成するポインタ型
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 取得するポインタの管理オブジェクト
 	 */
-	template <typename Type>
-	Type* GetPtr(SharedPtr<Type>& _ptr);
+	template <typename Type, typename ReleaseFunc>
+	Type* GetPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
 	/**
 	 * ポインタアドレスの取得
+	 * @tparam Type 生成するポインタ型
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 取得するポインタアドレスの管理オブジェクト
 	 */
-	template <typename Type>
-	Type** GetPtrPtr(SharedPtr<Type>& _ptr);
+	template <typename Type, typename ReleaseFunc>
+	Type** GetPtrPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
 	/**
 	 * ポインタの参照数の取得
+	 * @tparam Type 生成するポインタ型
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 取得するポインタ参照数の管理オブジェクト
 	 */
-	template <typename Type>
-	int GetCounter(SharedPtr<Type>& _ptr);
+	template <typename Type, typename ReleaseFunc>
+	int GetCounter(SharedPtr<Type, ReleaseFunc>& _ptr);
+
+	/**
+	 * ポインタの参照の取得
+	 * @tparam Type 生成するポインタ型
+	 * @tparam ReleaseFunc 解放処理ファンクタ
+	 * @param[in] _ptr 取得するポインタ参照数の管理オブジェクト
+	 */
+	template <typename Type, typename ReleaseFunc>
+	int* GetCounterPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
 	/**
  	 * シェアドポインタ生成関数
 	 * @tparam Type 生成するポインタ型
-	 * @tparam CreateFunctor 生成処理ファンクタ
+	 * @tparam CreateFunc 生成処理ファンクタ
+	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @tparam Args 生成する型のコンストラクタ引数の型
 	 * @param _args 生成する型のコンストラクタ引数
 	 */
 	template <
 		typename Type,
-		typename CreateFunctor = CreateFunctor,
+		typename CreateFunc = DefaultCreate<Type>,
+		typename ReleaseFunc = DefaultDelete<Type>,
 		typename... Args>
-	SharedPtr<Type> CreateSharedPtr(Args... _args);
+	SharedPtr<Type, ReleaseFunc> CreateSharedPtr(Args... _args);
 
 }
 

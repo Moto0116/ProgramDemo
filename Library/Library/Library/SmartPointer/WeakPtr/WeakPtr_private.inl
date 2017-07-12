@@ -17,7 +17,8 @@ namespace Lib
 	}
 
 	template <typename Type>
-	WeakPtr<Type>::WeakPtr(SharedPtr<Type>& _ptr) :
+	template <typename ReleaseFunc>
+	WeakPtr<Type>::WeakPtr(SharedPtr<Type, ReleaseFunc>& _ptr) :
 		m_Ptr(_ptr.m_Ptr)
 	{
 	}
@@ -44,6 +45,14 @@ namespace Lib
 		_src.m_Ptr = nullptr;	// 所有権を放棄.
 	}
 
+	template <typename Type>
+	template <typename MoveType>
+	WeakPtr<Type>::WeakPtr(WeakPtr<MoveType>&& _src)
+	{
+		m_Ptr = GetPtr(_src);
+
+		Reset(_src);
+	}
 
 	//----------------------------------------------------------------------
 	// Destructor
@@ -58,19 +67,19 @@ namespace Lib
 	// Private Functions
 	//----------------------------------------------------------------------
 	template <typename Type>
-	void WeakPtr<Type>::Reset(Type* _ptr)
+	void WeakPtr<Type>::ResetResource(Type* _ptr)
 	{
 		m_Ptr = _ptr;
 	}
 
 	template <typename Type>
-	Type* WeakPtr<Type>::GetPtr()
+	Type* WeakPtr<Type>::GetResource()
 	{
 		return m_Ptr;
 	}
 
 	template <typename Type>
-	Type** WeakPtr<Type>::GetPtrPtr()
+	Type** WeakPtr<Type>::GetResourceAddress()
 	{
 		return &m_Ptr;
 	}
@@ -82,18 +91,18 @@ namespace Lib
 	template <typename Type>
 	void Reset(WeakPtr<Type>& _ptr, Type* _src)
 	{
-		_ptr.Reset(_src);
+		_ptr.ResetResource(_src);
 	}
 
 	template <typename Type>
 	Type* GetPtr(WeakPtr<Type>& _ptr)
 	{
-		return _ptr.GetPtr();
+		return _ptr.GetResource();
 	}
 
 	template <typename Type>
 	Type** GetPtrPtr(WeakPtr<Type>& _ptr)
 	{
-		return _ptr.GetPtrPtr();
+		return _ptr.GetResourceAddress();
 	}
 }

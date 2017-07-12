@@ -41,7 +41,12 @@ namespace Lib
 		 * コンストラクタ
 		 * @param[in] _ptr 設定するポインタを管理するシェアドポインタ
 		 */
-		WeakPtr(SharedPtr<Type>& _ptr);
+		template <typename ReleaseFunc>
+		WeakPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
+
+
+		///@todo SharedPtrからの親子変換実装.
+
 
 		/** 
 		 * コンストラクタ
@@ -54,6 +59,13 @@ namespace Lib
 		 * @param[in] _src ムーブ元
 		 */
 		WeakPtr(WeakPtr<Type>&& _src);
+
+		/**
+		 * ムーブコンストラクタ
+		 * @param[in] _src ムーブ元
+		 */
+		template <typename MoveType>
+		WeakPtr(WeakPtr<MoveType>&& _src);
 
 		/**
 		 * デストラクタ
@@ -96,19 +108,19 @@ namespace Lib
 		 * ポインタを設定
 		 * @param[in] _ptr 設定するポインタ
 		 */
-		void Reset(Type* _ptr);
+		void ResetResource(Type* _ptr);
 
 		/**
 		 * ポインタを取得
 		 * @return 管理しているポインタ取得
 		 */
-		Type* GetPtr();
+		Type* GetResource();
 
 		/**
 		 * ポインタのアドレスを取得
 		 * @return 管理しているポインタアドレス取得
 		 */
-		Type** GetPtrPtr();
+		Type** GetResourceAddress();
 
 
 		Type*	m_Ptr;	//!< 管理するポインタ.
@@ -118,6 +130,7 @@ namespace Lib
 
 	/**
 	 * ポインタの所有権を再設定
+	 * @tparam Type 生成するポインタ型
 	 * @param[in] _ptr 再設定するポインタ管理オブジェクト
 	 * @param[in] _src 設定するポインタ
 	 */
@@ -126,6 +139,7 @@ namespace Lib
 
 	/**
 	 * ポインタの取得
+	 * @tparam Type 生成するポインタ型
 	 * @param[in] _ptr 取得するポインタの管理オブジェクト
 	 */
 	template <typename Type>
@@ -133,6 +147,7 @@ namespace Lib
 
 	/**
 	 * ポインタアドレスの取得
+	 * @tparam Type 生成するポインタ型
 	 * @param[in] _ptr 取得するポインタアドレスの管理オブジェクト
 	 */
 	template <typename Type>

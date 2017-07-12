@@ -10,8 +10,8 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Constructor
 	//----------------------------------------------------------------------
-	template <typename Type>
-	SharedPtr<Type>::SharedPtr(Type* _ptr) :
+	template <typename Type, typename ReleaseFunc>
+	SharedPtr<Type, ReleaseFunc>::SharedPtr(Type* _ptr) :
 		m_Ptr(_ptr),
 		m_pRefCount(new int)
 	{
@@ -23,8 +23,8 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Copy Constructor
 	//----------------------------------------------------------------------
-	template <typename Type>
-	SharedPtr<Type>::SharedPtr(const SharedPtr<Type>& _src)
+	template <typename Type, typename ReleaseFunc>
+	SharedPtr<Type, ReleaseFunc>::SharedPtr(const SharedPtr<Type, ReleaseFunc>& _src)
 	{
 		m_Ptr = _src.m_Ptr;
 		m_pRefCount = _src.m_pRefCount;
@@ -36,11 +36,21 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Move Constructor
 	//----------------------------------------------------------------------
-	template <typename Type>
-	SharedPtr<Type>::SharedPtr(SharedPtr<Type>&& _src)
+	template <typename Type, typename ReleaseFunc>
+	SharedPtr<Type, ReleaseFunc>::SharedPtr(SharedPtr<Type, ReleaseFunc>&& _src)
 	{
 		m_Ptr = _src.m_Ptr;
 		m_pRefCount = _src.m_pRefCount;
+
+		AddRef();
+	}
+
+	template <typename Type, typename ReleaseFunc>
+	template <typename MoveType, typename MoveReleaseFunc>
+	SharedPtr<Type, ReleaseFunc>::SharedPtr(SharedPtr<MoveType, MoveReleaseFunc>&& _src)
+	{
+		m_Ptr = GetPtr(_src);
+		m_pRefCount = GetCounterPtr(_src);
 
 		AddRef();
 	}
@@ -49,8 +59,8 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Destructor
 	//----------------------------------------------------------------------
-	template <typename Type>
-	SharedPtr<Type>::~SharedPtr()
+	template <typename Type, typename ReleaseFunc>
+	SharedPtr<Type, ReleaseFunc>::~SharedPtr()
 	{
 		Release();
 	}
@@ -59,8 +69,8 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Private Functions
 	//----------------------------------------------------------------------
-	template <typename Type>
-	void SharedPtr<Type>::Reset(Type* _ptr)
+	template <typename Type, typename ReleaseFunc>
+	void SharedPtr<Type, ReleaseFunc>::ResetResource(Type* _ptr)
 	{
 		Release();	// 既に所有しているポインタの所有権は手放す.
 
@@ -70,39 +80,46 @@ namespace Lib
 		AddRef();
 	}
 
-	template <typename Type>
-	Type* SharedPtr<Type>::GetPtr()
+	template <typename Type, typename ReleaseFunc>
+	Type* SharedPtr<Type, ReleaseFunc>::GetResource()
 	{
 		return m_Ptr;	// 管理するポインタを返す.
 	}
 
-	template <typename Type>
-	Type** SharedPtr<Type>::GetPtrPtr()
+	template <typename Type, typename ReleaseFunc>
+	Type** SharedPtr<Type, ReleaseFunc>::GetResourceAddress()
 	{
 		return &m_Ptr;	// 管理するポインタのアドレスを返す.
 	}
 
-	template <typename Type>
-	int SharedPtr<Type>::GetCounter()
+	template <typename Type, typename ReleaseFunc>
+	int SharedPtr<Type, ReleaseFunc>::GetRefCounter()
 	{
 		return *m_pRefCount;
 	}
 
-	template <typename Type>
-	void SharedPtr<Type>::AddRef()
+	template <typename Type, typename ReleaseFunc>
+	int* SharedPtr<Type, ReleaseFunc>::GetRefCounterPtr()
+	{
+		return m_pRefCount;
+	}
+
+	template <typename Type, typename ReleaseFunc>
+	void SharedPtr<Type, ReleaseFunc>::AddRef()
 	{
 		(*m_pRefCount)++;
 	}
 
-	template <typename Type>
-	void SharedPtr<Type>::Release()
+	template <typename Type, typename ReleaseFunc>
+	void SharedPtr<Type, ReleaseFunc>::Release()
 	{
 		(*m_pRefCount)--;
 
 		if ((*m_pRefCount) == 0)
 		{
 			// 参照カウンタが0なら解放処理を行う.
-			SafeDelete(m_Ptr);
+			ReleaseFunc Functor;
+			Functor(m_Ptr);
 			SafeDelete(m_pRefCount);
 		}
 
@@ -115,36 +132,42 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Friend Functions
 	//----------------------------------------------------------------------
-	template <typename Type>
-	void Reset(SharedPtr<Type>& _ptr, Type* _src)
+	template <typename Type, typename ReleaseFunc>
+	void Reset(SharedPtr<Type, ReleaseFunc>& _ptr, Type* _src)
 	{
-		_ptr.Reset(_src);
+		_ptr.ResetResource(_src);
 	}
 
-	template <typename Type>
-	Type* GetPtr(SharedPtr<Type>& _ptr)
+	template <typename Type, typename ReleaseFunc>
+	Type* GetPtr(SharedPtr<Type, ReleaseFunc>& _ptr)
 	{
-		return _ptr.GetPtr();
+		return _ptr.GetResource();
 	}
 
-	template <typename Type>
-	Type** GetPtrPtr(SharedPtr<Type>& _ptr)
+	template <typename Type, typename ReleaseFunc>
+	Type** GetPtrPtr(SharedPtr<Type, ReleaseFunc>& _ptr)
 	{
-		return _ptr.GetPtrPtr();
+		return _ptr.GetResourceAddress();
 	}
 
-	template <typename Type>
-	int GetCounter(SharedPtr<Type>& _ptr)
+	template <typename Type, typename ReleaseFunc>
+	int GetCounter(SharedPtr<Type, ReleaseFunc>& _ptr)
 	{
-		return _ptr.GetCounter();
+		return _ptr.GetRefCounter();
 	}
 
-	template <typename Type, typename CreateFunctor, typename... Args>
-	SharedPtr<Type> CreateSharedPtr(Args... _args)
+	template <typename Type, typename ReleaseFunc>
+	int* GetCounterPtr(SharedPtr<Type, ReleaseFunc>& _ptr)
 	{
-		CreateFunctor<Type, Args...> Functor;
+		return _ptr.GetRefCounterPtr();
+	}
+
+	template <typename Type, typename CreateFunc, typename ReleaseFunc, typename... Args>
+	SharedPtr<Type, ReleaseFunc> CreateSharedPtr(Args... _args)
+	{
+		CreateFunc Functor;
 		Type* pType = Functor(_args...);
-		SharedPtr<Type> pSmartPtr(pType);
+		SharedPtr<Type, ReleaseFunc> pSmartPtr(pType);
 
 		return pSmartPtr;
 	}

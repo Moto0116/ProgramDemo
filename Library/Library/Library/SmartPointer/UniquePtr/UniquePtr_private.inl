@@ -10,8 +10,8 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Constructor
 	//----------------------------------------------------------------------
-	template <typename Type>
-	UniquePtr<Type>::UniquePtr(Type* _ptr) :
+	template <typename Type, typename ReleaseFunc>
+	UniquePtr<Type, ReleaseFunc>::UniquePtr(Type* _ptr) :
 		m_Ptr(_ptr)
 	{
 	}
@@ -20,20 +20,29 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Move Constructor
 	//----------------------------------------------------------------------
-	template <typename Type>
-	UniquePtr<Type>::UniquePtr(UniquePtr<Type>&& _src)
+	template <typename Type, typename ReleaseFunc>
+	UniquePtr<Type, ReleaseFunc>::UniquePtr(UniquePtr<Type, ReleaseFunc>&& _src)
 	{
 		m_Ptr = _src.m_Ptr;
 
 		_src.m_Ptr = nullptr;	// 所有権を放棄.
 	}
 
+	template <typename Type, typename ReleaseFunc>
+	template <typename MoveType, typename MoveReleaseFunc>
+	UniquePtr<Type, ReleaseFunc>::UniquePtr(UniquePtr<MoveType, MoveReleaseFunc>&& _src)
+	{
+		m_Ptr = GetPtr(_src);
+
+		(*GetPtrPtr(_src)) = nullptr;	// 所有権を放棄.
+	}
+
 
 	//----------------------------------------------------------------------
 	// Destructor
 	//----------------------------------------------------------------------
-	template <typename Type>
-	UniquePtr<Type>::~UniquePtr()
+	template <typename Type, typename ReleaseFunc>
+	UniquePtr<Type, ReleaseFunc>::~UniquePtr()
 	{
 		Release();
 	}
@@ -42,62 +51,62 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Private Functions
 	//----------------------------------------------------------------------
-	template <typename Type>
-	void UniquePtr<Type>::Reset(Type* _ptr)
+	template <typename Type, typename ReleaseFunc>
+	void UniquePtr<Type, ReleaseFunc>::ResetResource(Type* _ptr)
 	{
 		Release();	// 既に所有しているポインタは解放.
 
 		m_Ptr = _ptr;
 	}
 
-	template <typename Type>
-	Type* UniquePtr<Type>::GetPtr()
+	template <typename Type, typename ReleaseFunc>
+	Type* UniquePtr<Type, ReleaseFunc>::GetResource()
 	{
 		return m_Ptr;
 	}
 
-	template <typename Type>
-	Type** UniquePtr<Type>::GetPtrPtr()
+	template <typename Type, typename ReleaseFunc>
+	Type** UniquePtr<Type, ReleaseFunc>::GetResourceAddress()
 	{
 		return &m_Ptr;
 	}
 
-	template <typename Type>
-	void UniquePtr<Type>::Release()
+	template <typename Type, typename ReleaseFunc>
+	void UniquePtr<Type, ReleaseFunc>::Release()
 	{
-		SafeDelete(m_Ptr);
+		ReleaseFunc Functor;
+		Functor(m_Ptr);
 	}
 
 
 	//----------------------------------------------------------------------
 	// Friend Functions
 	//----------------------------------------------------------------------
-	template <typename Type>
-	void Reset(UniquePtr<Type>& _ptr, Type* _src)
+	template <typename Type, typename ReleaseFunc>
+	void Reset(UniquePtr<Type, ReleaseFunc>& _ptr, Type* _src)
 	{
-		_ptr.Reset(_src);
+		_ptr.ResetResource(_src);
 	}
 
-	template <typename Type>
-	Type* GetPtr(UniquePtr<Type>& _ptr)
+	template <typename Type, typename ReleaseFunc>
+	Type* GetPtr(UniquePtr<Type, ReleaseFunc>& _ptr)
 	{
-		return _ptr.GetPtr();
+		return _ptr.GetResource();
 	}
 
-	template <typename Type>
-	Type** GetPtrPtr(UniquePtr<Type>& _ptr)
+	template <typename Type, typename ReleaseFunc>
+	Type** GetPtrPtr(UniquePtr<Type, ReleaseFunc>& _ptr)
 	{
-		return _ptr.GetPtrPtr();
+		return _ptr.GetResourceAddress();
 	}
 
-	template <typename Type, typename CreateFunctor, typename... Args>
-	UniquePtr<Type> CreateUniquePtr(Args... _args)
+	template <typename Type, typename CreateFunc, typename ReleaseFunc, typename... Args>
+	UniquePtr<Type, ReleaseFunc> CreateUniquePtr(Args... _args)
 	{
-		CreateFunctor<Type, Args...> Functor;
+		CreateFunc Functor;
 		Type* pType = Functor(_args...);
-		UniquePtr<Type> pSmartPtr(pType);
 
-		return pSmartPtr;
+		return UniquePtr<Type, ReleaseFunc>(pType);
 	}
 }
 
