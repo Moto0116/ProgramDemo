@@ -112,6 +112,24 @@ namespace Lib
 		}
 
 
+		///@todo 引数で受け取るオブジェクトにconstをつけれるようにする.
+		template <typename MoveType, typename MoveReleaseFunc>
+		SharedPtr<Type, ReleaseFunc>& operator = (SharedPtr<MoveType, MoveReleaseFunc>& _src)
+		{
+			// 同じポインタ同士のコピーは行わない.
+			if (m_Ptr == GetPtr(_src)) return (*this);
+
+			Release(); // 既に所有しているポインタは解放.
+
+			m_Ptr = GetPtr(_src);
+			m_pRefCount = GetCounterPtr(_src);
+
+			AddRef();
+
+			return (*this);
+		}
+
+
 		// 単項演算子.
 		Type& operator * ()
 		{
@@ -177,8 +195,8 @@ namespace Lib
 		void Release();
 
 
-		Type*		m_Ptr;				//!< 管理するポインタ.
-		int*		m_pRefCount;		//!< 参照カウンタ.
+		Type*		m_Ptr;			//!< 管理するポインタ.
+		int*		m_pRefCount;	//!< 参照カウンタ.
 
 	};
 
@@ -188,7 +206,9 @@ namespace Lib
 	 * @param[in] _ptr 再設定するポインタ管理オブジェクト
 	 * @param[in] _src 設定するポインタ
 	 */
-	template <typename Type, typename ReleaseFunc>
+	template <
+		typename Type,
+		typename ReleaseFunc>
 	void Reset(SharedPtr<Type, ReleaseFunc>& _ptr, Type* _src = nullptr);
 
 	/**
@@ -197,7 +217,9 @@ namespace Lib
 	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 取得するポインタの管理オブジェクト
 	 */
-	template <typename Type, typename ReleaseFunc>
+	template <
+		typename Type,
+		typename ReleaseFunc>
 	Type* GetPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
 	/**
@@ -206,7 +228,9 @@ namespace Lib
 	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 取得するポインタアドレスの管理オブジェクト
 	 */
-	template <typename Type, typename ReleaseFunc>
+	template <
+		typename Type,
+		typename ReleaseFunc>
 	Type** GetPtrPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
 	/**
@@ -215,7 +239,9 @@ namespace Lib
 	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 取得するポインタ参照数の管理オブジェクト
 	 */
-	template <typename Type, typename ReleaseFunc>
+	template <
+		typename Type,
+		typename ReleaseFunc>
 	int GetCounter(SharedPtr<Type, ReleaseFunc>& _ptr);
 
 	/**
@@ -224,7 +250,9 @@ namespace Lib
 	 * @tparam ReleaseFunc 解放処理ファンクタ
 	 * @param[in] _ptr 取得するポインタ参照数の管理オブジェクト
 	 */
-	template <typename Type, typename ReleaseFunc>
+	template <
+		typename Type,
+		typename ReleaseFunc>
 	int* GetCounterPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
 	/**

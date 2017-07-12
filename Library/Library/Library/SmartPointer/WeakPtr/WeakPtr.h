@@ -44,10 +44,6 @@ namespace Lib
 		template <typename ReleaseFunc>
 		WeakPtr(SharedPtr<Type, ReleaseFunc>& _ptr);
 
-
-		///@todo SharedPtrからの親子変換実装.
-
-
 		/** 
 		 * コンストラクタ
 		 * @param[in] _ptr 設定するポインタを管理するウィークポインタ
