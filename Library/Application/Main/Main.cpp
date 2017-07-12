@@ -30,9 +30,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr,
 	{
 		SharedPtr<Base> SBase1 = SharedPtr<Base>();
 		SharedPtr<A> SA1 = SharedPtr<A>();
-		SharedPtr<Base> SBase2 = SharedPtr<A>();
-		SharedPtr<A> SA2;
-		SA2 = SA1;
+		SharedPtr<Base> SBase2 = Lib::CreateSharedPtr<A>();
+		SharedPtr<A> SA2 = Lib::CreateSharedPtr<A>();
 		SBase1 = SA1;
 
 		UniquePtr<Base> UBase1 = UniquePtr<Base>();
@@ -44,6 +43,9 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr,
 		{
 			SharedPtr<A> SA3 = SA1;
 			SharedPtr<Base> SBase3 = SA1;
+
+			SharedPtr<A> SA4 = SA2;
+			SharedPtr<Base> SBase4 = SA2;
 		}
 	}
 
