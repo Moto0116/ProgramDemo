@@ -43,6 +43,8 @@ namespace Lib
 		m_pRefCount = _src.m_pRefCount;
 
 		AddRef();
+
+		Reset(_src);	//!< 右辺値が持つ所有権は放棄.
 	}
 
 	template <typename Type, typename ReleaseFunc>
@@ -53,6 +55,8 @@ namespace Lib
 		m_pRefCount = GetCounterPtr(_src);
 
 		AddRef();
+
+		Reset(_src);	//!< 右辺値が持つ所有権は放棄.
 	}
 
 
@@ -165,6 +169,7 @@ namespace Lib
 	template <typename Type, typename CreateFunc, typename ReleaseFunc, typename... Args>
 	SharedPtr<Type, ReleaseFunc> CreateSharedPtr(Args... _args)
 	{
+		// 生成ファンクタからオブジェクトを生成.
 		CreateFunc Functor;
 		Type* pType = Functor(_args...);
 		SharedPtr<Type, ReleaseFunc> pSmartPtr(pType);

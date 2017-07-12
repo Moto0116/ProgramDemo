@@ -76,7 +76,7 @@ namespace Lib
 		// キャスト.
 		explicit operator bool()
 		{
-			return m_Ptr != NULL;
+			return m_Ptr != nullptr;
 		}
 
 
