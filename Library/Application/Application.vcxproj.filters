@@ -17,6 +17,69 @@
     <Filter Include="Main\Application\Scene\GameScene">
       <UniqueIdentifier>{42dac0f4-4d82-410d-84b2-777640ce23fd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager">
+      <UniqueIdentifier>{aa5c5b39-71c1-4ced-9476-1b8381f49609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\Task">
+      <UniqueIdentifier>{172b81ca-9352-4e5f-88c5-fa7abc833807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask">
+      <UniqueIdentifier>{9b1305c2-8aa5-472c-b19c-904321328c3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\Task\DepthDrawTask">
+      <UniqueIdentifier>{7b37e18a-2efa-42ba-98f7-6aece62ce971}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\Task\MapDrawTask">
+      <UniqueIdentifier>{5b55a56a-a22f-4166-8c82-854e81e49990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask">
+      <UniqueIdentifier>{33561726-7c66-46a7-8968-d36e6f91312c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{b53ada98-ccc5-4854-ae51-d49a9d5753c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Effect">
+      <UniqueIdentifier>{ce74e9f2-8fd9-482c-a2a9-cd9497c0b771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager">
+      <UniqueIdentifier>{8dff7037-2230-4868-a511-ed6b0c648de3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground">
+      <UniqueIdentifier>{6de46100-08a8-4a74-b654-637413f27bc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky">
+      <UniqueIdentifier>{bd46f51a-c317-48db-9a09-08613259f1d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain">
+      <UniqueIdentifier>{a333fd1b-4704-48fa-8565-5799855e0803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\House">
+      <UniqueIdentifier>{77b9cb53-db0c-43c3-ba4a-523d73272a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\House\Smoke">
+      <UniqueIdentifier>{927da891-0a00-4f30-a4bf-6a3fb40ededa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap">
+      <UniqueIdentifier>{38f09d87-2124-4a6d-b6a6-8d64f4125acf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\MainLight">
+      <UniqueIdentifier>{76bb320e-90ce-474f-bfa9-730611b62c53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera">
+      <UniqueIdentifier>{24e5b97d-2acd-4ce4-8387-efb9a2f168e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\Rain">
+      <UniqueIdentifier>{b47417fd-b3bd-41e4-b847-82dc6bd0380c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\Water">
+      <UniqueIdentifier>{47f1d5c8-9590-4357-9c22-0fb365740a78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Object2DBase">
+      <UniqueIdentifier>{70e6f5e9-5dad-4461-a391-ca1e018df48f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Object3DBase">
+      <UniqueIdentifier>{5f00f2c6-ce7a-4c05-a1a3-c1543a3d1730}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main\Main.cpp">
@@ -28,24 +91,60 @@
     <ClCompile Include="Main\Application\Scene\GameScene\GameScene.cpp">
       <Filter>Main\Application\Scene\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="Main\Object3DBase\Object3DBase.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\House.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.cpp" />
-    <ClCompile Include="Main\Object2DBase\Object2DBase.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Rain\Rain.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Water\Water.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\FieldManager.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\Smoke\Smoke.cpp" />
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.cpp">
+      <Filter>Main\Application\Scene\GameScene\Task\CubeMapDrawTask</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.cpp">
+      <Filter>Main\Application\Scene\GameScene\Task\DepthDrawTask</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.cpp">
+      <Filter>Main\Application\Scene\GameScene\Task\MapDrawTask</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.cpp">
+      <Filter>Main\Application\Scene\GameScene\Task\ReflectMapDrawTask</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\FieldManager.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\FieldManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\House.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\House</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\House\Smoke\Smoke.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\House\Smoke</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\MainCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\MainLight</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Rain\Rain.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\Rain</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Water\Water.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Object3DBase\Object3DBase.cpp">
+      <Filter>Main\Object3DBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Main\Object2DBase\Object2DBase.cpp">
+      <Filter>Main\Object2DBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\Application\Application.h">
@@ -54,41 +153,109 @@
     <ClInclude Include="Main\Application\Scene\GameScene\GameScene.h">
       <Filter>Main\Application\Scene\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="Main\Object3DBase\Object3DBase.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\House.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.h" />
-    <ClInclude Include="Main\Object2DBase\Object2DBase.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Rain\Rain.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Water\Water.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\FieldManager.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.h" />
-    <ClInclude Include="Main\Application\MyDefine.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\Smoke\Smoke.h" />
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.h">
+      <Filter>Main\Application\Scene\GameScene\Task\CubeMapDrawTask</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h">
+      <Filter>Main\Application\Scene\GameScene\Task\DepthDrawTask</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.h">
+      <Filter>Main\Application\Scene\GameScene\Task\MapDrawTask</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.h">
+      <Filter>Main\Application\Scene\GameScene\Task\ReflectMapDrawTask</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\FieldManager.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\FieldManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain\Mountain.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\FieldManager\Mountain</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground\Ground.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\FieldManager\Ground</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\House.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\House</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\House\Smoke\Smoke.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\House\Smoke</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MiniMap\MiniMap.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainCamera\MainCamera.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\MainCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\MainLight\MainLight.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\MainLight</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\ObjectManager.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Rain\Rain.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\Rain</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Water\Water.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Object3DBase\Object3DBase.h">
+      <Filter>Main\Object3DBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Object2DBase\Object2DBase.h">
+      <Filter>Main\Object2DBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Main\Application\MyDefine.h">
+      <Filter>Main\Application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resource\Effect\DefaultEffect.fx" />
-    <FxCompile Include="Resource\Effect\DepthShadow.fx" />
-    <FxCompile Include="Resource\Effect\MiniMap.fx" />
-    <FxCompile Include="Resource\Effect\GroundEffect.fx" />
-    <FxCompile Include="Resource\Effect\MountainEffect.fx" />
-    <FxCompile Include="Resource\Effect\SkyEffect.fx" />
-    <FxCompile Include="Resource\Effect\MainLight.fx" />
-    <FxCompile Include="Resource\Effect\CubeMap.fx" />
-    <FxCompile Include="Resource\Effect\Rain.fx" />
-    <FxCompile Include="Resource\Effect\Smoke.fx" />
-    <FxCompile Include="Resource\Effect\Wave.fx" />
-    <FxCompile Include="Resource\Effect\WaterCube.fx" />
-    <FxCompile Include="Resource\Effect\WaterReflect.fx" />
-    <FxCompile Include="Resource\Effect\ReflectMap.fx" />
-    <FxCompile Include="Resource\Effect\Compute.fx" />
+    <FxCompile Include="Resource\Effect\Compute.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\CubeMap.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\DefaultEffect.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\DepthShadow.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\GroundEffect.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\MiniMap.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\MainLight.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\MountainEffect.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\Rain.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\ReflectMap.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\SkyEffect.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\Smoke.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\WaterCube.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\WaterReflect.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="Resource\Effect\Wave.fx">
+      <Filter>Resource\Effect</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

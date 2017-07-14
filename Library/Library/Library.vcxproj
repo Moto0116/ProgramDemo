@@ -102,6 +102,9 @@
     <ClInclude Include="Library\SmartPointer\SmartPointer.h" />
     <ClInclude Include="Library\SmartPointer\UniquePtr\UniquePtr.h" />
     <ClInclude Include="Library\SmartPointer\WeakPtr\WeakPtr.h" />
+    <ClInclude Include="Library\Math\Vector2\Vector2.h" />
+    <ClInclude Include="Library\Math\Vector3\Vector3.h" />
+    <ClInclude Include="Library\Math\Vector4\Vector4.h" />
     <None Include="Library\EventManager\EventManager_private.inl" />
     <ClInclude Include="Library\InputDeviceManager\GamePad\GamePad.h" />
     <ClInclude Include="Library\InputDeviceManager\KeyDevice\KeyDevice.h" />
@@ -113,7 +116,6 @@
     <ClInclude Include="Library\Debugger\Debugger.h" />
     <ClInclude Include="Library\InputDeviceManager\InputDeviceManager.h" />
     <ClInclude Include="Library\Math\Math.h" />
-    <ClInclude Include="Library\Math\Vector\Vector.h" />
     <None Include="Library\GameDataManager\GameDataManager_private.inl" />
     <ClInclude Include="Library\TaskManager\TaskBase\DrawTask\DrawTask.h" />
     <ClInclude Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.h" />
@@ -171,7 +173,6 @@
     <ClCompile Include="Library\Debugger\Debugger.cpp" />
     <ClCompile Include="Library\InputDeviceManager\InputDeviceManager.cpp" />
     <ClCompile Include="Library\Math\Math.cpp" />
-    <ClCompile Include="Library\Math\Vector\Vector.cpp" />
     <ClCompile Include="Library\TaskManager\TaskBase\DrawTask\DrawTask.cpp" />
     <ClCompile Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.cpp" />
     <ClCompile Include="Library\TaskManager\TaskManager.cpp" />
@@ -197,6 +198,9 @@
     <ClCompile Include="Library\SmartPointer\UniquePtr\UniquePtr.cpp" />
     <ClCompile Include="Library\SmartPointer\SharedPtr\SharedPtr.cpp" />
     <ClCompile Include="Library\SmartPointer\WeakPtr\WeakPtr.cpp" />
+    <ClCompile Include="Library\Math\Vector2\Vector2.cpp" />
+    <ClCompile Include="Library\Math\Vector3\Vector3.cpp" />
+    <ClCompile Include="Library\Math\Vector4\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Library\DirectX11\Font\Effect\Font.fx">

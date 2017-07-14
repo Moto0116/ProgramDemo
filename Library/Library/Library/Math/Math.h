@@ -16,7 +16,9 @@
 // Include
 //----------------------------------------------------------------------
 #include <Windows.h>
-#include "Vector\Vector.h"
+#include "Vector2\Vector2.h"
+#include "Vector3\Vector3.h"
+#include "Vector4\Vector4.h"
 
 
 namespace Lib
