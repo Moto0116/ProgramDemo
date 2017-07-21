@@ -133,7 +133,7 @@ namespace Lib
 		{
 			// 参照カウンタが0なら解放処理を行う.
 			ReleaseFunc Functor;
-			Functor(m_Ptr);
+			Functor.Release(m_Ptr);
 			SafeDelete(m_pRefCount);
 		}
 
@@ -181,7 +181,7 @@ namespace Lib
 	{
 		// 生成ファンクタからオブジェクトを生成.
 		CreateFunc Functor;
-		Type* pType = Functor(_args...);
+		Type* pType = Functor.Create(_args...);
 		SharedPtr<Type, ReleaseFunc> pSmartPtr(pType);
 
 		return pSmartPtr;

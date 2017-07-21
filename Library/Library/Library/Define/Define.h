@@ -78,7 +78,7 @@ struct DefaultCreate
 {
 public:
 	template <typename... Args>
-	Type* operator()(Args... _args) const
+	Type* Create(Args... _args) const
 	{
 		return new Type(_args...);
 	}
@@ -92,7 +92,7 @@ template <typename Type>
 struct DefaultDelete
 {
 public:
-	void operator()(Type*& _type) const
+	void Release(Type*& _type) const
 	{
 		delete _type;
 		_type = nullptr;

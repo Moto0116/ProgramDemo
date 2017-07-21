@@ -75,7 +75,7 @@ namespace Lib
 	void UniquePtr<Type, ReleaseFunc>::Release()
 	{
 		ReleaseFunc Functor;
-		Functor(m_Ptr);
+		Functor.Release(m_Ptr);
 	}
 
 
@@ -104,7 +104,7 @@ namespace Lib
 	UniquePtr<Type, ReleaseFunc> CreateUniquePtr(Args... _args)
 	{
 		CreateFunc Functor;
-		Type* pType = Functor(_args...);
+		Type* pType = Functor.Create(_args...);
 
 		return UniquePtr<Type, ReleaseFunc>(pType);
 	}
