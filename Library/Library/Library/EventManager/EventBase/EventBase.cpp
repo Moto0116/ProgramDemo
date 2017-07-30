@@ -13,18 +13,11 @@
 namespace Lib
 {
 	//----------------------------------------------------------------------
-	// Static Private Variables
-	//----------------------------------------------------------------------
-	unsigned int EventBase::m_EventBaseCount = 0;
-
-
-	//----------------------------------------------------------------------
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
-	EventBase::EventBase()
+	EventBase::EventBase(unsigned int _eventID)
 	{
-		m_EventBaseCount++;	// オーバーフローは考慮しない.
-		m_EventID = m_EventBaseCount;
+		m_EventID = _eventID;
 	}
 
 	EventBase::~EventBase()

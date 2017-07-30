@@ -41,9 +41,6 @@
     <Filter Include="Library\EventManagerBase">
       <UniqueIdentifier>{99776e76-b5bc-45a4-9e2a-365d05cd1c2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Library\EventManagerBase\EventListenerBase">
-      <UniqueIdentifier>{e65f01cc-3869-4bce-8287-f549dc0049b6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Library\EventManagerBase\EventBase">
       <UniqueIdentifier>{7ec68a45-7e99-4618-9ab6-d5c870954323}</UniqueIdentifier>
     </Filter>
@@ -191,6 +188,9 @@
     <Filter Include="Library\DirectX11\FbxFileManager\FbxModel">
       <UniqueIdentifier>{040d6c05-40fd-42da-9b25-abb3fa8ceee4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library\EventManagerBase\EventListener">
+      <UniqueIdentifier>{e65f01cc-3869-4bce-8287-f549dc0049b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\Debugger\Debugger.cpp">
@@ -281,7 +281,7 @@
       <Filter>Library\ObjectBase</Filter>
     </ClCompile>
     <ClCompile Include="Library\EventManager\EventListener\EventListener.cpp">
-      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
+      <Filter>Library\EventManagerBase\EventListener</Filter>
     </ClCompile>
     <ClCompile Include="Library\BinaryFile\BinaryFile.cpp">
       <Filter>Library\BinaryFile</Filter>
@@ -448,7 +448,7 @@
       <Filter>Library\ObjectBase</Filter>
     </ClInclude>
     <ClInclude Include="Library\EventManager\EventListener\EventListener.h">
-      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
+      <Filter>Library\EventManagerBase\EventListener</Filter>
     </ClInclude>
     <ClInclude Include="Library\BinaryFile\BinaryFile.h">
       <Filter>Library\BinaryFile</Filter>

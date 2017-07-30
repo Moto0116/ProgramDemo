@@ -41,7 +41,7 @@ namespace Lib
 		 * イベントメッセージを受け取る関数
 		 * @param[in] _pEvent 受け取るイベント
 		 */
-		virtual void EventMessage(EventBase* _pEvent);
+		void EventMessage(EventBase* _pEvent);
 
 		/**
 		 * EventListenerのIDを取得する関数
@@ -51,7 +51,6 @@ namespace Lib
 		{
 			return m_EventListenerID;
 		}
-
 
 	private:
 		static unsigned int				m_EventListenerCount;	//!< イベントリスナオブジェクトのカウント変数.

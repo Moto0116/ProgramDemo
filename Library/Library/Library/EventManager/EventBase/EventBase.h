@@ -18,7 +18,7 @@ namespace Lib
 		/**
 		 * コンストラクタ
 		 */
-		EventBase();
+		EventBase(unsigned int _eventID);
 
 		/**
 		 * デストラクタ
@@ -34,9 +34,7 @@ namespace Lib
 			return m_EventID;
 		}
 
-
 	private:
-		static unsigned int m_EventBaseCount;	//!< イベントオブジェクトのカウント変数.
 		unsigned int		m_EventID;			//!< イベントオブジェクトのユニークID.
 
 	};

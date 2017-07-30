@@ -44,7 +44,7 @@ namespace Lib
 		{
 			if ((*itr)->GetEventListenerID() == _pEventListener->GetEventListenerID())
 			{
-				m_pEventListener.erase(itr);
+				m_pEventListener.erase(itr);	// IDが一致していればリストから削除.
 				break;
 			}
 		}

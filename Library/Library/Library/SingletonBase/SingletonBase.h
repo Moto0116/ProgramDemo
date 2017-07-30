@@ -69,7 +69,7 @@ namespace Lib
 		inline virtual ~SingletonBase();
 	
 	private:
-		DISALLOW_COPY_AND_ASSIGN(SingletonBase);
+		DISALLOW_COPY_AND_ASSIGN(SingletonBase<Type>);
 
 	};
 }
