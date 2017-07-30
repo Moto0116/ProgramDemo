@@ -1,5 +1,5 @@
 ﻿/**
- * @file	EventListener.cpp
+ * @file	EventListenerBase.cpp
  * @brief	イベント受信クラス実装
  * @author	morimoto
  */
@@ -7,7 +7,7 @@
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
-#include "EventListener.h"
+#include "EventListenerBase.h"
 
 
 namespace Lib
@@ -15,19 +15,19 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Static Private Variables
 	//----------------------------------------------------------------------
-	unsigned int EventListener::m_EventListenerCount = 0;
+	unsigned int EventListenerBase::m_EventListenerCount = 0;
 
 
 	//----------------------------------------------------------------------
 	// Constructor	Destructor
 	//----------------------------------------------------------------------
-	EventListener::EventListener()
+	EventListenerBase::EventListenerBase()
 	{
 		m_EventListenerCount++;	// オーバーフローは考慮しない.
 		m_EventListenerID = m_EventListenerCount;
 	}
 
-	EventListener::~EventListener()
+	EventListenerBase::~EventListenerBase()
 	{
 	}
 
@@ -35,13 +35,7 @@ namespace Lib
 	//----------------------------------------------------------------------
 	// Public Functions
 	//----------------------------------------------------------------------
-	void EventListener::RegistryFunc(std::function<void(EventBase*)>* _pFunc)
+	void EventListenerBase::EventMessage(EventBase* _pEvent)
 	{
-		m_Func = *_pFunc;
-	}
-
-	void EventListener::EventMessage(EventBase* _pEvent)
-	{
-		m_Func(_pEvent);
 	}
 }

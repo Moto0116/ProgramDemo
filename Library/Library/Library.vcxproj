@@ -112,7 +112,7 @@
     <ClInclude Include="Library\GameDataManager\GameDataManager.h" />
     <ClInclude Include="Library\EventManager\EventBase\EventBase.h" />
     <ClInclude Include="Library\EventManager\EventManager.h" />
-    <ClInclude Include="Library\EventManager\EventListener\EventListener.h" />
+    <ClInclude Include="Library\EventManager\EventListenerBase\EventListenerBase.h" />
     <ClInclude Include="Library\Debugger\Debugger.h" />
     <ClInclude Include="Library\InputDeviceManager\InputDeviceManager.h" />
     <ClInclude Include="Library\Math\Math.h" />
@@ -169,7 +169,7 @@
     <ClCompile Include="Library\GameDataManager\GameDataManager.cpp" />
     <ClCompile Include="Library\EventManager\EventBase\EventBase.cpp" />
     <ClCompile Include="Library\EventManager\EventManager.cpp" />
-    <ClCompile Include="Library\EventManager\EventListener\EventListener.cpp" />
+    <ClCompile Include="Library\EventManager\EventListenerBase\EventListenerBase.cpp" />
     <ClCompile Include="Library\Debugger\Debugger.cpp" />
     <ClCompile Include="Library\InputDeviceManager\InputDeviceManager.cpp" />
     <ClCompile Include="Library\Math\Math.cpp" />

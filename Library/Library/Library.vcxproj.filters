@@ -188,7 +188,7 @@
     <Filter Include="Library\DirectX11\FbxFileManager\FbxModel">
       <UniqueIdentifier>{040d6c05-40fd-42da-9b25-abb3fa8ceee4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Library\EventManagerBase\EventListener">
+    <Filter Include="Library\EventManagerBase\EventListenerBase">
       <UniqueIdentifier>{e65f01cc-3869-4bce-8287-f549dc0049b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -268,20 +268,11 @@
     <ClCompile Include="Library\DirectX11\GraphicsDevice\GraphicsDevice.cpp">
       <Filter>Library\DirectX11\GraphicsDevice</Filter>
     </ClCompile>
-    <ClCompile Include="Library\EventManager\EventBase\EventBase.cpp">
-      <Filter>Library\EventManagerBase\EventBase</Filter>
-    </ClCompile>
-    <ClCompile Include="Library\EventManager\EventManager.cpp">
-      <Filter>Library\EventManagerBase</Filter>
-    </ClCompile>
     <ClCompile Include="Library\DirectX11\TextureManager\ITexture\ITexture.cpp">
       <Filter>Library\DirectX11\TextureManager\ITexture</Filter>
     </ClCompile>
     <ClCompile Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.cpp">
       <Filter>Library\ObjectBase</Filter>
-    </ClCompile>
-    <ClCompile Include="Library\EventManager\EventListener\EventListener.cpp">
-      <Filter>Library\EventManagerBase\EventListener</Filter>
     </ClCompile>
     <ClCompile Include="Library\BinaryFile\BinaryFile.cpp">
       <Filter>Library\BinaryFile</Filter>
@@ -354,6 +345,15 @@
     </ClCompile>
     <ClCompile Include="Library\DirectX11\FbxFileManager\FbxModel\FbxModel.cpp">
       <Filter>Library\DirectX11\FbxFileManager\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\EventManager\EventBase\EventBase.cpp">
+      <Filter>Library\EventManagerBase\EventBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\EventManager\EventManager.cpp">
+      <Filter>Library\EventManagerBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Library\EventManager\EventListenerBase\EventListenerBase.cpp">
+      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -435,20 +435,11 @@
     <ClInclude Include="Library\DirectX11\GraphicsDevice\GraphicsDevice.h">
       <Filter>Library\DirectX11\GraphicsDevice</Filter>
     </ClInclude>
-    <ClInclude Include="Library\EventManager\EventBase\EventBase.h">
-      <Filter>Library\EventManagerBase\EventBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\EventManager\EventManager.h">
-      <Filter>Library\EventManagerBase</Filter>
-    </ClInclude>
     <ClInclude Include="Library\DirectX11\TextureManager\ITexture\ITexture.h">
       <Filter>Library\DirectX11\TextureManager\ITexture</Filter>
     </ClInclude>
     <ClInclude Include="Library\ObjectManagerBase\ObjectBase\ObjectBase.h">
       <Filter>Library\ObjectBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Library\EventManager\EventListener\EventListener.h">
-      <Filter>Library\EventManagerBase\EventListener</Filter>
     </ClInclude>
     <ClInclude Include="Library\BinaryFile\BinaryFile.h">
       <Filter>Library\BinaryFile</Filter>
@@ -524,6 +515,15 @@
     </ClInclude>
     <ClInclude Include="Library\DirectX11\FbxFileManager\FbxModel\FbxModel.h">
       <Filter>Library\DirectX11\FbxFileManager\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\EventManager\EventBase\EventBase.h">
+      <Filter>Library\EventManagerBase\EventBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\EventManager\EventManager.h">
+      <Filter>Library\EventManagerBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Library\EventManager\EventListenerBase\EventListenerBase.h">
+      <Filter>Library\EventManagerBase\EventListenerBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
