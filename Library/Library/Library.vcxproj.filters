@@ -556,8 +556,5 @@
     <None Include="Library\GameDataManager\GameDataManager_private.inl">
       <Filter>Library\GameDataManager</Filter>
     </None>
-    <None Include="Library\EventManager\EventManager_private.inl">
-      <Filter>Library\EventManagerBase</Filter>
-    </None>
   </ItemGroup>
 </Project>

@@ -16,35 +16,35 @@
 
 namespace Lib
 {
-	class EventListener;
+	class EventBase;
+	class EventListenerBase;
 
 	/**
 	 * イベント管理基底クラス
 	 * @tparam Event 通知を受けるEventクラス
 	 */
-	template <typename Event>
-	class EventManager : public SingletonBase<EventManager<Event>>
+	class EventManager : public SingletonBase<EventManager>
 	{
 	public:
-		friend SingletonBase<EventManager<Event>>;
+		friend SingletonBase<EventManager>;
 
 		/**
 		 * EventListenerを追加する
 		 * @param[in] _pEventListener 追加するEventListener
 		 */
-		void AddEventListener(EventListener* _pEventListener);
+		void AddEventListener(EventListenerBase* _pEventListener);
 
 		/**
 		 * EventListenerを削除する
 		 * @param[in] _pEventListener 削除するEventListener
 		 */
-		void RemoveEventListener(EventListener* _pEventListener);
+		void RemoveEventListener(EventListenerBase* _pEventListener);
 
 		/**
 		 * イベントを通知する
 		 * @param[in] _pEvent 通知するイベント
 		 */
-		void SendEventMessage(Event* _pEvent);
+		void SendEventMessage(EventBase* _pEvent);
 
 	private:
 		/**
@@ -58,13 +58,10 @@ namespace Lib
 		virtual ~EventManager();
 
 
-		std::vector<EventListener*> m_pEventListener;	//!< イベントリスナを格納するコンテナ.
+		std::vector<EventListenerBase*> m_pEventListener;	//!< イベントリスナを格納するコンテナ.
 
 	};
 }
-
-
-#include "EventManager_private.inl"
 
 
 #endif // !LIB_EVENTMANAGER_H
