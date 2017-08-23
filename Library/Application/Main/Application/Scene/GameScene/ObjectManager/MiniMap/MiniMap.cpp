@@ -109,7 +109,7 @@ void MiniMap::Draw()
 //----------------------------------------------------------------------
 bool MiniMap::CreateConstantBuffer()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	// マップ描画の定数バッファ.
 	D3D11_BUFFER_DESC ConstantBufferDesc;
@@ -120,7 +120,7 @@ bool MiniMap::CreateConstantBuffer()
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, nullptr, &m_pConstantBuffer)))
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBuffer(&ConstantBufferDesc, nullptr, &m_pConstantBuffer)))
 	{
 		OutputErrorLog("定数バッファ生成に失敗しました");
 		return false;
@@ -131,7 +131,7 @@ bool MiniMap::CreateConstantBuffer()
 
 bool MiniMap::CreateTexture()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	// マップテクスチャの生成.
 	D3D11_TEXTURE2D_DESC MapTextureDesc;
@@ -148,7 +148,7 @@ bool MiniMap::CreateTexture()
 	MapTextureDesc.CPUAccessFlags = 0;
 	MapTextureDesc.MiscFlags = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateTexture2D(
 		&MapTextureDesc,
 		nullptr,
 		&m_pMapTexture)))
@@ -157,7 +157,7 @@ bool MiniMap::CreateTexture()
 		return false;
 	}
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateRenderTargetView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateRenderTargetView(
 		m_pMapTexture,
 		nullptr,
 		&m_pRenderTarget)))
@@ -166,7 +166,7 @@ bool MiniMap::CreateTexture()
 		return false;
 	}
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateShaderResourceView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateShaderResourceView(
 		m_pMapTexture,
 		nullptr,
 		&m_pShaderResourceView)))
@@ -190,7 +190,7 @@ bool MiniMap::CreateTexture()
 	DepthStencilDesc.CPUAccessFlags = 0;
 	DepthStencilDesc.MiscFlags = 0;
 
-	if (FAILED(FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
+	if (FAILED(FAILED(pGraphicsDevice->GetDevice()->CreateTexture2D(
 		&DepthStencilDesc,
 		nullptr,
 		&m_pDepthStencilTexture))))
@@ -199,7 +199,7 @@ bool MiniMap::CreateTexture()
 		return false;
 	}
 
-	if (FAILED(FAILED(pGraphicdDevice->GetDevice()->CreateDepthStencilView(
+	if (FAILED(FAILED(pGraphicsDevice->GetDevice()->CreateDepthStencilView(
 		m_pDepthStencilTexture,
 		nullptr,
 		&m_pDepthStencilView))))
@@ -216,10 +216,10 @@ bool MiniMap::CreateTexture()
 	m_ViewPort.MinDepth = 0.0f;
 	m_ViewPort.MaxDepth = 1.0f;
 
-	pGraphicdDevice->SetRenderTarget(&m_pRenderTarget, m_RenderTargetStage);
-	pGraphicdDevice->SetDepthStencil(&m_pDepthStencilView, m_RenderTargetStage);
-	pGraphicdDevice->SetClearColor(m_ClearColor, m_RenderTargetStage);
-	pGraphicdDevice->SetViewPort(&m_ViewPort, m_RenderTargetStage);
+	pGraphicsDevice->SetRenderTarget(&m_pRenderTarget, m_RenderTargetStage);
+	pGraphicsDevice->SetDepthStencil(&m_pDepthStencilView, m_RenderTargetStage);
+	pGraphicsDevice->SetClearColor(m_ClearColor, m_RenderTargetStage);
+	pGraphicsDevice->SetViewPort(&m_ViewPort, m_RenderTargetStage);
 
 	return true;
 }
@@ -282,10 +282,10 @@ bool MiniMap::WriteConstantBuffer()
 
 void MiniMap::MiniMapBeginScene()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 
-	pGraphicdDevice->BeginScene(m_RenderTargetStage);
+	pGraphicsDevice->BeginScene(m_RenderTargetStage);
 
 	// ミニマップ定数バッファの更新と設定.
 	WriteConstantBuffer();

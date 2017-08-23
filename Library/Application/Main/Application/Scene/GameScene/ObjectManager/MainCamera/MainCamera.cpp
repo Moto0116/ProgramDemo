@@ -275,7 +275,7 @@ void MainCamera::Transform()
 
 bool MainCamera::CreateConstantBuffer()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	// カメラの定数バッファ生成.
 	D3D11_BUFFER_DESC ConstantBufferDesc;
@@ -286,7 +286,7 @@ bool MainCamera::CreateConstantBuffer()
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBuffer(
 		&ConstantBufferDesc, 
 		nullptr,
 		&m_pConstantBuffer)))

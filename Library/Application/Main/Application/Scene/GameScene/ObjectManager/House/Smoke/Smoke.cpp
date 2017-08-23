@@ -160,7 +160,7 @@ void Smoke::Update()
 
 void Smoke::Draw()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 	Lib::TextureManager* pTextureManageer = SINGLETON_INSTANCE(Lib::TextureManager);
 	Lib::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
@@ -215,7 +215,7 @@ bool Smoke::CreateTask()
 
 bool Smoke::CreateVertexBuffer()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	VERTEX VertexData[VERTEX_NUM] =
 	{
@@ -246,7 +246,7 @@ bool Smoke::CreateVertexBuffer()
 	ZeroMemory(&ResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	ResourceData.pSysMem = m_pVertexData;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBuffer(
 		&BufferDesc,
 		&ResourceData,
 		&m_pVertexBuffer)))
@@ -277,7 +277,7 @@ bool Smoke::CreateVertexBuffer()
 	ZeroMemory(&InstanceResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	InstanceResourceData.pSysMem = m_pInstanceData;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBuffer(
 		&InstanceBufferDesc,
 		&InstanceResourceData,
 		&m_pInstanceBuffer)))
@@ -323,7 +323,7 @@ bool Smoke::CreateShader()
 
 bool Smoke::CreateVertexLayout()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 	Lib::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
 
 	D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
@@ -337,7 +337,7 @@ bool Smoke::CreateVertexLayout()
 		{ "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateInputLayout(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateInputLayout(
 		InputElementDesc,
 		sizeof(InputElementDesc) / sizeof(InputElementDesc[0]),
 		pShaderManager->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferPointer(),
@@ -353,7 +353,7 @@ bool Smoke::CreateVertexLayout()
 
 bool Smoke::CreateState()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	// ブレンドステートの生成.
 	D3D11_BLEND_DESC BlendDesc;
@@ -368,7 +368,7 @@ bool Smoke::CreateState()
 	BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBlendState(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBlendState(
 		&BlendDesc,
 		&m_pBlendState)))
 	{
@@ -383,7 +383,7 @@ bool Smoke::CreateState()
 	DepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	DepthStencilDesc.StencilEnable = FALSE;
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateDepthStencilState(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateDepthStencilState(
 		&DepthStencilDesc,
 		&m_pDepthStencilState)))
 	{

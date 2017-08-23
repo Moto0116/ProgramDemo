@@ -165,7 +165,7 @@ void Water::Update()
 
 void Water::Draw()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 	Lib::TextureManager* pTextureManager = SINGLETON_INSTANCE(Lib::TextureManager);
 	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
@@ -207,7 +207,7 @@ void Water::Draw()
 		WaveDraw(); // 波マップの描画.
 		BumpDraw();	// 法線マップの描画.
 
-		pGraphicdDevice->SetScene(Lib::GraphicsDevice::BACKBUFFER_TARGET);	// 描画先を設定.
+		pGraphicsDevice->SetScene(Lib::GraphicsDevice::BACKBUFFER_TARGET);	// 描画先を設定.
 
 		pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ReflectVertexShaderIndex), nullptr, 0);
 		pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_ReflectPixelShaderIndex), nullptr, 0);
@@ -245,16 +245,16 @@ void Water::Draw()
 
 void Water::WaveDraw()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
 
 	// 描画先を波マップに変更.
-	pGraphicdDevice->SetRenderTarget(&m_pWaveRenderTarget[m_WaveRenderIndex], m_WaveRenderTargetStage);
-	pGraphicdDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_WaveRenderTargetStage);
-	pGraphicdDevice->SetClearColor(m_WaterClearColor, m_WaveRenderTargetStage);
-	pGraphicdDevice->SetViewPort(&m_ViewPort, m_WaveRenderTargetStage);
-	pGraphicdDevice->BeginScene(m_WaveRenderTargetStage);
+	pGraphicsDevice->SetRenderTarget(&m_pWaveRenderTarget[m_WaveRenderIndex], m_WaveRenderTargetStage);
+	pGraphicsDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_WaveRenderTargetStage);
+	pGraphicsDevice->SetClearColor(m_WaterClearColor, m_WaveRenderTargetStage);
+	pGraphicsDevice->SetViewPort(&m_ViewPort, m_WaveRenderTargetStage);
+	pGraphicsDevice->BeginScene(m_WaveRenderTargetStage);
 
 	// 描画準備.
 	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_WaveVertexShaderIndex), nullptr, 0);
@@ -277,16 +277,16 @@ void Water::WaveDraw()
 
 void Water::BumpDraw()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 	Lib::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
 
 	// 描画先を法線マップに変更.
-	pGraphicdDevice->SetRenderTarget(&m_pBumpRenderTarget, m_BumpRenderTargetStage);
-	pGraphicdDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_BumpRenderTargetStage);
-	pGraphicdDevice->SetClearColor(m_ClearColor, m_BumpRenderTargetStage);
-	pGraphicdDevice->SetViewPort(&m_ViewPort, m_BumpRenderTargetStage);
-	pGraphicdDevice->BeginScene(m_BumpRenderTargetStage);
+	pGraphicsDevice->SetRenderTarget(&m_pBumpRenderTarget, m_BumpRenderTargetStage);
+	pGraphicsDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_BumpRenderTargetStage);
+	pGraphicsDevice->SetClearColor(m_ClearColor, m_BumpRenderTargetStage);
+	pGraphicsDevice->SetViewPort(&m_ViewPort, m_BumpRenderTargetStage);
+	pGraphicsDevice->BeginScene(m_BumpRenderTargetStage);
 
 	// 描画準備.
 	pContext->VSSetShader(pShaderManager->GetVertexShader(m_WaveVertexShaderIndex), nullptr, 0);
@@ -314,7 +314,7 @@ void Water::BumpDraw()
 //----------------------------------------------------------------------
 bool Water::CreateVertexBuffer()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	D3DXVECTOR3 Normal = D3DXVECTOR3(0, 1, 0);
 	D3DXVECTOR3 Tangent = D3DXVECTOR3(1, 0, 0);
@@ -352,7 +352,7 @@ bool Water::CreateVertexBuffer()
 	ZeroMemory(&ResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	ResourceData.pSysMem = m_pVertexData;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBuffer(
 		&BufferDesc,
 		&ResourceData,
 		&m_pVertexBuffer)))
@@ -391,7 +391,7 @@ bool Water::CreateVertexBuffer()
 	ZeroMemory(&WaveResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	WaveResourceData.pSysMem = m_pWaveVertexData;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBuffer(
 		&WaveBufferDesc,
 		&WaveResourceData,
 		&m_pWaveVertexBuffer)))
@@ -471,7 +471,7 @@ bool Water::CreateShader()
 
 bool Water::CreateVertexLayout()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
 
 	D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
@@ -483,7 +483,7 @@ bool Water::CreateVertexLayout()
 		{ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateInputLayout(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateInputLayout(
 		InputElementDesc,
 		sizeof(InputElementDesc) / sizeof(InputElementDesc[0]),
 		pShaderManager->GetCompiledVertexShader(m_CubeVertexShaderIndex)->GetBufferPointer(),
@@ -501,7 +501,7 @@ bool Water::CreateVertexLayout()
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateInputLayout(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateInputLayout(
 		WaveInputElementDesc,
 		sizeof(WaveInputElementDesc) / sizeof(WaveInputElementDesc[0]),
 		pShaderManager->GetCompiledVertexShader(m_WaveVertexShaderIndex)->GetBufferPointer(),
@@ -517,7 +517,7 @@ bool Water::CreateVertexLayout()
 
 bool Water::CreateState()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	// ブレンドステートの生成.
 	D3D11_BLEND_DESC BlendDesc;
@@ -533,7 +533,7 @@ bool Water::CreateState()
 	BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBlendState(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBlendState(
 		&BlendDesc,
 		&m_pBlendState)))
 	{
@@ -548,7 +548,7 @@ bool Water::CreateState()
 	DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	DepthStencilDesc.StencilEnable = FALSE;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateDepthStencilState(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateDepthStencilState(
 		&DepthStencilDesc,
 		&m_pDepthStencilState)))
 	{
@@ -561,7 +561,7 @@ bool Water::CreateState()
 
 bool Water::CreateConstantBuffer()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	// 水の定数バッファ生成.
 	D3D11_BUFFER_DESC WaterConstantBufferDesc;
@@ -572,7 +572,7 @@ bool Water::CreateConstantBuffer()
 	WaterConstantBufferDesc.MiscFlags = 0;
 	WaterConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBuffer(
 		&WaterConstantBufferDesc,
 		nullptr,
 		&m_pConstantBuffer)))
@@ -590,7 +590,7 @@ bool Water::CreateConstantBuffer()
 	CubeMapConstantBufferDesc.MiscFlags = 0;
 	CubeMapConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBuffer(
 		&CubeMapConstantBufferDesc,
 		nullptr, 
 		&m_pCubeMapConstantBuffer)))
@@ -608,7 +608,7 @@ bool Water::CreateConstantBuffer()
 	ReflectMapConstantBufferDesc.MiscFlags = 0;
 	ReflectMapConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateBuffer(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateBuffer(
 		&ReflectMapConstantBufferDesc,
 		nullptr,
 		&m_pReflectMapConstantBuffer)))
@@ -672,7 +672,7 @@ bool Water::CreateTexture()
 
 bool Water::CreateCubeMapTexture()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	// キューブマップテクスチャ.
 	D3D11_TEXTURE2D_DESC CubeTextureDesc;
@@ -689,7 +689,7 @@ bool Water::CreateCubeMapTexture()
 	CubeTextureDesc.CPUAccessFlags = 0;
 	CubeTextureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS | D3D11_RESOURCE_MISC_TEXTURECUBE; // キューブマップ指定.
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateTexture2D(
 		&CubeTextureDesc,
 		nullptr,
 		&m_pCubeTexture)))
@@ -706,7 +706,7 @@ bool Water::CreateCubeMapTexture()
 	CubeRenderTargetDesc.Texture2DArray.MipSlice = 0;
 	CubeRenderTargetDesc.Texture2DArray.ArraySize = 6;	// キューブマップなので6つ.
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateRenderTargetView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateRenderTargetView(
 		m_pCubeTexture,
 		&CubeRenderTargetDesc,
 		&m_pCubeTextureRenderTarget)))
@@ -722,7 +722,7 @@ bool Water::CreateCubeMapTexture()
 	CubeResourceDesc.TextureCube.MipLevels = CubeTextureDesc.MipLevels;
 	CubeResourceDesc.TextureCube.MostDetailedMip = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateShaderResourceView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateShaderResourceView(
 		m_pCubeTexture,
 		&CubeResourceDesc,
 		&m_pCubeTextureResource)))
@@ -746,7 +746,7 @@ bool Water::CreateCubeMapTexture()
 	DepthStencilTextureDesc.CPUAccessFlags = 0;
 	DepthStencilTextureDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateTexture2D(
 		&DepthStencilTextureDesc,
 		nullptr,
 		&m_pDepthStencilTexture)))
@@ -756,7 +756,7 @@ bool Water::CreateCubeMapTexture()
 	}
 
 	// 深度ステンシルビューの生成.
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateDepthStencilView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateDepthStencilView(
 		m_pDepthStencilTexture,
 		nullptr,
 		&m_pDepthStencilView)))
@@ -774,10 +774,10 @@ bool Water::CreateCubeMapTexture()
 	m_ViewPort.MaxDepth = 1.0f;
 
 	// グラフィックデバイスに描画先として深度テクスチャを設定.
-	pGraphicdDevice->SetRenderTarget(&m_pCubeTextureRenderTarget, m_CubeRenderTargetStage);
-	pGraphicdDevice->SetDepthStencil(&m_pDepthStencilView, m_CubeRenderTargetStage);
-	pGraphicdDevice->SetClearColor(m_ClearColor, m_CubeRenderTargetStage);
-	pGraphicdDevice->SetViewPort(&m_ViewPort, m_CubeRenderTargetStage);
+	pGraphicsDevice->SetRenderTarget(&m_pCubeTextureRenderTarget, m_CubeRenderTargetStage);
+	pGraphicsDevice->SetDepthStencil(&m_pDepthStencilView, m_CubeRenderTargetStage);
+	pGraphicsDevice->SetClearColor(m_ClearColor, m_CubeRenderTargetStage);
+	pGraphicsDevice->SetViewPort(&m_ViewPort, m_CubeRenderTargetStage);
 
 
 	D3DXVECTOR3 EyePos = D3DXVECTOR3(0, 0, 0);
@@ -831,7 +831,7 @@ bool Water::CreateCubeMapTexture()
 
 bool Water::CreateWaveMapTexture()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	for (int i = 0; i < WAVE_TEXTURE_NUM; i++)
 	{
@@ -850,7 +850,7 @@ bool Water::CreateWaveMapTexture()
 		WaveMapTextureDesc.CPUAccessFlags = 0;
 		WaveMapTextureDesc.MiscFlags = 0;
 
-		if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
+		if (FAILED(pGraphicsDevice->GetDevice()->CreateTexture2D(
 			&WaveMapTextureDesc,
 			nullptr,
 			&m_pWaveTexture[i])))
@@ -859,7 +859,7 @@ bool Water::CreateWaveMapTexture()
 			return false;
 		}
 
-		if (FAILED(pGraphicdDevice->GetDevice()->CreateRenderTargetView(
+		if (FAILED(pGraphicsDevice->GetDevice()->CreateRenderTargetView(
 			m_pWaveTexture[i],
 			nullptr,
 			&m_pWaveRenderTarget[i])))
@@ -868,7 +868,7 @@ bool Water::CreateWaveMapTexture()
 			return false;
 		}
 
-		if (FAILED(pGraphicdDevice->GetDevice()->CreateShaderResourceView(
+		if (FAILED(pGraphicsDevice->GetDevice()->CreateShaderResourceView(
 			m_pWaveTexture[i],
 			nullptr,
 			&m_pWaveShaderResourceView[i])))
@@ -890,7 +890,7 @@ bool Water::CreateWaveMapTexture()
 		DepthStencilDesc.CPUAccessFlags = 0;
 		DepthStencilDesc.MiscFlags = 0;
 
-		if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
+		if (FAILED(pGraphicsDevice->GetDevice()->CreateTexture2D(
 			&DepthStencilDesc,
 			nullptr,
 			&m_pWaveDepthStencilTexture[i])))
@@ -899,7 +899,7 @@ bool Water::CreateWaveMapTexture()
 			return false;
 		}
 
-		if (FAILED(pGraphicdDevice->GetDevice()->CreateDepthStencilView(
+		if (FAILED(pGraphicsDevice->GetDevice()->CreateDepthStencilView(
 			m_pWaveDepthStencilTexture[i],
 			nullptr,
 			&m_pWaveDepthStencilView[i])))
@@ -910,18 +910,18 @@ bool Water::CreateWaveMapTexture()
 	}
 
 	// 波テクスチャをグラフィックデバイスに設定.
-	pGraphicdDevice->SetRenderTarget(&m_pWaveRenderTarget[m_WaveRenderIndex], m_WaveRenderTargetStage);
-	pGraphicdDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_WaveRenderTargetStage);
-	pGraphicdDevice->SetClearColor(m_WaterClearColor, m_WaveRenderTargetStage);
-	pGraphicdDevice->SetViewPort(&m_ViewPort, m_WaveRenderTargetStage);
-	pGraphicdDevice->BeginScene(m_WaveRenderTargetStage);
+	pGraphicsDevice->SetRenderTarget(&m_pWaveRenderTarget[m_WaveRenderIndex], m_WaveRenderTargetStage);
+	pGraphicsDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_WaveRenderTargetStage);
+	pGraphicsDevice->SetClearColor(m_WaterClearColor, m_WaveRenderTargetStage);
+	pGraphicsDevice->SetViewPort(&m_ViewPort, m_WaveRenderTargetStage);
+	pGraphicsDevice->BeginScene(m_WaveRenderTargetStage);
 
 	// 2つ目の波テクスチャもグラフィックデバイスに設定.
-	pGraphicdDevice->SetRenderTarget(&m_pWaveRenderTarget[m_WaveRenderIndex ^ 1], m_WaveRenderTargetStage);
-	pGraphicdDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex ^ 1], m_WaveRenderTargetStage);
-	pGraphicdDevice->SetClearColor(m_WaterClearColor, m_WaveRenderTargetStage);
-	pGraphicdDevice->SetViewPort(&m_ViewPort, m_WaveRenderTargetStage);
-	pGraphicdDevice->BeginScene(m_WaveRenderTargetStage);
+	pGraphicsDevice->SetRenderTarget(&m_pWaveRenderTarget[m_WaveRenderIndex ^ 1], m_WaveRenderTargetStage);
+	pGraphicsDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex ^ 1], m_WaveRenderTargetStage);
+	pGraphicsDevice->SetClearColor(m_WaterClearColor, m_WaveRenderTargetStage);
+	pGraphicsDevice->SetViewPort(&m_ViewPort, m_WaveRenderTargetStage);
+	pGraphicsDevice->BeginScene(m_WaveRenderTargetStage);
 
 
 
@@ -940,7 +940,7 @@ bool Water::CreateWaveMapTexture()
 	BumpMapTextureDesc.CPUAccessFlags = 0;
 	BumpMapTextureDesc.MiscFlags = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateTexture2D(
 		&BumpMapTextureDesc,
 		nullptr,
 		&m_pBumpTexture)))
@@ -949,7 +949,7 @@ bool Water::CreateWaveMapTexture()
 		return false;
 	}
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateRenderTargetView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateRenderTargetView(
 		m_pBumpTexture,
 		nullptr,
 		&m_pBumpRenderTarget)))
@@ -958,7 +958,7 @@ bool Water::CreateWaveMapTexture()
 		return false;
 	}
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateShaderResourceView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateShaderResourceView(
 		m_pBumpTexture,
 		nullptr,
 		&m_pBumpShaderResourceView)))
@@ -972,7 +972,7 @@ bool Water::CreateWaveMapTexture()
 
 bool Water::CreateReflectMapTexture()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 
 	// 波テクスチャの生成処理.
 	D3D11_TEXTURE2D_DESC ReflectMapTextureDesc;
@@ -989,7 +989,7 @@ bool Water::CreateReflectMapTexture()
 	ReflectMapTextureDesc.CPUAccessFlags = 0;
 	ReflectMapTextureDesc.MiscFlags = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateTexture2D(
 		&ReflectMapTextureDesc,
 		nullptr,
 		&m_pReflectTexture)))
@@ -998,7 +998,7 @@ bool Water::CreateReflectMapTexture()
 		return false;
 	}
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateRenderTargetView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateRenderTargetView(
 		m_pReflectTexture,
 		nullptr,
 		&m_pReflectRenderTarget)))
@@ -1007,7 +1007,7 @@ bool Water::CreateReflectMapTexture()
 		return false;
 	}
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateShaderResourceView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateShaderResourceView(
 		m_pReflectTexture,
 		nullptr,
 		&m_pReflectShaderResourceView)))
@@ -1029,7 +1029,7 @@ bool Water::CreateReflectMapTexture()
 	DepthStencilDesc.CPUAccessFlags = 0;
 	DepthStencilDesc.MiscFlags = 0;
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateTexture2D(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateTexture2D(
 		&DepthStencilDesc,
 		nullptr,
 		&m_pReflectDepthStencilTexture)))
@@ -1038,7 +1038,7 @@ bool Water::CreateReflectMapTexture()
 		return false;
 	}
 
-	if (FAILED(pGraphicdDevice->GetDevice()->CreateDepthStencilView(
+	if (FAILED(pGraphicsDevice->GetDevice()->CreateDepthStencilView(
 		m_pReflectDepthStencilTexture,
 		nullptr,
 		&m_pReflectDepthStencilView)))
@@ -1055,10 +1055,10 @@ bool Water::CreateReflectMapTexture()
 	m_ReflectViewPort.MinDepth = 0.0f;
 	m_ReflectViewPort.MaxDepth = 1.0f;
 
-	pGraphicdDevice->SetRenderTarget(&m_pReflectRenderTarget, m_ReflectRenderTargetStage);
-	pGraphicdDevice->SetDepthStencil(&m_pReflectDepthStencilView, m_ReflectRenderTargetStage);
-	pGraphicdDevice->SetClearColor(m_ClearColor, m_ReflectRenderTargetStage);
-	pGraphicdDevice->SetViewPort(&m_ReflectViewPort, m_ReflectRenderTargetStage);
+	pGraphicsDevice->SetRenderTarget(&m_pReflectRenderTarget, m_ReflectRenderTargetStage);
+	pGraphicsDevice->SetDepthStencil(&m_pReflectDepthStencilView, m_ReflectRenderTargetStage);
+	pGraphicsDevice->SetClearColor(m_ClearColor, m_ReflectRenderTargetStage);
+	pGraphicsDevice->SetViewPort(&m_ReflectViewPort, m_ReflectRenderTargetStage);
 
 
 	if (!WriteReflectMapConstantBuffer())
@@ -1289,10 +1289,10 @@ bool Water::WriteReflectMapConstantBuffer()
 
 void Water::CubeMapBeginScene()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 
-	pGraphicdDevice->BeginScene(m_CubeRenderTargetStage);
+	pGraphicsDevice->BeginScene(m_CubeRenderTargetStage);
 	
 	// キューブマップ定数バッファの更新と設定.
 	WriteCubeMapConstantBuffer();
@@ -1303,10 +1303,10 @@ void Water::CubeMapBeginScene()
 
 void Water::ReflectMapBeginScene()
 {
-	Lib::GraphicsDevice* pGraphicdDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
 	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
 
-	pGraphicdDevice->BeginScene(m_ReflectRenderTargetStage);
+	pGraphicsDevice->BeginScene(m_ReflectRenderTargetStage);
 
 	// 反射マップ定数バッファの更新と設定.
 	WriteReflectMapConstantBuffer();
