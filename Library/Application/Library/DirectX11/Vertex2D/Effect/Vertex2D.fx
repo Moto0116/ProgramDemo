@@ -1,7 +1,7 @@
 Texture2D g_Texture: register(t0);
 SamplerState g_Sampler : register(s0);
 
-cbuffer global
+cbuffer global : register(b0)
 {
 	matrix g_WorldMat;
 	float4 g_ViewPort;

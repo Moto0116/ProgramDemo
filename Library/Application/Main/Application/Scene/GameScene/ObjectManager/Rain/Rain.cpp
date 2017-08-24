@@ -12,10 +12,10 @@
 #include "Debugger\Debugger.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
+#include "SoundManager\SoundManager.h"
+#include "SoundManager\ISound\ISound.h"
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "DirectX11\ShaderManager\ShaderManager.h"
-#include "DirectX11\SoundManager\SoundManager.h"
-#include "DirectX11\SoundManager\ISound\ISound.h"
 #include "DirectX11\TextureManager\TextureManager.h"
 #include "DirectX11\TextureManager\ITexture\ITexture.h"
 #include "DirectX11\Font\Font.h"
@@ -39,8 +39,8 @@ const D3DXVECTOR2 Rain::m_ZRange = D3DXVECTOR2(-55, 180);
 Rain::Rain(MainCamera* _pCamera) : 
 	m_pCamera(_pCamera),
 	m_pFont(nullptr),
-	m_TextureIndex(Lib::TextureManager::m_InvalidIndex),
-	m_SoundIndex(Lib::TextureManager::m_InvalidIndex),
+	m_TextureIndex(Lib::Dx11::TextureManager::m_InvalidIndex),
+	m_SoundIndex(Lib::Dx11::TextureManager::m_InvalidIndex),
 	m_RandDevice(),
 	m_MersenneTwister(m_RandDevice()),
 	m_IsActive(false)
@@ -175,9 +175,9 @@ void Rain::Draw()
 {
 	if (m_IsActive)
 	{
-		ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-		pContext->VSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), nullptr, 0);
-		pContext->PSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), nullptr, 0);
+		ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+		pContext->VSSetShader(SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetVertexShader(m_VertexShaderIndex), nullptr, 0);
+		pContext->PSSetShader(SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetPixelShader(m_PixelShaderIndex), nullptr, 0);
 		pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 		pContext->IASetInputLayout(m_pVertexLayout);
@@ -190,7 +190,7 @@ void Rain::Draw()
 		UINT Offset[2] = { 0, 0 };
 		pContext->IASetVertexBuffers(0, 2, pBuffer, Stride, Offset);
 
-		ID3D11ShaderResourceView* pResource = SINGLETON_INSTANCE(Lib::TextureManager)->GetTexture(m_TextureIndex)->Get();
+		ID3D11ShaderResourceView* pResource = SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->GetTexture(m_TextureIndex)->Get();
 		pContext->PSSetShaderResources(0, 1, &pResource);
 
 		pContext->DrawInstanced(VERTEX_NUM, RAIN_NUM, 0, 0);
@@ -257,7 +257,7 @@ bool Rain::CreateVertexBuffer()
 	ZeroMemory(&ResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	ResourceData.pSysMem = m_pVertexData;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateBuffer(
 		&BufferDesc,
 		&ResourceData,
 		&m_pVertexBuffer)))
@@ -289,7 +289,7 @@ bool Rain::CreateVertexBuffer()
 	ZeroMemory(&InstanceResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	InstanceResourceData.pSysMem = m_pInstanceData;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateBuffer(
 		&InstanceBufferDesc,
 		&InstanceResourceData,
 		&m_pInstanceBuffer)))
@@ -303,7 +303,7 @@ bool Rain::CreateVertexBuffer()
 
 bool Rain::CreateShader()
 {
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\Rain.fx"),
 		"VS",
 		&m_VertexShaderIndex))
@@ -312,7 +312,7 @@ bool Rain::CreateShader()
 		return false;
 	}
 
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 		TEXT("Resource\\Effect\\Rain.fx"),
 		"PS",
 		&m_PixelShaderIndex))
@@ -338,11 +338,11 @@ bool Rain::CreateVertexLayout()
 		{ "POS",	  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 64, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateInputLayout(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateInputLayout(
 		InputElementDesc,
 		sizeof(InputElementDesc) / sizeof(InputElementDesc[0]),
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferPointer(),
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferSize(),
+		SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferPointer(),
+		SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferSize(),
 		&m_pVertexLayout)))
 	{
 		OutputErrorLog("入力レイアウトの生成に失敗しました");
@@ -366,7 +366,7 @@ bool Rain::CreateState()
 	BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBlendState(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateBlendState(
 		&BlendDesc, 
 		&m_pBlendState)))
 	{
@@ -380,7 +380,7 @@ bool Rain::CreateState()
 	DepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	DepthStencilDesc.StencilEnable = FALSE;
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
 		&DepthStencilDesc,
 		&m_pDepthStencilState)))
 	{
@@ -393,7 +393,7 @@ bool Rain::CreateState()
 
 bool Rain::CreateTexture()
 {
-	if (!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->LoadTexture(
 		TEXT("Resource\\Texture\\Ring.png"),
 		&m_TextureIndex))
 	{
@@ -419,8 +419,8 @@ bool Rain::CreateSound()
 
 bool Rain::CreateFontObject()
 {
-	m_pFont = new Lib::Font();
-	if (!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
+	m_pFont = new Lib::Dx11::Font();
+	if (!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)))
 	{
 		OutputErrorLog("フォントオブジェクトの初期化に失敗しました");
 		return false;
@@ -452,8 +452,8 @@ void Rain::ReleaseVertexBuffer()
 
 void Rain::ReleaseShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
 }
 
 void Rain::ReleaseVertexLayout()
@@ -469,7 +469,7 @@ void Rain::ReleaseState()
 
 void Rain::ReleaseTexture()
 {
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_TextureIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->ReleaseTexture(m_TextureIndex);
 }
 
 void Rain::ReleaseSound()
@@ -488,7 +488,7 @@ void Rain::ReleaseFontObject()
 bool Rain::WriteInstanceBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Map(
 		m_pInstanceBuffer,
 		0,
 		D3D11_MAP_WRITE_DISCARD,
@@ -522,7 +522,7 @@ bool Rain::WriteInstanceBuffer()
 			pInstanceData[i].Pos = D3DXVECTOR4(m_RainData[i].Pos, 0);
 		}
 
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pInstanceBuffer, 0);
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Unmap(m_pInstanceBuffer, 0);
 
 		return true;
 	}

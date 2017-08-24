@@ -22,7 +22,11 @@ namespace Lib
 {
 	class DrawTask;
 	class UpdateTask;
-	class Font;
+
+	namespace Dx11
+	{
+		class Font;
+	}
 }
 
 
@@ -230,7 +234,7 @@ private:
 
 	//--------------------その他オブジェクト--------------------
 	MainCamera*					m_pCamera;					//!< カメラオブジェクト.
-	Lib::Font*					m_pFont;					//!< フォント描画オブジェクト.
+	Lib::Dx11::Font*					m_pFont;					//!< フォント描画オブジェクト.
 
 	
 	//--------------------描画関連--------------------

@@ -20,16 +20,16 @@
 // Private Static Variables
 //----------------------------------------------------------------------
 D3DXVECTOR3 House::m_DefaultScale = D3DXVECTOR3(50, 50, 50);
-int	House::m_ModelIndex = Lib::FbxFileManager::m_InvalidIndex;
-int	House::m_ShadowVertexShaderIndex = Lib::ShaderManager::m_InvalidIndex;
-int	House::m_ShadowPixelShaderIndex = Lib::ShaderManager::m_InvalidIndex;
-int	House::m_MapVertexShaderIndex = Lib::ShaderManager::m_InvalidIndex;
-int	House::m_MapPixelShaderIndex = Lib::ShaderManager::m_InvalidIndex;
-int	House::m_CubeMapVertexShaderIndex = Lib::ShaderManager::m_InvalidIndex;
-int	House::m_CubeMapGeometryShaderIndex = Lib::ShaderManager::m_InvalidIndex;
-int	House::m_CubeMapPixelShaderIndex = Lib::ShaderManager::m_InvalidIndex;
-int	House::m_ReflectMapVertexShaderIndex = Lib::ShaderManager::m_InvalidIndex;
-int	House::m_ReflectMapPixelShaderIndex = Lib::ShaderManager::m_InvalidIndex;
+int	House::m_ModelIndex = Lib::Dx11::FbxFileManager::m_InvalidIndex;
+int	House::m_ShadowVertexShaderIndex = Lib::Dx11::ShaderManager::m_InvalidIndex;
+int	House::m_ShadowPixelShaderIndex = Lib::Dx11::ShaderManager::m_InvalidIndex;
+int	House::m_MapVertexShaderIndex = Lib::Dx11::ShaderManager::m_InvalidIndex;
+int	House::m_MapPixelShaderIndex = Lib::Dx11::ShaderManager::m_InvalidIndex;
+int	House::m_CubeMapVertexShaderIndex = Lib::Dx11::ShaderManager::m_InvalidIndex;
+int	House::m_CubeMapGeometryShaderIndex = Lib::Dx11::ShaderManager::m_InvalidIndex;
+int	House::m_CubeMapPixelShaderIndex = Lib::Dx11::ShaderManager::m_InvalidIndex;
+int	House::m_ReflectMapVertexShaderIndex = Lib::Dx11::ShaderManager::m_InvalidIndex;
+int	House::m_ReflectMapPixelShaderIndex = Lib::Dx11::ShaderManager::m_InvalidIndex;
 
 
 //----------------------------------------------------------------------
@@ -116,14 +116,14 @@ void House::Draw()
 	DepthStencilStateSetup();
 	ConstantBufferSetup();
 
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
+	SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager)->GetFbxModel(m_ModelIndex)->Draw();
 }
 
 void House::DepthDraw()
 {
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
-	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
+	Lib::Dx11::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager);
 
 	// シェーダーの設定.
 	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ShadowVertexShaderIndex), nullptr, 0);
@@ -137,9 +137,9 @@ void House::DepthDraw()
 
 void House::MapDraw()
 {
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
-	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
+	Lib::Dx11::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager);
 
 	// シェーダーの設定.
 	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), nullptr, 0);
@@ -154,9 +154,9 @@ void House::MapDraw()
 
 void House::CubeMapDraw()
 {
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
-	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
+	Lib::Dx11::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager);
 
 	// シェーダーの設定.
 	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_CubeMapVertexShaderIndex), nullptr, 0);
@@ -171,9 +171,9 @@ void House::CubeMapDraw()
 
 void House::ReflectMapDraw()
 {
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
-	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
+	Lib::Dx11::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager);
 
 	// シェーダーの設定.
 	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ReflectMapVertexShaderIndex), nullptr, 0);
@@ -204,9 +204,9 @@ bool House::CreateTask()
 
 bool House::CreateModel()
 {
-	if (m_ModelIndex == Lib::FbxFileManager::m_InvalidIndex)
+	if (m_ModelIndex == Lib::Dx11::FbxFileManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager)->LoadFbxModel(
 			TEXT("Resource\\Model\\house_red.fbx"),
 			&m_ModelIndex))
 		{
@@ -220,9 +220,9 @@ bool House::CreateModel()
 
 bool House::CreateShadowShader()
 {
-	if (m_ShadowVertexShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	if (m_ShadowVertexShaderIndex == Lib::Dx11::ShaderManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 			TEXT("Resource\\Effect\\DepthShadow.fx"),
 			"VS",
 			&m_ShadowVertexShaderIndex))
@@ -232,9 +232,9 @@ bool House::CreateShadowShader()
 		}
 	}
 
-	if (m_ShadowPixelShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	if (m_ShadowPixelShaderIndex == Lib::Dx11::ShaderManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 			TEXT("Resource\\Effect\\DepthShadow.fx"),
 			"PS",
 			&m_ShadowPixelShaderIndex))
@@ -249,9 +249,9 @@ bool House::CreateShadowShader()
 
 bool House::CreateMapShader()
 {
-	if (m_MapVertexShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	if (m_MapVertexShaderIndex == Lib::Dx11::ShaderManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 			TEXT("Resource\\Effect\\MiniMap.fx"),
 			"VS",
 			&m_MapVertexShaderIndex))
@@ -261,9 +261,9 @@ bool House::CreateMapShader()
 		}
 	}
 
-	if (m_MapPixelShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	if (m_MapPixelShaderIndex == Lib::Dx11::ShaderManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 			TEXT("Resource\\Effect\\MiniMap.fx"),
 			"PS",
 			&m_MapPixelShaderIndex))
@@ -278,9 +278,9 @@ bool House::CreateMapShader()
 
 bool House::CreateCubeMapShader()
 {
-	if (m_CubeMapVertexShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	if (m_CubeMapVertexShaderIndex == Lib::Dx11::ShaderManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 			TEXT("Resource\\Effect\\CubeMap.fx"),
 			"VS",
 			&m_CubeMapVertexShaderIndex))
@@ -290,9 +290,9 @@ bool House::CreateCubeMapShader()
 		}
 	}
 
-	if (m_CubeMapGeometryShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	if (m_CubeMapGeometryShaderIndex == Lib::Dx11::ShaderManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadGeometryShader(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadGeometryShader(
 			TEXT("Resource\\Effect\\CubeMap.fx"),
 			"GS",
 			&m_CubeMapGeometryShaderIndex))
@@ -302,9 +302,9 @@ bool House::CreateCubeMapShader()
 		}
 	}
 
-	if (m_CubeMapPixelShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	if (m_CubeMapPixelShaderIndex == Lib::Dx11::ShaderManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 			TEXT("Resource\\Effect\\CubeMap.fx"),
 			"PS",
 			&m_CubeMapPixelShaderIndex))
@@ -319,9 +319,9 @@ bool House::CreateCubeMapShader()
 
 bool House::CreateReflectMapShader()
 {
-	if (m_ReflectMapVertexShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	if (m_ReflectMapVertexShaderIndex == Lib::Dx11::ShaderManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 			TEXT("Resource\\Effect\\ReflectMap.fx"),
 			"VS",
 			&m_ReflectMapVertexShaderIndex))
@@ -331,9 +331,9 @@ bool House::CreateReflectMapShader()
 		}
 	}
 
-	if (m_ReflectMapPixelShaderIndex == Lib::ShaderManager::m_InvalidIndex)
+	if (m_ReflectMapPixelShaderIndex == Lib::Dx11::ShaderManager::m_InvalidIndex)
 	{
-		if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 			TEXT("Resource\\Effect\\ReflectMap.fx"),
 			"PS",
 			&m_ReflectMapPixelShaderIndex))
@@ -358,31 +358,31 @@ void House::ReleaseTask()
 
 void House::ReleaseModel()
 {
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->ReleaseFbxModel(m_ModelIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager)->ReleaseFbxModel(m_ModelIndex);
 }
 
 void House::ReleaseShadowShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_ShadowPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_ShadowVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_ShadowPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_ShadowVertexShaderIndex);
 }
 
 void House::ReleaseMapShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_MapPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_MapVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_MapPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_MapVertexShaderIndex);
 }
 
 void House::ReleaseCubeMapShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_CubeMapPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseGeometryShader(m_CubeMapGeometryShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_CubeMapVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_CubeMapPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseGeometryShader(m_CubeMapGeometryShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_CubeMapVertexShaderIndex);
 }
 
 void House::ReleaseReflectMapShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_ReflectMapPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_ReflectMapVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_ReflectMapPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_ReflectMapVertexShaderIndex);
 }
 

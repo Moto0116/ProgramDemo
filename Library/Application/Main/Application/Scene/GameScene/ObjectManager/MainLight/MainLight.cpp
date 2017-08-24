@@ -106,10 +106,10 @@ void MainLight::Update()
 void MainLight::Draw()
 {
 	//--------------------描画--------------------
-	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
 
-	pContext->VSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), nullptr, 0);
-	pContext->PSSetShader(SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), nullptr, 0);
+	pContext->VSSetShader(SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetVertexShader(m_VertexShaderIndex), nullptr, 0);
+	pContext->PSSetShader(SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetPixelShader(m_PixelShaderIndex), nullptr, 0);
 	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	pContext->IASetInputLayout(m_pVertexLayout);
 	pContext->OMSetDepthStencilState(m_pDepthStencilState, 0);
@@ -119,8 +119,9 @@ void MainLight::Draw()
 	UINT Offset = 0;
 	pContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &Stride, &Offset);
 
-	ID3D11ShaderResourceView* pResource = SINGLETON_INSTANCE(Lib::TextureManager)->GetTexture(m_LightTextureIndex)->Get();
-	ID3D11ShaderResourceView* pResource2 = SINGLETON_INSTANCE(Lib::TextureManager)->GetTexture(m_BloomTextureIndex)->Get();
+	Lib::Dx11::TextureManager* pTextureManager = SINGLETON_INSTANCE(Lib::Dx11::TextureManager);
+	ID3D11ShaderResourceView* pResource = pTextureManager->GetTexture(m_LightTextureIndex)->Get();
+	ID3D11ShaderResourceView* pResource2 = pTextureManager->GetTexture(m_BloomTextureIndex)->Get();
 	pContext->PSSetShaderResources(0, 1, &pResource);
 	pContext->PSSetShaderResources(1, 1, &pResource2);
 
@@ -154,7 +155,7 @@ bool MainLight::CreateTask()
 bool MainLight::CreateLight()
 {
 	// ライトオブジェクトの生成 初期化.
-	m_pLight = new Lib::Light();
+	m_pLight = new Lib::Dx11::Light();
 	m_pLight->SetPos(&m_LightState.Pos);
 	m_pLight->SetDirectionPos(&m_DefaultLightDirPos);
 
@@ -162,7 +163,7 @@ bool MainLight::CreateLight()
 	// ライト視点の行列生成.
 	D3DXMatrixLookAtLH(&m_LightView, &m_LightState.Pos, &m_DefaultLightDirPos, &D3DXVECTOR3(0, 1, 0));
 
-	const RECT* pWindowRect = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowRect();
+	const RECT* pWindowRect = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetMainWindowRect();
 	float WindowWidth = static_cast<float>(pWindowRect->right - pWindowRect->left);
 	float WindowHeight = static_cast<float>(pWindowRect->bottom - pWindowRect->top);
 	float Aspect = WindowWidth / WindowHeight;
@@ -188,7 +189,7 @@ bool MainLight::CreateConstantBuffer()
 	ConstantBufferDesc.MiscFlags = 0;
 	ConstantBufferDesc.StructureByteStride = 0;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateBuffer(
 		&ConstantBufferDesc, 
 		nullptr,
 		&m_pConstantBuffer)))
@@ -217,7 +218,7 @@ bool MainLight::CreateDepthTexture()
 	DepthTextureDesc.CPUAccessFlags = 0;
 	DepthTextureDesc.MiscFlags = 0;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateTexture2D(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateTexture2D(
 		&DepthTextureDesc,
 		nullptr,
 		&m_pDepthTexture)))
@@ -226,7 +227,7 @@ bool MainLight::CreateDepthTexture()
 		return false;
 	}
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateRenderTargetView(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateRenderTargetView(
 		m_pDepthTexture, 
 		nullptr,
 		&m_pRenderTarget)))
@@ -235,7 +236,7 @@ bool MainLight::CreateDepthTexture()
 		return false;
 	}
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateShaderResourceView(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateShaderResourceView(
 		m_pDepthTexture, 
 		nullptr, 
 		&m_pDepthStencilResource)))
@@ -259,7 +260,7 @@ bool MainLight::CreateDepthTexture()
 	DepthStencilDesc.CPUAccessFlags = 0;
 	DepthStencilDesc.MiscFlags = 0;
 
-	if (FAILED(FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateTexture2D(
+	if (FAILED(FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateTexture2D(
 		&DepthStencilDesc,
 		nullptr,
 		&m_pDepthStencilTexture))))
@@ -268,7 +269,7 @@ bool MainLight::CreateDepthTexture()
 		return false;
 	}
 
-	if (FAILED(FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilView(
+	if (FAILED(FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateDepthStencilView(
 		m_pDepthStencilTexture,
 		nullptr,
 		&m_pDepthStencilView))))
@@ -286,10 +287,10 @@ bool MainLight::CreateDepthTexture()
 	m_ViewPort.MaxDepth = 1.0f;
 
 	// グラフィックデバイスに描画先として深度テクスチャを設定.
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(&m_pRenderTarget, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(&m_pDepthStencilView, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(m_ClearColor, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(&m_ViewPort, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetRenderTarget(&m_pRenderTarget, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetDepthStencil(&m_pDepthStencilView, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetClearColor(m_ClearColor, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetViewPort(&m_ViewPort, m_RenderTargetStage);
 
 	return true;
 }
@@ -325,7 +326,7 @@ bool MainLight::CreateVertex()
 	ZeroMemory(&ResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 	ResourceData.pSysMem = m_pVertexData;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateBuffer(
 		&BufferDesc,
 		&ResourceData,
 		&m_pVertexBuffer)))
@@ -339,7 +340,7 @@ bool MainLight::CreateVertex()
 
 bool MainLight::CreateShader()
 {
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\MainLight.fx"),
 		"VS",
 		&m_VertexShaderIndex))
@@ -348,7 +349,7 @@ bool MainLight::CreateShader()
 		return false;
 	}
 
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 		TEXT("Resource\\Effect\\MainLight.fx"),
 		"PS",
 		&m_PixelShaderIndex))
@@ -368,11 +369,11 @@ bool MainLight::CreateVertexLayout()
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateInputLayout(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateInputLayout(
 		InputElementDesc,
 		sizeof(InputElementDesc) / sizeof(InputElementDesc[0]),
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferPointer(),
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferSize(),
+		SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferPointer(),
+		SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferSize(),
 		&m_pVertexLayout)))
 	{
 		OutputErrorLog("入力レイアウトの生成に失敗しました");
@@ -396,7 +397,7 @@ bool MainLight::CreateState()
 	BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBlendState(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateBlendState(
 		&BlendDesc,
 		&m_pBlendState)))
 	{
@@ -411,7 +412,7 @@ bool MainLight::CreateState()
 	DepthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 	DepthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	DepthStencilDesc.StencilEnable = FALSE;
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
 		&DepthStencilDesc,
 		&m_pDepthStencilState)))
 	{
@@ -424,7 +425,7 @@ bool MainLight::CreateState()
 
 bool MainLight::CreateLightTexture()
 {
-	if(!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+	if(!SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->LoadTexture(
 		"Resource\\Texture\\Light.png",
 		&m_LightTextureIndex))
 	{
@@ -432,7 +433,7 @@ bool MainLight::CreateLightTexture()
 		return false;
 	}
 
-	if (!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->LoadTexture(
 		"Resource\\Texture\\Bloom.png",
 		&m_BloomTextureIndex))
 	{
@@ -468,10 +469,10 @@ void MainLight::ReleaseConstantBuffer()
 
 void MainLight::ReleaseDepthTexture()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(nullptr, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(0xffffffff, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(nullptr, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(nullptr, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetViewPort(nullptr, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetClearColor(0xffffffff, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetDepthStencil(nullptr, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetRenderTarget(nullptr, m_RenderTargetStage);
 
 	SafeRelease(m_pDepthStencilView);
 	SafeRelease(m_pDepthStencilTexture);
@@ -487,8 +488,8 @@ void MainLight::ReleaseVertex()
 
 void MainLight::ReleaseShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
 }
 
 void MainLight::ReleaseVertexLayout()
@@ -504,14 +505,14 @@ void MainLight::ReleaseState()
 
 void MainLight::ReleaseLightTexture()
 {
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_BloomTextureIndex);
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_LightTextureIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->ReleaseTexture(m_BloomTextureIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->ReleaseTexture(m_LightTextureIndex);
 }
 
 bool MainLight::WriteConstantBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResourceData)))
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Map(m_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResourceData)))
 	{
 		D3DXVECTOR3 LightPos = m_pLight->GetPos();
 		D3DXVECTOR3 LightDir;
@@ -549,7 +550,7 @@ bool MainLight::WriteConstantBuffer()
 			reinterpret_cast<void*>(&ConstantBuffer),
 			sizeof(ConstantBuffer));
 
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
 
 		return true;
 	}
@@ -559,18 +560,18 @@ bool MainLight::WriteConstantBuffer()
 
 void MainLight::DrawBeginScene()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(2, 1, &m_pDepthStencilResource);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(2, 1, &m_pDepthStencilResource);
 }
 
 void MainLight::MainLightBeginScene()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->BeginScene(m_RenderTargetStage);
 
 	WriteConstantBuffer();
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(2, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(2, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->GSSetConstantBuffers(2, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(2, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(2, 1, &m_pConstantBuffer);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->GSSetConstantBuffers(2, 1, &m_pConstantBuffer);
 }
 
 

@@ -53,7 +53,7 @@ bool MiniMap::Initialize()
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddBeginTask(m_pDrawBeginTask);
 
-	m_pCamera = new Lib::Camera(
+	m_pCamera = new Lib::Dx11::Camera(
 		m_TextureWidth,
 		m_TextureHeight,
 		m_NearPoint,
@@ -96,7 +96,7 @@ void MiniMap::Update()
 
 void MiniMap::Draw()
 {
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
 
 	pDeviceContext->PSSetShaderResources(0, 1, &m_pShaderResourceView);
 	m_pVertex->ShaderSetup();
@@ -109,7 +109,7 @@ void MiniMap::Draw()
 //----------------------------------------------------------------------
 bool MiniMap::CreateConstantBuffer()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	// マップ描画の定数バッファ.
 	D3D11_BUFFER_DESC ConstantBufferDesc;
@@ -131,7 +131,7 @@ bool MiniMap::CreateConstantBuffer()
 
 bool MiniMap::CreateTexture()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	// マップテクスチャの生成.
 	D3D11_TEXTURE2D_DESC MapTextureDesc;
@@ -231,10 +231,10 @@ void MiniMap::ReleaseConstantBuffer()
 
 void MiniMap::ReleaseTexture()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetViewPort(nullptr, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetClearColor(0xffffffff, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetDepthStencil(nullptr, m_RenderTargetStage);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->SetRenderTarget(nullptr, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetViewPort(nullptr, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetClearColor(0xffffffff, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetDepthStencil(nullptr, m_RenderTargetStage);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->SetRenderTarget(nullptr, m_RenderTargetStage);
 
 	SafeRelease(m_pDepthStencilView);
 	SafeRelease(m_pDepthStencilTexture);
@@ -250,7 +250,7 @@ void MiniMap::ReleaseTexture()
 bool MiniMap::WriteConstantBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Map(
 		m_pConstantBuffer, 
 		0, 
 		D3D11_MAP_WRITE_DISCARD,
@@ -272,7 +272,7 @@ bool MiniMap::WriteConstantBuffer()
 			reinterpret_cast<void*>(&ConstantBuffer),
 			sizeof(ConstantBuffer));
 
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
 
 		return true;
 	}
@@ -282,8 +282,8 @@ bool MiniMap::WriteConstantBuffer()
 
 void MiniMap::MiniMapBeginScene()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
 
 	pGraphicsDevice->BeginScene(m_RenderTargetStage);
 

@@ -39,8 +39,5 @@ VS_OUT VS(VS_IN In)
 
 float4 PS(VS_OUT In) : SV_Target
 {
-	float4 OutColor;
-	OutColor = g_Texture.Sample(g_Sampler, In.Texel + g_TexelOffset.xy);
-	OutColor *= In.Color;
-	return OutColor;
+	return g_Texture.Sample(g_Sampler, In.Texel + g_TexelOffset.xy) * In.Color;
 }

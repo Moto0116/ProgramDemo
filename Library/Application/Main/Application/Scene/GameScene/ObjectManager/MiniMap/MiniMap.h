@@ -15,7 +15,10 @@
 
 namespace Lib
 {
-	class Camera;
+	namespace Dx11
+	{
+		class Camera;
+	}
 }
 
 
@@ -160,7 +163,7 @@ private:
 
 
 	//--------------------その他オブジェクト--------------------
-	Lib::Camera*				m_pCamera;				//!< カメラオブジェクト.
+	Lib::Dx11::Camera*			m_pCamera;				//!< カメラオブジェクト.
 
 
 	//--------------------描画関連--------------------

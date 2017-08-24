@@ -51,13 +51,13 @@ const int Water::m_ReflectRenderTargetStage = 6;
 Water::Water() : 
 	m_pCamera(nullptr),
 	m_pFont(nullptr),
-	m_CubeVertexShaderIndex(Lib::ShaderManager::m_InvalidIndex),
-	m_CubePixelShaderIndex(Lib::ShaderManager::m_InvalidIndex),
-	m_ReflectVertexShaderIndex(Lib::ShaderManager::m_InvalidIndex),
-	m_ReflectPixelShaderIndex(Lib::ShaderManager::m_InvalidIndex),
-	m_WaveVertexShaderIndex(Lib::ShaderManager::m_InvalidIndex),
-	m_WavePixelShaderIndex(Lib::ShaderManager::m_InvalidIndex),
-	m_BumpPixelShaderIndex(Lib::ShaderManager::m_InvalidIndex),
+	m_CubeVertexShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
+	m_CubePixelShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
+	m_ReflectVertexShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
+	m_ReflectPixelShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
+	m_WaveVertexShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
+	m_WavePixelShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
+	m_BumpPixelShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
 	m_WaveRenderIndex(0),
 	m_AddWavePos(D3DXVECTOR2(0, 0)),
 	m_AddWaveHeight(0),
@@ -165,10 +165,10 @@ void Water::Update()
 
 void Water::Draw()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	Lib::TextureManager* pTextureManager = SINGLETON_INSTANCE(Lib::TextureManager);
-	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::TextureManager* pTextureManager = SINGLETON_INSTANCE(Lib::Dx11::TextureManager);
+	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
 
 	if (m_IsCubeMapDraw)
 	{
@@ -207,7 +207,7 @@ void Water::Draw()
 		WaveDraw(); // 波マップの描画.
 		BumpDraw();	// 法線マップの描画.
 
-		pGraphicsDevice->SetScene(Lib::GraphicsDevice::BACKBUFFER_TARGET);	// 描画先を設定.
+		pGraphicsDevice->SetScene(Lib::Dx11::GraphicsDevice::BACKBUFFER_TARGET);	// 描画先を設定.
 
 		pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_ReflectVertexShaderIndex), nullptr, 0);
 		pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_ReflectPixelShaderIndex), nullptr, 0);
@@ -245,9 +245,9 @@ void Water::Draw()
 
 void Water::WaveDraw()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
 
 	// 描画先を波マップに変更.
 	pGraphicsDevice->SetRenderTarget(&m_pWaveRenderTarget[m_WaveRenderIndex], m_WaveRenderTargetStage);
@@ -277,9 +277,9 @@ void Water::WaveDraw()
 
 void Water::BumpDraw()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
-	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	Lib::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
 
 	// 描画先を法線マップに変更.
 	pGraphicsDevice->SetRenderTarget(&m_pBumpRenderTarget, m_BumpRenderTargetStage);
@@ -314,7 +314,7 @@ void Water::BumpDraw()
 //----------------------------------------------------------------------
 bool Water::CreateVertexBuffer()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	D3DXVECTOR3 Normal = D3DXVECTOR3(0, 1, 0);
 	D3DXVECTOR3 Tangent = D3DXVECTOR3(1, 0, 0);
@@ -408,7 +408,7 @@ bool Water::CreateShader()
 	// 頂点シェーダー読み込み
 	auto VertexShaderLoad = [this](LPCTSTR _pShaderName, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		return SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+		return SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 			TEXT(_pShaderName),
 			TEXT(_pFuncName),
 			_pIndex);
@@ -417,7 +417,7 @@ bool Water::CreateShader()
 	// ピクセルシェーダー読み込み
 	auto PixelShaderLoad = [this](LPCTSTR _pShaderName, LPCTSTR _pFuncName, int* _pIndex)
 	{
-		return SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+		return SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 			TEXT(_pShaderName),
 			TEXT(_pFuncName),
 			_pIndex);
@@ -471,8 +471,8 @@ bool Water::CreateShader()
 
 bool Water::CreateVertexLayout()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
-	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
 
 	D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
 	{
@@ -517,7 +517,7 @@ bool Water::CreateVertexLayout()
 
 bool Water::CreateState()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	// ブレンドステートの生成.
 	D3D11_BLEND_DESC BlendDesc;
@@ -561,7 +561,7 @@ bool Water::CreateState()
 
 bool Water::CreateConstantBuffer()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	// 水の定数バッファ生成.
 	D3D11_BUFFER_DESC WaterConstantBufferDesc;
@@ -625,7 +625,7 @@ bool Water::CreateTexture()
 	// テクスチャの読み込み.
 	auto LoadTexture = [this](LPCTSTR _pTextureName, int* _pIndex)
 	{
-		return SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+		return SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->LoadTexture(
 			TEXT(_pTextureName),
 			TEXT(_pIndex));
 	};
@@ -672,7 +672,7 @@ bool Water::CreateTexture()
 
 bool Water::CreateCubeMapTexture()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	// キューブマップテクスチャ.
 	D3D11_TEXTURE2D_DESC CubeTextureDesc;
@@ -785,7 +785,7 @@ bool Water::CreateCubeMapTexture()
 	D3DXVECTOR3 UpVec = D3DXVECTOR3(0, 1, 0);
 	float ViewAngle = 90;
 
-	m_pCamera = new Lib::Camera(m_CubeTextureWidth, m_CubeTextureHeight, 1, 700);
+	m_pCamera = new Lib::Dx11::Camera(m_CubeTextureWidth, m_CubeTextureHeight, 1, 700);
 
 	// 6方面View行列を生成する.
 	LookPos = D3DXVECTOR3(1, 0, 0);
@@ -831,7 +831,7 @@ bool Water::CreateCubeMapTexture()
 
 bool Water::CreateWaveMapTexture()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	for (int i = 0; i < WAVE_TEXTURE_NUM; i++)
 	{
@@ -972,7 +972,7 @@ bool Water::CreateWaveMapTexture()
 
 bool Water::CreateReflectMapTexture()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	// 波テクスチャの生成処理.
 	D3D11_TEXTURE2D_DESC ReflectMapTextureDesc;
@@ -1072,8 +1072,8 @@ bool Water::CreateReflectMapTexture()
 
 bool Water::CreateFontObject()
 {
-	m_pFont = new Lib::Font();
-	if (!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
+	m_pFont = new Lib::Dx11::Font();
+	if (!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)))
 	{
 		return false;
 	}
@@ -1094,15 +1094,15 @@ void Water::ReleaseVertexBuffer()
 
 void Water::ReleaseShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_BumpPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_WavePixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_WaveVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_BumpPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_WavePixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_WaveVertexShaderIndex);
 
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_ReflectPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_ReflectVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_ReflectPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_ReflectVertexShaderIndex);
 
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_CubePixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_CubeVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_CubePixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_CubeVertexShaderIndex);
 }
 
 void Water::ReleaseVertexLayout()
@@ -1130,9 +1130,9 @@ void Water::ReleaseTexture()
 	ReleaseWaveMapTexture();
 	ReleaseCubeMapTexture();
 
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_WaterColorIndex);
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_PuddleTextureIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->ReleaseTexture(m_WaterColorIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->ReleaseTexture(m_PuddleTextureIndex);
 }
 
 void Water::ReleaseCubeMapTexture()
@@ -1180,7 +1180,7 @@ void Water::ReleaseFontObject()
 bool Water::WriteConstantBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Map(
 		m_pConstantBuffer,
 		0,
 		D3D11_MAP_WRITE_DISCARD, 
@@ -1211,7 +1211,7 @@ bool Water::WriteConstantBuffer()
 			reinterpret_cast<void*>(&ConstantBuffer),
 			sizeof(ConstantBuffer));
 
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
 
 		return true;
 	}
@@ -1222,7 +1222,7 @@ bool Water::WriteConstantBuffer()
 bool Water::WriteCubeMapConstantBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Map(
 		m_pCubeMapConstantBuffer,
 		0, 
 		D3D11_MAP_WRITE_DISCARD, 
@@ -1244,7 +1244,7 @@ bool Water::WriteCubeMapConstantBuffer()
 			reinterpret_cast<void*>(&m_CubeConstantBuffer),
 			sizeof(m_CubeConstantBuffer));
 
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pCubeMapConstantBuffer, 0);
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Unmap(m_pCubeMapConstantBuffer, 0);
 
 		return true;
 	}
@@ -1255,7 +1255,7 @@ bool Water::WriteCubeMapConstantBuffer()
 bool Water::WriteReflectMapConstantBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Map(
 		m_pReflectMapConstantBuffer,
 		0,
 		D3D11_MAP_WRITE_DISCARD,
@@ -1279,7 +1279,7 @@ bool Water::WriteReflectMapConstantBuffer()
 			reinterpret_cast<void*>(&m_ReflectConstantBuffer),
 			sizeof(m_ReflectConstantBuffer));
 
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pReflectMapConstantBuffer, 0);
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Unmap(m_pReflectMapConstantBuffer, 0);
 
 		return true;
 	}
@@ -1289,8 +1289,8 @@ bool Water::WriteReflectMapConstantBuffer()
 
 void Water::CubeMapBeginScene()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
 
 	pGraphicsDevice->BeginScene(m_CubeRenderTargetStage);
 	
@@ -1303,8 +1303,8 @@ void Water::CubeMapBeginScene()
 
 void Water::ReflectMapBeginScene()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
 
 	pGraphicsDevice->BeginScene(m_ReflectRenderTargetStage);
 

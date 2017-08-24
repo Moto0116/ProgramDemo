@@ -72,7 +72,7 @@ void Ground::Update()
 
 void Ground::Draw()
 {
-	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
+	Lib::Dx11::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager);
 
 	ShaderSetup();
 	TextureSetup();
@@ -89,9 +89,9 @@ void Ground::DepthDraw()
 
 void Ground::MapDraw()
 {
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	Lib::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
-	Lib::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::FbxFileManager);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
+	Lib::Dx11::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager);
 
 	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_MapVertexShaderIndex), nullptr, 0);
 	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_MapPixelShaderIndex), nullptr, 0);
@@ -115,7 +115,7 @@ bool Ground::CreateTask()
 
 bool Ground::CreateModel()
 {
-	if(!SINGLETON_INSTANCE(Lib::FbxFileManager)->LoadFbxModel(
+	if(!SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager)->LoadFbxModel(
 		TEXT("Resource\\Model\\map.fbx"),
 		&m_GroundModelIndex))
 	{
@@ -128,7 +128,7 @@ bool Ground::CreateModel()
 
 bool Ground::CreateDefaultShader()
 {
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\GroundEffect.fx"),
 		"VS",
 		&m_VertexShaderIndex))
@@ -137,7 +137,7 @@ bool Ground::CreateDefaultShader()
 		return false;
 	}
 
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 		TEXT("Resource\\Effect\\GroundEffect.fx"),
 		"PS",
 		&m_PixelShaderIndex))
@@ -151,7 +151,7 @@ bool Ground::CreateDefaultShader()
 
 bool Ground::CreateShadowShader()
 {
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\DepthShadow.fx"),
 		"VS",
 		&m_ShadowVertexShaderIndex))
@@ -160,7 +160,7 @@ bool Ground::CreateShadowShader()
 		return false;
 	}
 
-	if(!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+	if(!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 		TEXT("Resource\\Effect\\DepthShadow.fx"),
 		"PS",
 		&m_ShadowPixelShaderIndex))
@@ -174,7 +174,7 @@ bool Ground::CreateShadowShader()
 
 bool Ground::CreateMapShader()
 {
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\MiniMap.fx"),
 		"VS",
 		&m_MapVertexShaderIndex))
@@ -183,7 +183,7 @@ bool Ground::CreateMapShader()
 		return false;
 	}
 
-	if(!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+	if(!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 		TEXT("Resource\\Effect\\MiniMap.fx"),
 		"PS",
 		&m_MapPixelShaderIndex))
@@ -205,24 +205,24 @@ void Ground::ReleaseTask()
 
 void Ground::ReleaseModel()
 {
-	SINGLETON_INSTANCE(Lib::FbxFileManager)->ReleaseFbxModel(m_GroundModelIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager)->ReleaseFbxModel(m_GroundModelIndex);
 }
 
 void Ground::ReleaseDefaultShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
 }
 
 void Ground::ReleaseShadowShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_ShadowPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_ShadowVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_ShadowPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_ShadowVertexShaderIndex);
 }
 
 void Ground::ReleaseMapShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_MapPixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_MapVertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_MapPixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_MapVertexShaderIndex);
 }
 

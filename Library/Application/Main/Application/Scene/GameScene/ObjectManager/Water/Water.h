@@ -22,10 +22,14 @@ namespace Lib
 {
 	class DrawTask;
 	class UpdateTask;
-	class Camera;
-	class Texture;
-	class Vertex2D;
-	class Font;
+
+	namespace Dx11
+	{
+		class Camera;
+		class Texture;
+		class Vertex2D;
+		class Font;
+	}
 }
 
 
@@ -374,8 +378,8 @@ private:
 
 
 	//--------------------その他オブジェクト--------------------
-	Lib::Camera*				m_pCamera;						//!< カメラオブジェクト.
-	Lib::Font*					m_pFont;						//!< フォント描画オブジェクト.
+	Lib::Dx11::Camera*			m_pCamera;						//!< カメラオブジェクト.
+	Lib::Dx11::Font*			m_pFont;						//!< フォント描画オブジェクト.
 
 
 	//--------------------描画関連--------------------

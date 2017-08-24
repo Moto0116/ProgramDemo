@@ -62,8 +62,8 @@ bool MainCamera::Initialize()
 
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 
-	const RECT* pWindowRect = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowRect();
-	m_pCamera = new Lib::Camera(
+	const RECT* pWindowRect = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetMainWindowRect();
+	m_pCamera = new Lib::Dx11::Camera(
 		static_cast<float>(pWindowRect->right - pWindowRect->left),
 		static_cast<float>(pWindowRect->bottom - pWindowRect->top),
 		m_NearPoint,
@@ -262,7 +262,7 @@ void MainCamera::MoveRight()
 
 void MainCamera::Transform()
 {
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
 
 	WriteConstantBuffer();
 
@@ -275,7 +275,7 @@ void MainCamera::Transform()
 
 bool MainCamera::CreateConstantBuffer()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	// カメラの定数バッファ生成.
 	D3D11_BUFFER_DESC ConstantBufferDesc;
@@ -306,7 +306,7 @@ void MainCamera::ReleaseConstantBuffer()
 bool MainCamera::WriteConstantBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Map(
 		m_pConstantBuffer,
 		0,
 		D3D11_MAP_WRITE_DISCARD,
@@ -345,7 +345,7 @@ bool MainCamera::WriteConstantBuffer()
 			reinterpret_cast<void*>(&ConstantBuffer), 
 			sizeof(ConstantBuffer));
 
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
 
 		return true;
 	}

@@ -18,7 +18,11 @@ namespace Lib
 {
 	class UpdateTask;
 	class DrawTask;
-	class Vertex2D;
+
+	namespace Dx11
+	{
+		class Vertex2D;
+	}
 }
 
 class MainCamera;
@@ -315,7 +319,7 @@ private:
 
 
 	//--------------------その他オブジェクト--------------------
-	Lib::Light*					m_pLight;				//!< ライトオブジェクト.
+	Lib::Dx11::Light*			m_pLight;				//!< ライトオブジェクト.
 	MainCamera*					m_pCamera;				//!< カメラオブジェクト.
 
 

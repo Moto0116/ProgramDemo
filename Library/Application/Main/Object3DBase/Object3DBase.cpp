@@ -97,15 +97,15 @@ void Object3DBase::ReflectMapDraw()
 //----------------------------------------------------------------------
 void Object3DBase::ShaderSetup()
 {
-	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
 
 	pContext->VSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetVertexShader(m_VertexShaderIndex), 
+		SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetVertexShader(m_VertexShaderIndex), 
 		nullptr, 
 		0);
 	
 	pContext->PSSetShader(
-		SINGLETON_INSTANCE(Lib::ShaderManager)->GetPixelShader(m_PixelShaderIndex), 
+		SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->GetPixelShader(m_PixelShaderIndex), 
 		nullptr,
 		0);
 
@@ -117,33 +117,39 @@ void Object3DBase::ShaderSetup()
 
 void Object3DBase::TextureSetup()
 {
-	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
 
 	ID3D11ShaderResourceView* pResource =
-		SINGLETON_INSTANCE(Lib::TextureManager)->GetTexture(m_SkyCLUTIndex)->Get();
+		SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->GetTexture(m_SkyCLUTIndex)->Get();
 
 	pContext->PSSetShaderResources(3, 1, &pResource);
 }
 
 void Object3DBase::VertexLayoutSetup()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->IASetInputLayout(m_pVertexLayout);
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+
+	pContext->IASetInputLayout(m_pVertexLayout);
 }
 
 void Object3DBase::DepthStencilStateSetup()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->OMSetDepthStencilState(m_pDepthStencilState, 0);
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+
+	pContext->OMSetDepthStencilState(m_pDepthStencilState, 0);
 }
 
 void Object3DBase::ConstantBufferSetup()
 {
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+
+	pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 }
 
 bool Object3DBase::CreateShader()
 {
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\DefaultEffect.fx"), 
 		"VS", 
 		&m_VertexShaderIndex))
@@ -152,7 +158,7 @@ bool Object3DBase::CreateShader()
 		return false;
 	}
 
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 		TEXT("Resource\\Effect\\DefaultEffect.fx"),
 		"PS",
 		&m_PixelShaderIndex))
@@ -166,7 +172,7 @@ bool Object3DBase::CreateShader()
 
 bool Object3DBase::CreateTexture()
 {
-	if (!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->LoadTexture(
 		TEXT("Resource\\Texture\\MainLightCLUT.png"),
 		&m_SkyCLUTIndex))
 	{
@@ -179,6 +185,8 @@ bool Object3DBase::CreateTexture()
 
 bool Object3DBase::CreateVertexLayout()
 {
+	Lib::Dx11::ShaderManager* pShaderManager = Lib::Dx11::ShaderManager::GetInstance();
+
 	// 入力レイアウトの設定.
 	D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
 	{
@@ -188,11 +196,11 @@ bool Object3DBase::CreateVertexLayout()
 	};
 
 	// 入力レイアウトの生成.
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateInputLayout(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateInputLayout(
 		InputElementDesc,
 		sizeof(InputElementDesc) / sizeof(InputElementDesc[0]),
-		Lib::ShaderManager::GetInstance()->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferPointer(),
-		Lib::ShaderManager::GetInstance()->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferSize(),
+		pShaderManager->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferPointer(),
+		pShaderManager->GetCompiledVertexShader(m_VertexShaderIndex)->GetBufferSize(),
 		&m_pVertexLayout)))
 	{
 		OutputErrorLog("入力レイアウトの生成に失敗しました");
@@ -213,7 +221,7 @@ bool Object3DBase::CreateDepthStencilState()
 	DepthStencilDesc.StencilEnable = FALSE;
 
 	// 深度ステンシルステートの生成.
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateDepthStencilState(
 		&DepthStencilDesc,
 		&m_pDepthStencilState)))
 	{
@@ -236,7 +244,7 @@ bool Object3DBase::CreateConstantBuffer()
 	ConstantBufferDesc.StructureByteStride = 0;
 
 	// 定数バッファの生成.
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateBuffer(
 		&ConstantBufferDesc,
 		nullptr,
 		&m_pConstantBuffer)))
@@ -250,8 +258,10 @@ bool Object3DBase::CreateConstantBuffer()
 
 bool Object3DBase::WriteConstantBuffer()
 {
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+
 	D3D11_MAPPED_SUBRESOURCE SubResourceData;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+	if (SUCCEEDED(pContext->Map(
 		m_pConstantBuffer,
 		0,
 		D3D11_MAP_WRITE_DISCARD,
@@ -278,7 +288,7 @@ bool Object3DBase::WriteConstantBuffer()
 			reinterpret_cast<void*>(&ConstantBuffer),
 			sizeof(ConstantBuffer));
 
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pConstantBuffer, 0);
+		pContext->Unmap(m_pConstantBuffer, 0);
 
 		return true;
 	}
@@ -288,13 +298,13 @@ bool Object3DBase::WriteConstantBuffer()
 
 void Object3DBase::ReleaseShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
 }
 
 void Object3DBase::ReleaseTexture()
 {
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
 }
 
 void Object3DBase::ReleaseVertexLayout()

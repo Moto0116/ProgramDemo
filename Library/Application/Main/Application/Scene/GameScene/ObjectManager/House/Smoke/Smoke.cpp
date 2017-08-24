@@ -32,11 +32,11 @@ const D3DXVECTOR2 Smoke::m_LifeRange = D3DXVECTOR2(180, 240);
 //----------------------------------------------------------------------
 Smoke::Smoke(MainCamera* _pCamera, D3DXVECTOR3* _pPos) :
 	m_pCamera(_pCamera),
-	m_VertexShaderIndex(Lib::ShaderManager::m_InvalidIndex),
-	m_PixelShaderIndex(Lib::ShaderManager::m_InvalidIndex),
-	m_ComputeShaderIndex(Lib::ShaderManager::m_InvalidIndex),
-	m_SmokeTextureIndex(Lib::TextureManager::m_InvalidIndex),
-	m_SkyCLUTIndex(Lib::TextureManager::m_InvalidIndex),
+	m_VertexShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
+	m_PixelShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
+	m_ComputeShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
+	m_SmokeTextureIndex(Lib::Dx11::TextureManager::m_InvalidIndex),
+	m_SkyCLUTIndex(Lib::Dx11::TextureManager::m_InvalidIndex),
 	m_IsActive(true),
 	m_IsComputeShader(false),
 	m_RandDevice(),
@@ -160,10 +160,10 @@ void Smoke::Update()
 
 void Smoke::Draw()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext();
-	Lib::TextureManager* pTextureManageer = SINGLETON_INSTANCE(Lib::TextureManager);
-	Lib::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::TextureManager* pTextureManageer = SINGLETON_INSTANCE(Lib::Dx11::TextureManager);
+	Lib::Dx11::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
 
 	if (m_IsActive)
 	{
@@ -215,7 +215,7 @@ bool Smoke::CreateTask()
 
 bool Smoke::CreateVertexBuffer()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	VERTEX VertexData[VERTEX_NUM] =
 	{
@@ -291,7 +291,7 @@ bool Smoke::CreateVertexBuffer()
 
 bool Smoke::CreateShader()
 {
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadVertexShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadVertexShader(
 		TEXT("Resource\\Effect\\Smoke.fx"),
 		"VS",
 		&m_VertexShaderIndex))
@@ -300,7 +300,7 @@ bool Smoke::CreateShader()
 		return false;
 	}
 
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadPixelShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadPixelShader(
 		TEXT("Resource\\Effect\\Smoke.fx"),
 		"PS",
 		&m_PixelShaderIndex))
@@ -309,7 +309,7 @@ bool Smoke::CreateShader()
 		return false;
 	}
 
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->LoadComputeShader(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->LoadComputeShader(
 		TEXT("Resource\\Effect\\Compute.fx"),
 		"CS",
 		&m_ComputeShaderIndex))
@@ -323,8 +323,8 @@ bool Smoke::CreateShader()
 
 bool Smoke::CreateVertexLayout()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
-	Lib::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::ShaderManager);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	Lib::Dx11::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
 
 	D3D11_INPUT_ELEMENT_DESC InputElementDesc[] =
 	{
@@ -353,7 +353,7 @@ bool Smoke::CreateVertexLayout()
 
 bool Smoke::CreateState()
 {
-	Lib::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::GraphicsDevice);
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
 
 	// ブレンドステートの生成.
 	D3D11_BLEND_DESC BlendDesc;
@@ -396,7 +396,7 @@ bool Smoke::CreateState()
 
 bool Smoke::CreateTexture()
 {
-	if (!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->LoadTexture(
 		TEXT("Resource\\Texture\\smoke.png"),
 		&m_SmokeTextureIndex))
 	{
@@ -404,7 +404,7 @@ bool Smoke::CreateTexture()
 		return false;
 	}
 
-	if(!SINGLETON_INSTANCE(Lib::TextureManager)->LoadTexture(
+	if (!SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->LoadTexture(
 		TEXT("Resource\\Texture\\MainLightCLUT.png"),
 		&m_SkyCLUTIndex))
 	{
@@ -429,7 +429,7 @@ bool Smoke::CreateComputeShaderBuffer()
 	D3D11_SUBRESOURCE_DATA InitData;
 	InitData.pSysMem = m_ComputeData;
 
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateBuffer(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateBuffer(
 		&BufferDesc,
 		&InitData,
 		&m_pComputeShaderBuffer)))
@@ -446,7 +446,7 @@ bool Smoke::CreateComputeShaderBuffer()
 	AccessViewDesc.Buffer.FirstElement = 0;
 	AccessViewDesc.Format = DXGI_FORMAT_UNKNOWN;
 	AccessViewDesc.Buffer.NumElements = PARTICLE_NUM;
-	if (FAILED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDevice()->CreateUnorderedAccessView(
+	if (FAILED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDevice()->CreateUnorderedAccessView(
 		m_pComputeShaderBuffer,
 		&AccessViewDesc,
 		&m_pComputeShaderBufferAccess)))
@@ -475,9 +475,9 @@ void Smoke::ReleaseVertexBuffer()
 
 void Smoke::ReleaseShader()
 {
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseComputeShader(m_ComputeShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
-	SINGLETON_INSTANCE(Lib::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseComputeShader(m_ComputeShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleasePixelShader(m_PixelShaderIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->ReleaseVertexShader(m_VertexShaderIndex);
 }
 
 void Smoke::ReleaseVertexLayout()
@@ -493,8 +493,8 @@ void Smoke::ReleaseState()
 
 void Smoke::ReleaseTexture()
 {
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
-	SINGLETON_INSTANCE(Lib::TextureManager)->ReleaseTexture(m_SmokeTextureIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->ReleaseTexture(m_SkyCLUTIndex);
+	SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->ReleaseTexture(m_SmokeTextureIndex);
 }
 
 void Smoke::ReleaseComputeShaderBuffer()
@@ -506,7 +506,7 @@ void Smoke::ReleaseComputeShaderBuffer()
 bool Smoke::WriteInstanceBuffer()
 {
 	D3D11_MAPPED_SUBRESOURCE MappedResource;
-	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Map(
+	if (SUCCEEDED(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Map(
 		m_pInstanceBuffer,
 		0,
 		D3D11_MAP_WRITE_DISCARD,
@@ -533,7 +533,7 @@ bool Smoke::WriteInstanceBuffer()
 			pInstanceData[i].Color.a = m_SmokeData[i].Color.a;
 		}
 
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetDeviceContext()->Unmap(m_pInstanceBuffer, 0);
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->Unmap(m_pInstanceBuffer, 0);
 
 		return true;
 	}

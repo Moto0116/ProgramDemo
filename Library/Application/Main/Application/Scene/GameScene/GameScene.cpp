@@ -14,9 +14,9 @@
 #include "DirectX11\GraphicsDevice\GraphicsDevice.h"
 #include "DirectX11\ShaderManager\ShaderManager.h"
 #include "DirectX11\TextureManager\TextureManager.h"
-#include "DirectX11\SoundDevice\SoundDevice.h"
-#include "DirectX11\SoundManager\SoundManager.h"
 #include "InputDeviceManager\InputDeviceManager.h"
+#include "SoundDevice\SoundDevice.h"
+#include "SoundManager\SoundManager.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "Task\DepthDrawTask\DepthDrawTask.h"
@@ -61,22 +61,22 @@ bool GameScene::Initialize()
 	SINGLETON_CREATE(MapDrawTaskManager);
 
 
-	SINGLETON_CREATE(Lib::FbxFileManager);
-	if (!SINGLETON_INSTANCE(Lib::FbxFileManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
+	SINGLETON_CREATE(Lib::Dx11::FbxFileManager);
+	if (!SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager)->Initialize(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)))
 	{
 		OutputErrorLog("Fbxモデル管理クラスの生成に失敗しました");
 		return false;
 	}
 
-	SINGLETON_CREATE(Lib::ShaderManager);
-	if (!SINGLETON_INSTANCE(Lib::ShaderManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
+	SINGLETON_CREATE(Lib::Dx11::ShaderManager);
+	if (!SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->Initialize(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)))
 	{
 		OutputErrorLog("シェーダー管理クラスの生成に失敗しました");
 		return false;
 	}
 
-	SINGLETON_CREATE(Lib::TextureManager);
-	if (!SINGLETON_INSTANCE(Lib::TextureManager)->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
+	SINGLETON_CREATE(Lib::Dx11::TextureManager);
+	if (!SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->Initialize(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)))
 	{
 		OutputErrorLog("テクスチャ管理クラスの生成に失敗しました");
 		return false;
@@ -84,7 +84,7 @@ bool GameScene::Initialize()
 
 	SINGLETON_CREATE(Lib::SoundDevice);
 	if (!SINGLETON_INSTANCE(Lib::SoundDevice)->Initialize(
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowHandle()))
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetMainWindowHandle()))
 	{
 		OutputErrorLog("サウンドデバイスの生成に失敗しました");
 		return false;
@@ -104,8 +104,8 @@ bool GameScene::Initialize()
 		return false;
 	}
 
-	m_pFont = new Lib::Font();
-	if(!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::GraphicsDevice)))
+	m_pFont = new Lib::Dx11::Font();
+	if (!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)))
 	{
 		OutputErrorLog("フォントオブジェクトの生成に失敗しました");
 		return false;
@@ -150,22 +150,22 @@ void GameScene::Finalize()
 		SINGLETON_DELETE(Lib::SoundDevice);
 	}
 
-	if (SINGLETON_INSTANCE(Lib::TextureManager) != nullptr)
+	if (SINGLETON_INSTANCE(Lib::Dx11::TextureManager) != nullptr)
 	{
-		SINGLETON_INSTANCE(Lib::TextureManager)->Finalize();
-		SINGLETON_DELETE(Lib::TextureManager);
+		SINGLETON_INSTANCE(Lib::Dx11::TextureManager)->Finalize();
+		SINGLETON_DELETE(Lib::Dx11::TextureManager);
 	}
 
-	if (SINGLETON_INSTANCE(Lib::ShaderManager) != nullptr)
+	if (SINGLETON_INSTANCE(Lib::Dx11::ShaderManager) != nullptr)
 	{
-		SINGLETON_INSTANCE(Lib::ShaderManager)->Finalize();
-		SINGLETON_DELETE(Lib::ShaderManager);
+		SINGLETON_INSTANCE(Lib::Dx11::ShaderManager)->Finalize();
+		SINGLETON_DELETE(Lib::Dx11::ShaderManager);
 	}
 
-	if (SINGLETON_INSTANCE(Lib::FbxFileManager) != nullptr)
+	if (SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager) != nullptr)
 	{
-		SINGLETON_INSTANCE(Lib::FbxFileManager)->Finalize();
-		SINGLETON_DELETE(Lib::FbxFileManager);
+		SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager)->Finalize();
+		SINGLETON_DELETE(Lib::Dx11::FbxFileManager);
 	}
 
 	SINGLETON_DELETE(MapDrawTaskManager);
@@ -203,7 +203,7 @@ void GameScene::Update()
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->Run();
 	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->Run();
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(Lib::GraphicsDevice::BACKBUFFER_TARGET);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->BeginScene(Lib::Dx11::GraphicsDevice::BACKBUFFER_TARGET);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
 
 	// 計測時間の描画.
@@ -215,7 +215,7 @@ void GameScene::Update()
 	m_pFont->Draw(&D3DXVECTOR2(1000, 50), UpdateStr);
 	m_pFont->Draw(&D3DXVECTOR2(1000, 80), DrawStr);
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->EndScene();
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->EndScene();
 	Lib::Debugger::EndTimer();
 	m_DrawTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した描画時間を取得.
 
@@ -228,9 +228,9 @@ void GameScene::Update()
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->Run();
 	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->Run();
 
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->BeginScene(Lib::GraphicsDevice::BACKBUFFER_TARGET);
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->BeginScene(Lib::Dx11::GraphicsDevice::BACKBUFFER_TARGET);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
-	SINGLETON_INSTANCE(Lib::GraphicsDevice)->EndScene();
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->EndScene();
 
 #endif // _DEBUG
 

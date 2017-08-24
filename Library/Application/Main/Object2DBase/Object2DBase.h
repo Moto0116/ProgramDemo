@@ -68,10 +68,10 @@ protected:
 	Lib::DrawTask*		m_pDrawTask;	//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*	m_pUpdateTask;	//!< 更新タスクオブジェクト.
 
-	Lib::Vertex2D*	m_pVertex;		//!< 2D描画オブジェクト.
-	D3DXVECTOR2		m_Pos;			//!< 描画座標.
-	D3DXVECTOR2		m_Size;			//!< 描画サイズ.
-	int				m_TextureIndex;	//!< テクスチャのインデックス.
+	Lib::Dx11::Vertex2D*	m_pVertex;		//!< 2D描画オブジェクト.
+	D3DXVECTOR2				m_Pos;			//!< 描画座標.
+	D3DXVECTOR2				m_Size;			//!< 描画サイズ.
+	int						m_TextureIndex;	//!< テクスチャのインデックス.
 	
 };
 

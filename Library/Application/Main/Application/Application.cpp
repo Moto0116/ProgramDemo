@@ -118,11 +118,11 @@ bool Application::CreateMainWindow()
 
 bool Application::CreateGraphicsDevice()
 {
-	SINGLETON_CREATE(Lib::GraphicsDevice);
-	if (!SINGLETON_INSTANCE(Lib::GraphicsDevice)->Initialize(m_pMainWindow->GetWindowHandle()))
+	SINGLETON_CREATE(Lib::Dx11::GraphicsDevice);
+	if (!SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->Initialize(m_pMainWindow->GetWindowHandle()))
 	{
 		OutputErrorLog("グラフィックデバイス生成に失敗しました");
-		SINGLETON_DELETE(Lib::GraphicsDevice);
+		SINGLETON_DELETE(Lib::Dx11::GraphicsDevice);
 		return false;
 	}
 
@@ -133,7 +133,7 @@ bool Application::CreateInputDevice()
 {
 	SINGLETON_CREATE(Lib::InputDeviceManager);
 	if (!SINGLETON_INSTANCE(Lib::InputDeviceManager)->Initialize(
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->GetMainWindowHandle()))
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetMainWindowHandle()))
 	{
 		OutputErrorLog("入力デバイス管理クラス生成に失敗しました");
 		SINGLETON_DELETE(Lib::InputDeviceManager);
@@ -192,10 +192,10 @@ void Application::ReleaseMainWindow()
 
 void Application::ReleaseGraphicsDevice()
 {
-	if (SINGLETON_INSTANCE(Lib::GraphicsDevice) != nullptr)
+	if (SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice) != nullptr)
 	{
-		SINGLETON_INSTANCE(Lib::GraphicsDevice)->Finalize();
-		SINGLETON_DELETE(Lib::GraphicsDevice);
+		SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->Finalize();
+		SINGLETON_DELETE(Lib::Dx11::GraphicsDevice);
 	}
 }
 
