@@ -28,7 +28,7 @@ Object3DBase::Object3DBase() :
 	m_Rotate(D3DXVECTOR3(0, 0, 0))
 {
 	// タスク生成処理.
-	m_pDrawTask = new Lib::DrawTask();
+	m_pDrawTask = new Lib::Draw3DTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 	m_pDepthDrawTask = new DepthDrawTask();
 	m_pMapDrawTask = new MapDrawTask();
@@ -36,12 +36,12 @@ Object3DBase::Object3DBase() :
 	m_pReflectMapDrawTask = new ReflectMapDrawTask();
 
 	// タスクにオブジェクト設定.
-	m_pDrawTask->SetDrawObject(this);
-	m_pUpdateTask->SetUpdateObject(this);
-	m_pDepthDrawTask->SetDrawObject(this);
-	m_pMapDrawTask->SetDrawObject(this);
-	m_pCubeMapDrawTask->SetDrawObject(this);
-	m_pReflectMapDrawTask->SetDrawObject(this);
+	m_pDrawTask->SetObject(this);
+	m_pUpdateTask->SetObject(this);
+	m_pDepthDrawTask->SetObject(this);
+	m_pMapDrawTask->SetObject(this);
+	m_pCubeMapDrawTask->SetObject(this);
+	m_pReflectMapDrawTask->SetObject(this);
 }
 
 Object3DBase::~Object3DBase()

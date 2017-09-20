@@ -49,7 +49,7 @@ bool MiniMap::Initialize()
 {
 	m_pMiniMapDrawStartUp = new MiniMapDrawStartUp(this);
 
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw2DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddStartUpTask(m_pMiniMapDrawStartUp);
 
@@ -84,7 +84,7 @@ void MiniMap::Finalize()
 	delete m_pCamera;
 
 	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveStartUpTask(m_pMiniMapDrawStartUp);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw2DTaskManager)->RemoveTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 
 	delete m_pMiniMapDrawStartUp;

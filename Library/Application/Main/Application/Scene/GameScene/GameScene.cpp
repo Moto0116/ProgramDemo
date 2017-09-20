@@ -54,7 +54,8 @@ GameScene::~GameScene()
 bool GameScene::Initialize()
 {
 	SINGLETON_CREATE(Lib::UpdateTaskManager);
-	SINGLETON_CREATE(Lib::DrawTaskManager);
+	SINGLETON_CREATE(Lib::Draw2DTaskManager);
+	SINGLETON_CREATE(Lib::Draw3DTaskManager);
 	SINGLETON_CREATE(CubeMapDrawTaskManager);
 	SINGLETON_CREATE(ReflectMapDrawTaskManager);
 	SINGLETON_CREATE(DepthDrawTaskManager);
@@ -172,7 +173,8 @@ void GameScene::Finalize()
 	SINGLETON_DELETE(DepthDrawTaskManager);
 	SINGLETON_DELETE(ReflectMapDrawTaskManager);
 	SINGLETON_DELETE(CubeMapDrawTaskManager);
-	SINGLETON_DELETE(Lib::DrawTaskManager);
+	SINGLETON_DELETE(Lib::Draw3DTaskManager);
+	SINGLETON_DELETE(Lib::Draw2DTaskManager);
 	SINGLETON_DELETE(Lib::UpdateTaskManager);
 }
 
@@ -204,7 +206,8 @@ void GameScene::Update()
 	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->Run();
 
 	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->BeginScene(Lib::Dx11::GraphicsDevice::BACKBUFFER_TARGET);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->Run();
+	SINGLETON_INSTANCE(Lib::Draw2DTaskManager)->Run();
 
 	// 計測時間の描画.
 	char UpdateStr[32];
@@ -219,7 +222,7 @@ void GameScene::Update()
 	Lib::Debugger::EndTimer();
 	m_DrawTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した描画時間を取得.
 
-#else
+#else // _DEBUG
 
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
 
@@ -229,9 +232,10 @@ void GameScene::Update()
 	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->Run();
 
 	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->BeginScene(Lib::Dx11::GraphicsDevice::BACKBUFFER_TARGET);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->Run();
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->Run();
+	SINGLETON_INSTANCE(Lib::Draw2DTaskManager)->Run();
 	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->EndScene();
 
-#endif // _DEBUG
+#endif // !_DEBUG
 
 }

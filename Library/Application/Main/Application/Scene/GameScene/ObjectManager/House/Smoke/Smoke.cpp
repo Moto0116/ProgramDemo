@@ -194,16 +194,16 @@ void Smoke::Draw()
 bool Smoke::CreateTask()
 {
 	// タスク生成処理.
-	m_pDrawTask = new Lib::DrawTask();
+	m_pDrawTask = new Lib::Draw3DTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 
 	// タスクにオブジェクト設定.
-	m_pDrawTask->SetDrawObject(this);
-	m_pUpdateTask->SetUpdateObject(this);
+	m_pDrawTask->SetObject(this);
+	m_pUpdateTask->SetObject(this);
 
 	m_pDrawTask->SetPriority(TRANSPARENT_OBJECT);
 
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 
 	return true;
@@ -456,7 +456,7 @@ bool Smoke::CreateComputeShaderBuffer()
 
 void Smoke::ReleaseTask()
 {
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->RemoveTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 
 	delete m_pUpdateTask;

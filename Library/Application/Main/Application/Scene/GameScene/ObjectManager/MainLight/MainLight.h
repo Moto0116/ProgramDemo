@@ -11,15 +11,13 @@
 //----------------------------------------------------------------------
 #include "DirectX11\Light\Dx11Light.h"
 #include "TaskManager\TaskBase\TaskBase.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
+#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
 
 
 namespace Lib
 {
-	class UpdateTask;
-	class DrawStartUpTask;
-	class DrawTask;
-
 	namespace Dx11
 	{
 		class Vertex2D;
@@ -285,7 +283,7 @@ private:
 
 	//--------------------タスクオブジェクト--------------------
 	DepthDrawStartUp*			m_pDepthDrawStartUp;	//!< 深度バッファ描画前処理タスクオブジェクト.
-	Lib::DrawTask*				m_pDrawTask;			//!< 描画タスクオブジェクト.
+	Lib::Draw3DTask*			m_pDrawTask;			//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*			m_pUpdateTask;			//!< 更新タスクオブジェクト.
 	Lib::DrawStartUpTask*		m_pDrawStartUpTask;		//!< 通常描画前処理タスクオブジェクト.
 

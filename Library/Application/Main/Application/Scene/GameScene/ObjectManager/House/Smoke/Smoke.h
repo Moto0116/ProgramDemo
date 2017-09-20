@@ -14,13 +14,9 @@
 #include <random>
 
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
+#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 
-
-namespace Lib
-{
-	class DrawTask;
-	class UpdateTask;
-}
 
 class MainCamera;
 
@@ -228,7 +224,7 @@ private:
 
 
 	//--------------------タスクオブジェクト--------------------
-	Lib::DrawTask*				m_pDrawTask;					//!< 描画タスクオブジェクト.
+	Lib::Draw3DTask*			m_pDrawTask;					//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*			m_pUpdateTask;					//!< 更新タスクオブジェクト.
 
 

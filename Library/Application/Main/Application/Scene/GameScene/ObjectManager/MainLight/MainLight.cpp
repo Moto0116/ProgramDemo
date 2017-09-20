@@ -141,19 +141,19 @@ void MainLight::Draw()
 bool MainLight::CreateTask()
 {
 	// タスクオブジェクトの生成初期化処理.
-	m_pDrawTask = new Lib::DrawTask();
+	m_pDrawTask = new Lib::Draw3DTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 	m_pDrawStartUpTask = new Lib::DrawStartUpTask();
 	m_pDepthDrawStartUp = new DepthDrawStartUp(this);
 
-	m_pDrawTask->SetDrawObject(this);
-	m_pUpdateTask->SetUpdateObject(this);
-	m_pDrawStartUpTask->SetStartUpObject(this);
+	m_pDrawTask->SetObject(this);
+	m_pUpdateTask->SetObject(this);
+	m_pDrawStartUpTask->SetObject(this);
 
 	// タスクオブジェクトを管理クラスに追加.
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddStartUpTask(m_pDrawStartUpTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddStartUpTask(m_pDrawStartUpTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddStartUpTask(m_pDepthDrawStartUp);
 
 	return true;
@@ -454,9 +454,9 @@ bool MainLight::CreateLightTexture()
 void MainLight::ReleaseTask()
 {
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveStartUpTask(m_pDepthDrawStartUp);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveStartUpTask(m_pDrawStartUpTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->RemoveStartUpTask(m_pDrawStartUpTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->RemoveTask(m_pDrawTask);
 
 	SafeDelete(m_pDepthDrawStartUp);
 	SafeDelete(m_pDrawStartUpTask);

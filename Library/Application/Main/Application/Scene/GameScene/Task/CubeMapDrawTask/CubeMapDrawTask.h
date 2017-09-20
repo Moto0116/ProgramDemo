@@ -41,7 +41,7 @@ public:
 	 * 描画するオブジェクトをセット
 	 * @param[in] _pObject オブジェクト
 	 */
-	void SetDrawObject(Object3DBase* _pObject);
+	void SetObject(Object3DBase* _pObject);
 
 private:
 	Object3DBase* m_pObject;	//!< 描画を行うオブジェクト.

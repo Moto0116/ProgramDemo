@@ -186,7 +186,7 @@ protected:
 
 
 
-	Lib::DrawTask*				m_pDrawTask;			//!< 描画タスクオブジェクト.
+	Lib::Draw3DTask*			m_pDrawTask;			//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*			m_pUpdateTask;			//!< 更新タスクオブジェクト.
 	DepthDrawTask*				m_pDepthDrawTask;		//!< 深度バッファ描画タスクオブジェクト.
 	MapDrawTask*				m_pMapDrawTask;			//!< マップ描画タスクオブジェクト.

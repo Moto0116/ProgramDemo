@@ -14,21 +14,19 @@
 #include <random>
 
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
-#include "TaskManager\TaskBase\TaskBase.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
+#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "InputDeviceManager\InputDeviceManager.h"
+#include "WaterDebugFont\WaterDebugFont.h"
 
 
 namespace Lib
 {
-	class DrawTask;
-	class UpdateTask;
-
 	namespace Dx11
 	{
 		class Camera;
 		class Texture;
 		class Vertex2D;
-		class Font;
 	}
 }
 
@@ -188,9 +186,6 @@ private:
 
 	static const D3DXVECTOR3 m_DefaultPos;		//!< 描画する波の位置.
 	static const D3DXVECTOR2 m_DefaultSize;		//!< 描画する波のサイズ.
-	static const D3DXVECTOR2 m_DefaultFontPos;	//!< フォントの座標.
-	static const D3DXVECTOR2 m_DefaultFontSize;	//!< フォントのサイズ.
-	static const D3DXCOLOR m_DefaultFontColor;	//!< フォントのカラー値.
 	static const float m_ClearColor[4];			//!< 初期化色.
 	static const float m_WaterClearColor[4];	//!< 波マップ初期化色.
 	static const float m_CubeTextureWidth;		//!< キューブマップテクスチャの幅.
@@ -263,12 +258,6 @@ private:
 	 */
 	bool CreateReflectMapTexture();
 
-	/**
-	 * フォントの生成
-	 * @return 初期化に成功したらtrue 失敗したらfalse
-	 */
-	bool CreateFontObject();
-
 
 	//----------------------------------------------------------------------
 	// 解放処理
@@ -319,11 +308,6 @@ private:
 	 */
 	void ReleaseReflectMapTexture();
 
-	/**
-	 * フォントオブジェクトの解放
-	 */
-	void ReleaseFontObject();
-
 
 	//----------------------------------------------------------------------
 	// その他処理
@@ -369,15 +353,15 @@ private:
 
 
 	//--------------------タスクオブジェクト--------------------
-	Lib::DrawTask*				m_pDrawTask;				//!< 描画タスクオブジェクト.
+	Lib::Draw3DTask*			m_pDraw3DTask;				//!< 3D描画タスクオブジェクト.
 	Lib::UpdateTask*			m_pUpdateTask;				//!< 更新タスクオブジェクト.
 	CubeDrawStartUp*			m_pCubeDrawStartUp;			//!< キューブマップ描画タスクオブジェクト.
 	ReflectDrawStartUp*			m_pReflectDrawStartUp;		//!< 反射マップ描画タスクオブジェクト.
 
 
 	//--------------------その他オブジェクト--------------------
-	Lib::Dx11::Camera*			m_pCamera;						//!< カメラオブジェクト.
-	Lib::Dx11::Font*			m_pFont;						//!< フォント描画オブジェクト.
+	Lib::Dx11::Camera*			m_pCamera;					//!< カメラオブジェクト.
+	WaterDebugFont*				m_pDebugFont;				//!< 水デバッグフォントクラス.	
 
 
 	//--------------------描画関連--------------------

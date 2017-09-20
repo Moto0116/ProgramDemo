@@ -32,7 +32,7 @@ void MapDrawTask::Run()
 	m_pObject3D->MapDraw();
 }
 
-void MapDrawTask::SetDrawObject(Object3DBase* _pObject3D)
+void MapDrawTask::SetObject(Object3DBase* _pObject3D)
 {
 	m_pObject3D = _pObject3D;
 }

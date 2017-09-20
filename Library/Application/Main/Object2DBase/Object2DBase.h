@@ -75,7 +75,7 @@ protected:
 	void ReleaseVertex2D();
 
 
-	Lib::DrawTask*		m_pDrawTask;	//!< 描画タスクオブジェクト.
+	Lib::Draw2DTask*	m_pDrawTask;	//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*	m_pUpdateTask;	//!< 更新タスクオブジェクト.
 
 	Lib::Dx11::Vertex2D*	m_pVertex;		//!< 2D描画オブジェクト.

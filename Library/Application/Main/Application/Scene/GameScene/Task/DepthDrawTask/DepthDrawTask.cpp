@@ -32,7 +32,7 @@ void DepthDrawTask::Run()
 	m_pObject3D->DepthDraw();
 }
 
-void DepthDrawTask::SetDrawObject(Object3DBase* _pObject3D)
+void DepthDrawTask::SetObject(Object3DBase* _pObject3D)
 {
 	m_pObject3D = _pObject3D;
 }

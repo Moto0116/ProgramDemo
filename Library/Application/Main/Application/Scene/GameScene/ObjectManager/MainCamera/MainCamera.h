@@ -15,12 +15,7 @@
 #include "DirectX11\Camera\Dx11Camera.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
-
-
-namespace Lib
-{
-	class UpdateTask;
-}
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
 
 /**

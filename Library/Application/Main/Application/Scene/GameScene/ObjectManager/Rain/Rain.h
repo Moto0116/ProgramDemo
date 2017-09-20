@@ -14,15 +14,14 @@
 #include <random>
 
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
+#include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
+#include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "..\MainCamera\MainCamera.h"
 
 
 namespace Lib
 {
-	class DrawTask;
-	class UpdateTask;
-
 	namespace Dx11
 	{
 		class Font;
@@ -227,7 +226,7 @@ private:
 
 
 	//--------------------タスクオブジェクト--------------------
-	Lib::DrawTask*				m_pDrawTask;				//!< 描画タスクオブジェクト.
+	Lib::Draw3DTask*			m_pDrawTask;				//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*			m_pUpdateTask;				//!< 更新タスクオブジェクト.
 
 

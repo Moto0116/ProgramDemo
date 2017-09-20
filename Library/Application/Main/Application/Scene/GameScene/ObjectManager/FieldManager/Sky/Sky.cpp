@@ -110,7 +110,7 @@ void Sky::CubeMapDraw()
 //----------------------------------------------------------------------
 bool Sky::CreateTask()
 {
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
@@ -251,7 +251,7 @@ void Sky::ReleaseTask()
 	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->RemoveTask(m_pDrawTask);
 }
 
 void Sky::ReleaseModel()

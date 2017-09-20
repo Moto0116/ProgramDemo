@@ -33,7 +33,7 @@ void ReflectMapDrawTask::Run()
 	m_pObject->ReflectMapDraw();
 }
 
-void ReflectMapDrawTask::SetDrawObject(Object3DBase* _pObject)
+void ReflectMapDrawTask::SetObject(Object3DBase* _pObject)
 {
 	m_pObject = _pObject;
 }

@@ -18,7 +18,6 @@
 #include "DirectX11\TextureManager\ITexture\Dx11ITexture.h"
 #include "DirectX11\TextureManager\Texture\Dx11Texture.h"
 #include "DirectX11\Camera\Dx11Camera.h"
-#include "DirectX11\Font\Dx11Font.h"
 #include "Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.h"
 #include "Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.h"
 
@@ -28,9 +27,6 @@
 //----------------------------------------------------------------------
 const D3DXVECTOR3 Water::m_DefaultPos = D3DXVECTOR3(0, 0.1f, 0);
 const D3DXVECTOR2 Water::m_DefaultSize = D3DXVECTOR2(160, 160);
-const D3DXVECTOR2 Water::m_DefaultFontPos = D3DXVECTOR2(25, 50);
-const D3DXVECTOR2 Water::m_DefaultFontSize = D3DXVECTOR2(16, 32);
-const D3DXCOLOR Water::m_DefaultFontColor = 0xffffffff;
 const float Water::m_ClearColor[4] = { 0, 0, 0, 0 };
 const float Water::m_WaterClearColor[4] = { 0.1f, 0.1f, 0, 0};
 const float Water::m_CubeTextureWidth = 800;
@@ -50,7 +46,6 @@ const int Water::m_ReflectRenderTargetStage = 6;
 //----------------------------------------------------------------------
 Water::Water() : 
 	m_pCamera(nullptr),
-	m_pFont(nullptr),
 	m_CubeVertexShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
 	m_CubePixelShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
 	m_ReflectVertexShaderIndex(Lib::Dx11::ShaderManager::m_InvalidIndex),
@@ -80,20 +75,26 @@ Water::~Water()
 bool Water::Initialize()
 {
 	// タスク生成処理.
-	m_pDrawTask = new Lib::DrawTask();
+	m_pDraw3DTask = new Lib::Draw3DTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 	m_pCubeDrawStartUp = new CubeDrawStartUp(this);
 	m_pReflectDrawStartUp = new ReflectDrawStartUp(this);
 
 	// タスクにオブジェクト設定.
-	m_pDrawTask->SetDrawObject(this);
-	m_pUpdateTask->SetUpdateObject(this);
+	m_pDraw3DTask->SetObject(this);
+	m_pUpdateTask->SetObject(this);
 
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDraw3DTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddStartUpTask(m_pCubeDrawStartUp);
 	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->AddStartUpTask(m_pReflectDrawStartUp);
 
+	m_pDebugFont = new WaterDebugFont();
+	if (!m_pDebugFont->Initialize())
+	{
+		OutputErrorLog("水のデバッグフォントの初期化に失敗しました");
+		return false;
+	}
 
 	if (!CreateVertexBuffer())		return false;
 	if (!CreateShader())			return false;
@@ -102,14 +103,12 @@ bool Water::Initialize()
 	if (!CreateConstantBuffer())	return false;
 	if (!WriteConstantBuffer())		return false;
 	if (!CreateTexture())			return false;
-	if (!CreateFontObject())		return false;
 
 	return true;
 }
 
 void Water::Finalize()
 {
-	ReleaseFontObject();
 	ReleaseTexture();
 	ReleaseConstantBuffer();
 	ReleaseState();
@@ -117,19 +116,24 @@ void Water::Finalize()
 	ReleaseShader();
 	ReleaseVertexBuffer();
 
+	m_pDebugFont->Finalize();
+	SafeDelete(m_pDebugFont);
+
 	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->RemoveStartUpTask(m_pReflectDrawStartUp);
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->RemoveStartUpTask(m_pCubeDrawStartUp);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
+	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->RemoveTask(m_pDraw3DTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 
-	delete m_pReflectDrawStartUp;
-	delete m_pCubeDrawStartUp;
-	delete m_pUpdateTask;
-	delete m_pDrawTask;
+	SafeDelete(m_pReflectDrawStartUp);
+	SafeDelete(m_pCubeDrawStartUp);
+	SafeDelete(m_pUpdateTask);
+	SafeDelete(m_pDraw3DTask);
 }
 
 void Water::Update()
 {
+	m_pDebugFont->SetIsCubeMap(m_IsCubeMapDraw);
+
 	m_pKeyState = SINGLETON_INSTANCE(Lib::InputDeviceManager)->GetKeyState();
 
 	if (m_pKeyState[DIK_T] == Lib::KeyDevice::KEYSTATE::KEY_PUSH)
@@ -198,9 +202,6 @@ void Water::Draw()
 		pDeviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
 		pDeviceContext->Draw(VERTEX_NUM, 0);
-
-		m_pFont->Draw(&m_DefaultFontPos, "Water : CubeMap");
-		m_pFont->Draw(&D3DXVECTOR2(m_DefaultFontPos.x + 320, m_DefaultFontPos.y), "T key");
 	}
 	else
 	{
@@ -237,9 +238,6 @@ void Water::Draw()
 		pDeviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 
 		pDeviceContext->Draw(VERTEX_NUM, 0);
-
-		m_pFont->Draw(&m_DefaultFontPos, "Water : ReflectMap");
-		m_pFont->Draw(&D3DXVECTOR2(m_DefaultFontPos.x + 320, m_DefaultFontPos.y), "T key");
 	}
 }
 
@@ -1005,22 +1003,6 @@ bool Water::CreateReflectMapTexture()
 	return true;
 }
 
-bool Water::CreateFontObject()
-{
-	m_pFont = new Lib::Dx11::Font();
-	if (!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)))
-	{
-		return false;
-	}
-
-	if (!m_pFont->CreateVertexBuffer(&m_DefaultFontSize, &m_DefaultFontColor))
-	{
-		return false;
-	}
-
-	return true;
-}
-
 void Water::ReleaseVertexBuffer()
 {
 	SafeRelease(m_pWaveVertexBuffer);
@@ -1103,13 +1085,6 @@ void Water::ReleaseReflectMapTexture()
 	SafeRelease(m_pReflectShaderResourceView);
 	SafeRelease(m_pReflectRenderTarget);
 	SafeRelease(m_pReflectTexture);
-}
-
-void Water::ReleaseFontObject()
-{
-	m_pFont->ReleaseVertexBuffer();
-	m_pFont->Finalize();
-	delete m_pFont;
 }
 
 bool Water::WriteConstantBuffer()

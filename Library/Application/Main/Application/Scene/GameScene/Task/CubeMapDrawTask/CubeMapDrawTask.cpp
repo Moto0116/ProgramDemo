@@ -33,7 +33,7 @@ void CubeMapDrawTask::Run()
 	m_pObject->CubeMapDraw();
 }
 
-void CubeMapDrawTask::SetDrawObject(Object3DBase* _pObject)
+void CubeMapDrawTask::SetObject(Object3DBase* _pObject)
 {
 	m_pObject = _pObject;
 }

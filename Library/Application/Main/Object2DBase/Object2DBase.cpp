@@ -22,11 +22,11 @@ Object2DBase::Object2DBase() :
 	m_Pos(D3DXVECTOR2(0, 0)),
 	m_Size(D3DXVECTOR2(0, 0))
 {
-	m_pDrawTask = new Lib::DrawTask();
+	m_pDrawTask = new Lib::Draw2DTask();
 	m_pUpdateTask = new Lib::UpdateTask();
 
-	m_pDrawTask->SetDrawObject(this);
-	m_pUpdateTask->SetUpdateObject(this);
+	m_pDrawTask->SetObject(this);
+	m_pUpdateTask->SetObject(this);
 }
 
 Object2DBase::~Object2DBase()

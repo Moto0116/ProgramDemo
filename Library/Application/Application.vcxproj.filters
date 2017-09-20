@@ -145,6 +145,7 @@
     <ClCompile Include="Main\Object2DBase\Object2DBase.cpp">
       <Filter>Main\Object2DBase</Filter>
     </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\Application\Application.h">
@@ -210,6 +211,7 @@
     <ClInclude Include="Main\Application\MyDefine.h">
       <Filter>Main\Application</Filter>
     </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\Effect\Compute.fx">
