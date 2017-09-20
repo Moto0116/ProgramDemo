@@ -10,9 +10,9 @@
 #include "House.h"
 
 #include "Debugger\Debugger.h"
-#include "DirectX11\FbxFileManager\FbxFileManager.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\ShaderManager\ShaderManager.h"
+#include "DirectX11\FbxFileManager\Dx11FbxFileManager.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\ShaderManager\Dx11ShaderManager.h"
 #include "Smoke\Smoke.h"
 
 
@@ -84,7 +84,6 @@ bool House::Initialize()
 	if (!WriteConstantBuffer())		return false;
 	if (!m_pSmoke->Initialize())	return false;
 
-
 	return true;
 }
 
@@ -102,10 +101,6 @@ void House::Finalize()
 	ReleaseShader();
 	ReleaseModel();
 	ReleaseTask();
-}
-
-void House::Update()
-{
 }
 
 void House::Draw()

@@ -10,8 +10,8 @@
 #include "Object2DBase.h"
 
 #include "Debugger\Debugger.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\TextureManager\TextureManager.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\TextureManager\Dx11TextureManager.h"
 
 
 //----------------------------------------------------------------------
@@ -48,7 +48,15 @@ void Object2DBase::Finalize()
 {
 }
 
+void Object2DBase::UpdateStartUp()
+{
+}
+
 void Object2DBase::Update()
+{
+}
+
+void Object2DBase::DrawStartUp()
 {
 }
 

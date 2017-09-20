@@ -50,33 +50,27 @@ public:
 	virtual void Finalize();
 
 	/**
-	 * オブジェクトの更新
-	 */
-	virtual void Update();
-
-	/**
 	 * オブジェクトの描画
 	 */
 	virtual void Draw();
-
 
 private:
 	/**
 	 * ミニマップ描画前処理のタスク
 	 */
-	class DrawBeginTask : public Lib::TaskBase<>
+	class MiniMapDrawStartUp : public Lib::TaskBase<>
 	{
 	public:
 		/**
 		 * コンストラクタ
 		 * @param[in] _pMiniMap ミニマップオブジェクト
 		 */
-		DrawBeginTask(MiniMap* _pMiniMap);
+		MiniMapDrawStartUp(MiniMap* _pMiniMap);
 
 		/**
 		 * デストラクタ
 		 */
-		virtual ~DrawBeginTask();
+		virtual ~MiniMapDrawStartUp();
 
 		/**
 		 * タスクの実行
@@ -159,7 +153,7 @@ private:
 
 
 	//--------------------タスクオブジェクト--------------------
-	DrawBeginTask*				m_pDrawBeginTask;		//!< 描画前タスクオブジェクト.
+	MiniMapDrawStartUp*			m_pMiniMapDrawStartUp;		//!< 描画前タスクオブジェクト.
 
 
 	//--------------------その他オブジェクト--------------------

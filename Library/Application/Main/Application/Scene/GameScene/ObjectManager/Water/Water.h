@@ -70,34 +70,23 @@ public:
 	 */
 	virtual void Draw();
 
-	/**
-	 * 波マップの描画
-	 */
-	void WaveDraw();
-
-	/**
-	 * 法線マップの描画
-	 */
-	void BumpDraw();
-
-
 private:
 	/**
 	 * キューブマップ描画前処理のタスク
 	 */
-	class CubeDrawBeginTask : public Lib::TaskBase<>
+	class CubeDrawStartUp : public Lib::TaskBase<>
 	{
 	public:
 		/**
 		 * コンストラクタ
 		 * @param[in] _pWater 水オブジェクト
 		 */
-		CubeDrawBeginTask(Water* _pWater);
+		CubeDrawStartUp(Water* _pWater);
 
 		/**
 		 * デストラクタ
 		 */
-		virtual ~CubeDrawBeginTask();
+		virtual ~CubeDrawStartUp();
 
 		/**
 		 * タスクの実行
@@ -113,19 +102,19 @@ private:
 	/**
 	 * 反射マップ描画前処理のタスク
 	 */
-	class ReflectDrawBeginTask : public Lib::TaskBase<>
+	class ReflectDrawStartUp : public Lib::TaskBase<>
 	{
 	public:
 		/**
 		 * コンストラクタ
 		 * @param[in] _pWater 水オブジェクト
 		 */
-		ReflectDrawBeginTask(Water* _pWater);
+		ReflectDrawStartUp(Water* _pWater);
 
 		/**
 		 * デストラクタ
 		 */
-		virtual ~ReflectDrawBeginTask();
+		virtual ~ReflectDrawStartUp();
 
 		/**
 		 * タスクの実行
@@ -368,13 +357,22 @@ private:
 	 */
 	void ReflectMapBeginScene();
 
+	/**
+	 * 波マップの描画
+	 */
+	void WaveDraw();
+
+	/**
+	 * 法線マップの描画
+	 */
+	void BumpDraw();
 
 
 	//--------------------タスクオブジェクト--------------------
-	Lib::DrawTask*				m_pDrawTask;					//!< 描画タスクオブジェクト.
-	Lib::UpdateTask*			m_pUpdateTask;					//!< 更新タスクオブジェクト.
-	CubeDrawBeginTask*			m_pCubeDrawBeginTask;			//!< キューブマップ描画タスクオブジェクト.
-	ReflectDrawBeginTask*		m_pReflectDrawBeginTask;		//!< 反射マップ描画タスクオブジェクト.
+	Lib::DrawTask*				m_pDrawTask;				//!< 描画タスクオブジェクト.
+	Lib::UpdateTask*			m_pUpdateTask;				//!< 更新タスクオブジェクト.
+	CubeDrawStartUp*			m_pCubeDrawStartUp;			//!< キューブマップ描画タスクオブジェクト.
+	ReflectDrawStartUp*			m_pReflectDrawStartUp;		//!< 反射マップ描画タスクオブジェクト.
 
 
 	//--------------------その他オブジェクト--------------------

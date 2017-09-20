@@ -13,6 +13,8 @@
 
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr, INT _iCmdShow)
 {
+	::ImmDisableIME(NULL);	// IMEは切っておく.
+
 	Application App;
 	if (!App.Initialize())
 	{

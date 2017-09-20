@@ -12,7 +12,7 @@
 #include <D3DX11.h>
 #include <D3DX10.h>
 
-#include "DirectX11\Camera\Camera.h"
+#include "DirectX11\Camera\Dx11Camera.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
 
@@ -56,11 +56,6 @@ public:
 	virtual void Update();
 
 	/**
-	 * オブジェクトの描画
-	 */
-	virtual void Draw();
-
-	/**
 	 * ビュー行列の取得
 	 * @return ビュー行列
 	 */
@@ -93,7 +88,6 @@ public:
 	 * @param[out] _pRotation 回転行列の出力先
 	 */
 	void GetBillBoardRotation(D3DXVECTOR3* _pBillPos, D3DXMATRIX* _pRotation);
-
 
 private:
 	/**

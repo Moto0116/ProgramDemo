@@ -10,12 +10,13 @@
 #include "MainLight.h"
 
 #include "Debugger\Debugger.h"
+#include "TaskManager\TaskBase\DrawStartUpTask\DrawStartUpTask.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\TextureManager\TextureManager.h"
-#include "DirectX11\ShaderManager\ShaderManager.h"
-#include "DirectX11\Vertex2D\Vertex2D.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\TextureManager\Dx11TextureManager.h"
+#include "DirectX11\ShaderManager\Dx11ShaderManager.h"
+#include "DirectX11\Vertex2D\Dx11Vertex2D.h"
 #include "Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h"
 #include "..\MainCamera\MainCamera.h"
 
@@ -39,11 +40,11 @@ const int MainLight::m_RenderTargetStage = 1;
 // Constructor	Destructor
 //----------------------------------------------------------------------
 MainLight::MainLight(MainCamera* _pCamera) :
-	m_pLight(nullptr),
-	m_pCamera(_pCamera),
-	m_pDepthTexture(nullptr),
-	m_pRenderTarget(nullptr),
-	m_LightState(m_DefaultLightPos, 0.0f)
+m_pLight(nullptr),
+m_pCamera(_pCamera),
+m_pDepthTexture(nullptr),
+m_pRenderTarget(nullptr),
+m_LightState(m_DefaultLightPos, 0.0f)
 {
 }
 
@@ -56,7 +57,7 @@ MainLight::~MainLight()
 // Public Functions
 //----------------------------------------------------------------------
 bool MainLight::Initialize()
-{ 
+{
 	if (!CreateTask())				return false;
 	if (!CreateLight())				return false;
 	if (!CreateConstantBuffer())	return false;
@@ -103,6 +104,11 @@ void MainLight::Update()
 	WriteConstantBuffer();
 }
 
+void MainLight::DrawStartUp()
+{
+	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(2, 1, &m_pDepthStencilResource);
+}
+
 void MainLight::Draw()
 {
 	//--------------------描画--------------------
@@ -137,17 +143,18 @@ bool MainLight::CreateTask()
 	// タスクオブジェクトの生成初期化処理.
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
-	m_pDrawBeginTask = new DrawBeginTask(this);
-	m_pDepthDrawBeginTask = new DepthDrawBeginTask(this);
+	m_pDrawStartUpTask = new Lib::DrawStartUpTask();
+	m_pDepthDrawStartUp = new DepthDrawStartUp(this);
 
 	m_pDrawTask->SetDrawObject(this);
 	m_pUpdateTask->SetUpdateObject(this);
+	m_pDrawStartUpTask->SetStartUpObject(this);
 
 	// タスクオブジェクトを管理クラスに追加.
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddBeginTask(m_pDrawBeginTask);
-	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddBeginTask(m_pDepthDrawBeginTask);
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddStartUpTask(m_pDrawStartUpTask);
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddStartUpTask(m_pDepthDrawStartUp);
 
 	return true;
 }
@@ -446,13 +453,13 @@ bool MainLight::CreateLightTexture()
 
 void MainLight::ReleaseTask()
 {
-	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveBeginTask(m_pDepthDrawBeginTask);
-	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveBeginTask(m_pDrawBeginTask);
+	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveStartUpTask(m_pDepthDrawStartUp);
+	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveStartUpTask(m_pDrawStartUpTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
 
-	SafeDelete(m_pDepthDrawBeginTask);
-	SafeDelete(m_pDrawBeginTask);
+	SafeDelete(m_pDepthDrawStartUp);
+	SafeDelete(m_pDrawStartUpTask);
 	SafeDelete(m_pUpdateTask);
 	SafeDelete(m_pDrawTask);
 }
@@ -558,11 +565,6 @@ bool MainLight::WriteConstantBuffer()
 	return false;
 }
 
-void MainLight::DrawBeginScene()
-{
-	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext()->PSSetShaderResources(2, 1, &m_pDepthStencilResource);
-}
-
 void MainLight::MainLightBeginScene()
 {
 	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->BeginScene(m_RenderTargetStage);
@@ -576,37 +578,14 @@ void MainLight::MainLightBeginScene()
 
 
 //----------------------------------------------------------------------
-// 通常描画前処理タスク Constructor Destructor
-//----------------------------------------------------------------------
-MainLight::DrawBeginTask::DrawBeginTask(MainLight* _pMainLight) :
-	m_pMainLight(_pMainLight)
-{
-}
-
-MainLight::DrawBeginTask::~DrawBeginTask()
-{
-}
-
-
-//----------------------------------------------------------------------
-// 通常描画前処理タスク Public Function
-//----------------------------------------------------------------------
-void MainLight::DrawBeginTask::Run()
-{
-	m_pMainLight->DrawBeginScene();
-}
-
-
-
-//----------------------------------------------------------------------
 // 深度バッファ描画前タスク Constructor Destructor
 //----------------------------------------------------------------------
-MainLight::DepthDrawBeginTask::DepthDrawBeginTask(MainLight* _pMainLight) :
+MainLight::DepthDrawStartUp::DepthDrawStartUp(MainLight* _pMainLight) :
 	m_pMainLight(_pMainLight)
 {
 }
 
-MainLight::DepthDrawBeginTask::~DepthDrawBeginTask()
+MainLight::DepthDrawStartUp::~DepthDrawStartUp()
 {
 }
 
@@ -614,7 +593,7 @@ MainLight::DepthDrawBeginTask::~DepthDrawBeginTask()
 //----------------------------------------------------------------------
 // 深度バッファ描画前タスク Public Function
 //----------------------------------------------------------------------
-void MainLight::DepthDrawBeginTask::Run()
+void MainLight::DepthDrawStartUp::Run()
 {
 	m_pMainLight->MainLightBeginScene();
 }

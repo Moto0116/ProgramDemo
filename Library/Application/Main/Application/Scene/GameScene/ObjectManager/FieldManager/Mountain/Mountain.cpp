@@ -10,9 +10,9 @@
 #include "Mountain.h"
 
 #include "Debugger\Debugger.h"
-#include "DirectX11\FbxFileManager\FbxFileManager.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\ShaderManager\ShaderManager.h"
+#include "DirectX11\FbxFileManager\Dx11FbxFileManager.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\ShaderManager\Dx11ShaderManager.h"
 
 
 //----------------------------------------------------------------------
@@ -68,10 +68,6 @@ void Mountain::Finalize()
 	ReleaseTask();
 }
 
-void Mountain::Update()
-{
-}
-
 void Mountain::Draw()
 {
 	Lib::Dx11::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager);
@@ -83,10 +79,6 @@ void Mountain::Draw()
 	ConstantBufferSetup();
 
 	pFbxFileManager->GetFbxModel(m_MountainModelIndex)->Draw();
-}
-
-void Mountain::DepthDraw()
-{
 }
 
 void Mountain::MapDraw()

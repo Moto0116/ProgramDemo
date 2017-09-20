@@ -9,7 +9,7 @@
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
-#include "DirectX11\Light\Light.h"
+#include "DirectX11\Light\Dx11Light.h"
 #include "TaskManager\TaskBase\TaskBase.h"
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
 
@@ -17,6 +17,7 @@
 namespace Lib
 {
 	class UpdateTask;
+	class DrawStartUpTask;
 	class DrawTask;
 
 	namespace Dx11
@@ -63,10 +64,14 @@ public:
 	virtual void Update();
 
 	/**
+	 * オブジェクトの描画前処理
+	 */
+	virtual void DrawStartUp();
+
+	/**
 	 * オブジェクトの描画
 	 */
 	virtual void Draw();
-
 
 private:
 	enum
@@ -75,49 +80,21 @@ private:
 	};
 
 	/**
-	 * 通常描画前処理のタスク
-	 */
-	class DrawBeginTask : public Lib::TaskBase<>
-	{
-	public:
-		/**
-		 * コンストラクタ
-		 * @param[in] _pMainLight ライトオブジェクト
-		 */
-		DrawBeginTask(MainLight* _pMainLight);
-
-		/**
-		 * デストラクタ 
-		 */
-		virtual ~DrawBeginTask();
-
-		/**
-		 * タスクの実行
-		 */
-		virtual void Run();
-
-	private:
-		MainLight* m_pMainLight;	//!< 処理オブジェクト.
-
-	};
-
-
-	/**
 	 * 深度値描画前処理のタスク
 	 */
-	class DepthDrawBeginTask : public Lib::TaskBase<>
+	class DepthDrawStartUp : public Lib::TaskBase<>
 	{
 	public:
 		/**
 		 * コンストラクタ
 		 * @param[in] _pMainLight ライトオブジェクト
 		 */
-		DepthDrawBeginTask(MainLight* _pMainLight);
+		DepthDrawStartUp(MainLight* _pMainLight);
 
 		/**
 		 * デストラクタ
 		 */
-		virtual ~DepthDrawBeginTask();
+		virtual ~DepthDrawStartUp();
 
 		/**
 		 * タスクの実行
@@ -293,11 +270,6 @@ private:
 	// その他処理
 	//----------------------------------------------------------------------
 
-	/** 
-	 * 通常描画前処理
-	 */
-	void DrawBeginScene();
-
 	/**
 	 * 深度値描画前処理
 	 */
@@ -312,10 +284,10 @@ private:
 
 
 	//--------------------タスクオブジェクト--------------------
-	DrawBeginTask*				m_pDrawBeginTask;		//!< 通常描画前処理タスクオブジェクト.
-	DepthDrawBeginTask*			m_pDepthDrawBeginTask;	//!< 深度バッファ描画前処理タスクオブジェクト.
+	DepthDrawStartUp*			m_pDepthDrawStartUp;	//!< 深度バッファ描画前処理タスクオブジェクト.
 	Lib::DrawTask*				m_pDrawTask;			//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*			m_pUpdateTask;			//!< 更新タスクオブジェクト.
+	Lib::DrawStartUpTask*		m_pDrawStartUpTask;		//!< 通常描画前処理タスクオブジェクト.
 
 
 	//--------------------その他オブジェクト--------------------

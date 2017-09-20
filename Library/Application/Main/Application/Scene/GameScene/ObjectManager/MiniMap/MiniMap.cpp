@@ -10,8 +10,8 @@
 #include "MiniMap.h"
 
 #include "Debugger\Debugger.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\Camera\Camera.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\Camera\Dx11Camera.h"
 #include "Main\Application\Scene\GameScene\Task\MapDrawTask\MapDrawTask.h"
 
 
@@ -47,11 +47,11 @@ MiniMap::~MiniMap()
 //----------------------------------------------------------------------
 bool MiniMap::Initialize()
 {
-	m_pDrawBeginTask = new DrawBeginTask(this);
+	m_pMiniMapDrawStartUp = new MiniMapDrawStartUp(this);
 
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(MapDrawTaskManager)->AddBeginTask(m_pDrawBeginTask);
+	SINGLETON_INSTANCE(MapDrawTaskManager)->AddStartUpTask(m_pMiniMapDrawStartUp);
 
 	m_pCamera = new Lib::Dx11::Camera(
 		m_TextureWidth,
@@ -83,15 +83,11 @@ void MiniMap::Finalize()
 
 	delete m_pCamera;
 
-	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveBeginTask(m_pDrawBeginTask);
+	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveStartUpTask(m_pMiniMapDrawStartUp);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 
-	delete m_pDrawBeginTask;
-}
-
-void MiniMap::Update()
-{
+	delete m_pMiniMapDrawStartUp;
 }
 
 void MiniMap::Draw()
@@ -300,12 +296,12 @@ void MiniMap::MiniMapBeginScene()
 //----------------------------------------------------------------------
 // Inner Class Constructor Destructor
 //----------------------------------------------------------------------
-MiniMap::DrawBeginTask::DrawBeginTask(MiniMap* _pMiniMap) :
+MiniMap::MiniMapDrawStartUp::MiniMapDrawStartUp(MiniMap* _pMiniMap) :
 	m_pMiniMap(_pMiniMap)
 {
 }
 
-MiniMap::DrawBeginTask::~DrawBeginTask()
+MiniMap::MiniMapDrawStartUp::~MiniMapDrawStartUp()
 {
 }
 
@@ -313,7 +309,7 @@ MiniMap::DrawBeginTask::~DrawBeginTask()
 //----------------------------------------------------------------------
 // Inner Class Public Function
 //----------------------------------------------------------------------
-void MiniMap::DrawBeginTask::Run()
+void MiniMap::MiniMapDrawStartUp::Run()
 {
 	m_pMiniMap->MiniMapBeginScene();
 }

@@ -11,7 +11,7 @@
 
 #include "Debugger\Debugger.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 
 
@@ -103,10 +103,6 @@ void MainCamera::Update()
 	{
 		Transform();	// カメラが動いたら定数バッファを更新する.
 	}
-}
-
-void MainCamera::Draw()
-{
 }
 
 void MainCamera::GetBillBoardRotation(D3DXVECTOR3* _pBillPos, D3DXMATRIX* _pRotation)

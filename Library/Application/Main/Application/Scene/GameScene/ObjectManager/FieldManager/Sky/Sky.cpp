@@ -10,11 +10,11 @@
 #include "Sky.h"
 
 #include "Debugger\Debugger.h"
-#include "DirectX11\FbxFileManager\FbxFileManager.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\ShaderManager\ShaderManager.h"
-#include "DirectX11\TextureManager\TextureManager.h"
-#include "DirectX11\TextureManager\ITexture\ITexture.h"
+#include "DirectX11\FbxFileManager\Dx11FbxFileManager.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\ShaderManager\Dx11ShaderManager.h"
+#include "DirectX11\TextureManager\Dx11TextureManager.h"
+#include "DirectX11\TextureManager\ITexture\Dx11ITexture.h"
 
 
 //----------------------------------------------------------------------
@@ -70,10 +70,6 @@ void Sky::Finalize()
 	ReleaseTask();
 }
 
-void Sky::Update()
-{
-}
-
 void Sky::Draw()
 {
 	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
@@ -89,14 +85,6 @@ void Sky::Draw()
 	ConstantBufferSetup();
 
 	SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager)->GetFbxModel(m_SkyModelIndex)->Draw();
-}
-
-void Sky::DepthDraw()
-{
-}
-
-void Sky::MapDraw()
-{
 }
 
 void Sky::CubeMapDraw()

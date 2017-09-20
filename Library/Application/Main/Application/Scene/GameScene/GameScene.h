@@ -12,7 +12,7 @@
 #include "SceneManager\SceneBase\SceneBase.h"
 
 #include "ObjectManager\ObjectManager.h"
-#include "DirectX11\Font\Font.h"
+#include "DirectX11\Font\Dx11Font.h"
 
 
 /**

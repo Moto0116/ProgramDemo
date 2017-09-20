@@ -10,7 +10,7 @@
 #include "Application.h"
 
 #include "Debugger\Debugger.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
 #include "InputDeviceManager\InputDeviceManager.h"
 #include "Scene\GameScene\GameScene.h"
 

@@ -12,13 +12,13 @@
 #include "Debugger\Debugger.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\ShaderManager\ShaderManager.h"
-#include "DirectX11\TextureManager\TextureManager.h"
-#include "DirectX11\TextureManager\ITexture\ITexture.h"
-#include "DirectX11\TextureManager\Texture\Texture.h"
-#include "DirectX11\Camera\Camera.h"
-#include "DirectX11\Font\Font.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\ShaderManager\Dx11ShaderManager.h"
+#include "DirectX11\TextureManager\Dx11TextureManager.h"
+#include "DirectX11\TextureManager\ITexture\Dx11ITexture.h"
+#include "DirectX11\TextureManager\Texture\Dx11Texture.h"
+#include "DirectX11\Camera\Dx11Camera.h"
+#include "DirectX11\Font\Dx11Font.h"
 #include "Main\Application\Scene\GameScene\Task\CubeMapDrawTask\CubeMapDrawTask.h"
 #include "Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.h"
 
@@ -82,8 +82,8 @@ bool Water::Initialize()
 	// タスク生成処理.
 	m_pDrawTask = new Lib::DrawTask();
 	m_pUpdateTask = new Lib::UpdateTask();
-	m_pCubeDrawBeginTask = new CubeDrawBeginTask(this);
-	m_pReflectDrawBeginTask = new ReflectDrawBeginTask(this);
+	m_pCubeDrawStartUp = new CubeDrawStartUp(this);
+	m_pReflectDrawStartUp = new ReflectDrawStartUp(this);
 
 	// タスクにオブジェクト設定.
 	m_pDrawTask->SetDrawObject(this);
@@ -91,8 +91,8 @@ bool Water::Initialize()
 
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
-	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddBeginTask(m_pCubeDrawBeginTask);
-	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->AddBeginTask(m_pReflectDrawBeginTask);
+	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddStartUpTask(m_pCubeDrawStartUp);
+	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->AddStartUpTask(m_pReflectDrawStartUp);
 
 
 	if (!CreateVertexBuffer())		return false;
@@ -117,13 +117,13 @@ void Water::Finalize()
 	ReleaseShader();
 	ReleaseVertexBuffer();
 
-	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->RemoveBeginTask(m_pReflectDrawBeginTask);
-	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->RemoveBeginTask(m_pCubeDrawBeginTask);
+	SINGLETON_INSTANCE(ReflectMapDrawTaskManager)->RemoveStartUpTask(m_pReflectDrawStartUp);
+	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->RemoveStartUpTask(m_pCubeDrawStartUp);
 	SINGLETON_INSTANCE(Lib::DrawTaskManager)->RemoveTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 
-	delete m_pReflectDrawBeginTask;
-	delete m_pCubeDrawBeginTask;
+	delete m_pReflectDrawStartUp;
+	delete m_pCubeDrawStartUp;
 	delete m_pUpdateTask;
 	delete m_pDrawTask;
 }
@@ -241,71 +241,6 @@ void Water::Draw()
 		m_pFont->Draw(&m_DefaultFontPos, "Water : ReflectMap");
 		m_pFont->Draw(&D3DXVECTOR2(m_DefaultFontPos.x + 320, m_DefaultFontPos.y), "T key");
 	}
-}
-
-void Water::WaveDraw()
-{
-	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
-	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
-	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
-
-	// 描画先を波マップに変更.
-	pGraphicsDevice->SetRenderTarget(&m_pWaveRenderTarget[m_WaveRenderIndex], m_WaveRenderTargetStage);
-	pGraphicsDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_WaveRenderTargetStage);
-	pGraphicsDevice->SetClearColor(m_WaterClearColor, m_WaveRenderTargetStage);
-	pGraphicsDevice->SetViewPort(&m_ViewPort, m_WaveRenderTargetStage);
-	pGraphicsDevice->BeginScene(m_WaveRenderTargetStage);
-
-	// 描画準備.
-	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_WaveVertexShaderIndex), nullptr, 0);
-	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_WavePixelShaderIndex), nullptr, 0);
-	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	pDeviceContext->IASetInputLayout(m_pWaveVertexLayout);
-	pDeviceContext->OMSetDepthStencilState(nullptr, 0);
-	pDeviceContext->OMSetBlendState(m_pBlendState, nullptr, 0xffffffff);
-
-	UINT Stride = sizeof(MAP_VERTEX);
-	UINT Offset = 0;
-	pDeviceContext->IASetVertexBuffers(0, 1, &m_pWaveVertexBuffer, &Stride, &Offset);
-	pDeviceContext->PSSetShaderResources(0, 1, &m_pWaveShaderResourceView[m_WaveRenderIndex ^ 1]);
-	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	pDeviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	pDeviceContext->Draw(VERTEX_NUM, 0);
-
-	m_WaveRenderIndex ^= 1; // 描画先のテクスチャを入れ替える.
-}
-
-void Water::BumpDraw()
-{
-	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
-	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
-	Lib::Dx11::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
-
-	// 描画先を法線マップに変更.
-	pGraphicsDevice->SetRenderTarget(&m_pBumpRenderTarget, m_BumpRenderTargetStage);
-	pGraphicsDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_BumpRenderTargetStage);
-	pGraphicsDevice->SetClearColor(m_ClearColor, m_BumpRenderTargetStage);
-	pGraphicsDevice->SetViewPort(&m_ViewPort, m_BumpRenderTargetStage);
-	pGraphicsDevice->BeginScene(m_BumpRenderTargetStage);
-
-	// 描画準備.
-	pContext->VSSetShader(pShaderManager->GetVertexShader(m_WaveVertexShaderIndex), nullptr, 0);
-	pContext->PSSetShader(pShaderManager->GetPixelShader(m_BumpPixelShaderIndex), nullptr, 0);
-	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-	pContext->IASetInputLayout(m_pWaveVertexLayout);
-	pContext->OMSetDepthStencilState(m_pDepthStencilState, 0);
-	pContext->OMSetBlendState(m_pBlendState, nullptr, 0xffffffff);
-
-	UINT Stride = sizeof(MAP_VERTEX);
-	UINT Offset = 0;
-	pContext->IASetVertexBuffers(0, 1, &m_pWaveVertexBuffer, &Stride, &Offset);
-	pContext->PSSetShaderResources(0, 1, &m_pWaveShaderResourceView[m_WaveRenderIndex]);
-	pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	pContext->VSSetConstantBuffers(5, 1, &m_pReflectMapConstantBuffer);
-	pContext->PSSetConstantBuffers(5, 1, &m_pReflectMapConstantBuffer);
-
-	pContext->Draw(VERTEX_NUM, 0);
 }
 
 
@@ -1314,17 +1249,81 @@ void Water::ReflectMapBeginScene()
 	pDeviceContext->PSSetConstantBuffers(5, 1, &m_pReflectMapConstantBuffer);
 }
 
+void Water::WaveDraw()
+{
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	ID3D11DeviceContext* pDeviceContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::ShaderManager* pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
+
+	// 描画先を波マップに変更.
+	pGraphicsDevice->SetRenderTarget(&m_pWaveRenderTarget[m_WaveRenderIndex], m_WaveRenderTargetStage);
+	pGraphicsDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_WaveRenderTargetStage);
+	pGraphicsDevice->SetClearColor(m_WaterClearColor, m_WaveRenderTargetStage);
+	pGraphicsDevice->SetViewPort(&m_ViewPort, m_WaveRenderTargetStage);
+	pGraphicsDevice->BeginScene(m_WaveRenderTargetStage);
+
+	// 描画準備.
+	pDeviceContext->VSSetShader(pShaderManager->GetVertexShader(m_WaveVertexShaderIndex), nullptr, 0);
+	pDeviceContext->PSSetShader(pShaderManager->GetPixelShader(m_WavePixelShaderIndex), nullptr, 0);
+	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	pDeviceContext->IASetInputLayout(m_pWaveVertexLayout);
+	pDeviceContext->OMSetDepthStencilState(nullptr, 0);
+	pDeviceContext->OMSetBlendState(m_pBlendState, nullptr, 0xffffffff);
+
+	UINT Stride = sizeof(MAP_VERTEX);
+	UINT Offset = 0;
+	pDeviceContext->IASetVertexBuffers(0, 1, &m_pWaveVertexBuffer, &Stride, &Offset);
+	pDeviceContext->PSSetShaderResources(0, 1, &m_pWaveShaderResourceView[m_WaveRenderIndex ^ 1]);
+	pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	pDeviceContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	pDeviceContext->Draw(VERTEX_NUM, 0);
+
+	m_WaveRenderIndex ^= 1; // 描画先のテクスチャを入れ替える.
+}
+
+void Water::BumpDraw()
+{
+	Lib::Dx11::GraphicsDevice* pGraphicsDevice = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice);
+	ID3D11DeviceContext* pContext = SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->GetDeviceContext();
+	Lib::Dx11::ShaderManager*	pShaderManager = SINGLETON_INSTANCE(Lib::Dx11::ShaderManager);
+
+	// 描画先を法線マップに変更.
+	pGraphicsDevice->SetRenderTarget(&m_pBumpRenderTarget, m_BumpRenderTargetStage);
+	pGraphicsDevice->SetDepthStencil(&m_pWaveDepthStencilView[m_WaveRenderIndex], m_BumpRenderTargetStage);
+	pGraphicsDevice->SetClearColor(m_ClearColor, m_BumpRenderTargetStage);
+	pGraphicsDevice->SetViewPort(&m_ViewPort, m_BumpRenderTargetStage);
+	pGraphicsDevice->BeginScene(m_BumpRenderTargetStage);
+
+	// 描画準備.
+	pContext->VSSetShader(pShaderManager->GetVertexShader(m_WaveVertexShaderIndex), nullptr, 0);
+	pContext->PSSetShader(pShaderManager->GetPixelShader(m_BumpPixelShaderIndex), nullptr, 0);
+	pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	pContext->IASetInputLayout(m_pWaveVertexLayout);
+	pContext->OMSetDepthStencilState(m_pDepthStencilState, 0);
+	pContext->OMSetBlendState(m_pBlendState, nullptr, 0xffffffff);
+
+	UINT Stride = sizeof(MAP_VERTEX);
+	UINT Offset = 0;
+	pContext->IASetVertexBuffers(0, 1, &m_pWaveVertexBuffer, &Stride, &Offset);
+	pContext->PSSetShaderResources(0, 1, &m_pWaveShaderResourceView[m_WaveRenderIndex]);
+	pContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	pContext->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	pContext->VSSetConstantBuffers(5, 1, &m_pReflectMapConstantBuffer);
+	pContext->PSSetConstantBuffers(5, 1, &m_pReflectMapConstantBuffer);
+
+	pContext->Draw(VERTEX_NUM, 0);
+}
 
 
 //----------------------------------------------------------------------
 // Inner Class Constructor Destructor
 //----------------------------------------------------------------------
-Water::CubeDrawBeginTask::CubeDrawBeginTask(Water* _pWater) :
+Water::CubeDrawStartUp::CubeDrawStartUp(Water* _pWater) :
 	m_pWater(_pWater)
 {
 }
 
-Water::CubeDrawBeginTask::~CubeDrawBeginTask()
+Water::CubeDrawStartUp::~CubeDrawStartUp()
 {
 }
 
@@ -1332,7 +1331,7 @@ Water::CubeDrawBeginTask::~CubeDrawBeginTask()
 //----------------------------------------------------------------------
 // Inner Class Public Function
 //----------------------------------------------------------------------
-void Water::CubeDrawBeginTask::Run()
+void Water::CubeDrawStartUp::Run()
 {
 	m_pWater->CubeMapBeginScene();
 }
@@ -1341,12 +1340,12 @@ void Water::CubeDrawBeginTask::Run()
 //----------------------------------------------------------------------
 // Inner Class Constructor Destructor
 //----------------------------------------------------------------------
-Water::ReflectDrawBeginTask::ReflectDrawBeginTask(Water* _pWater) :
+Water::ReflectDrawStartUp::ReflectDrawStartUp(Water* _pWater) :
 	m_pWater(_pWater)
 {
 }
 
-Water::ReflectDrawBeginTask::~ReflectDrawBeginTask()
+Water::ReflectDrawStartUp::~ReflectDrawStartUp()
 {
 }
 
@@ -1354,7 +1353,7 @@ Water::ReflectDrawBeginTask::~ReflectDrawBeginTask()
 //----------------------------------------------------------------------
 // Inner Class Public Function
 //----------------------------------------------------------------------
-void Water::ReflectDrawBeginTask::Run()
+void Water::ReflectDrawStartUp::Run()
 {
 	m_pWater->ReflectMapBeginScene();
 }

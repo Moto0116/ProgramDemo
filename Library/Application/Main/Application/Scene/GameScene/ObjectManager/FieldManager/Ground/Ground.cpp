@@ -10,9 +10,9 @@
 #include "Ground.h"
 
 #include "Debugger\Debugger.h"
-#include "DirectX11\FbxFileManager\FbxFileManager.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\ShaderManager\ShaderManager.h"
+#include "DirectX11\FbxFileManager\Dx11FbxFileManager.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\ShaderManager\Dx11ShaderManager.h"
 
 
 //----------------------------------------------------------------------
@@ -66,10 +66,6 @@ void Ground::Finalize()
 	ReleaseTask();
 }
 
-void Ground::Update()
-{
-}
-
 void Ground::Draw()
 {
 	Lib::Dx11::FbxFileManager* pFbxFileManager = SINGLETON_INSTANCE(Lib::Dx11::FbxFileManager);
@@ -81,10 +77,6 @@ void Ground::Draw()
 	ConstantBufferSetup();
 
 	pFbxFileManager->GetFbxModel(m_GroundModelIndex)->Draw();
-}
-
-void Ground::DepthDraw()
-{
 }
 
 void Ground::MapDraw()

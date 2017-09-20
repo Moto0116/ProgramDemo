@@ -10,7 +10,7 @@
 // Include
 //----------------------------------------------------------------------
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
-#include "DirectX11\Vertex2D\Vertex2D.h"
+#include "DirectX11\Vertex2D\Dx11Vertex2D.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
@@ -43,9 +43,19 @@ public:
 	virtual void Finalize();
 
 	/**
+	 * オブジェクトの更新前処理
+	 */
+	virtual void UpdateStartUp();
+
+	/**
 	 * オブジェクトの更新
 	 */
 	virtual void Update();
+
+	/**
+	 * オブジェクトの描画前処理
+	 */
+	virtual void DrawStartUp();
 
 	/**
 	 * オブジェクトの描画

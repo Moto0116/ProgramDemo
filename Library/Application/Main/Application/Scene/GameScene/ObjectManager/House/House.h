@@ -47,11 +47,6 @@ public:
 	virtual void Finalize();
 
 	/**
-	 * オブジェクトの更新
-	 */
-	virtual void Update();
-
-	/**
 	 * オブジェクトの描画
 	 */
 	virtual void Draw();
@@ -75,7 +70,6 @@ public:
 	 * 反射マップへの描画
 	 */
 	virtual void ReflectMapDraw();
-
 
 private:
 	static D3DXVECTOR3 m_DefaultScale;			//!< デフォルトスケーリング値.

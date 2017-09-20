@@ -14,11 +14,11 @@
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "SoundManager\SoundManager.h"
 #include "SoundManager\ISound\ISound.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\ShaderManager\ShaderManager.h"
-#include "DirectX11\TextureManager\TextureManager.h"
-#include "DirectX11\TextureManager\ITexture\ITexture.h"
-#include "DirectX11\Font\Font.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\ShaderManager\Dx11ShaderManager.h"
+#include "DirectX11\TextureManager\Dx11TextureManager.h"
+#include "DirectX11\TextureManager\ITexture\Dx11ITexture.h"
+#include "DirectX11\Font\Dx11Font.h"
 
 
 //----------------------------------------------------------------------

@@ -68,7 +68,6 @@ public:
 	 */
 	virtual void Draw();
 
-
 private:
 	enum
 	{

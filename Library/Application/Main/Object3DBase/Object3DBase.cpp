@@ -10,10 +10,10 @@
 #include "Object3DBase.h"
 
 #include "Debugger\Debugger.h"
-#include "DirectX11\GraphicsDevice\GraphicsDevice.h"
-#include "DirectX11\ShaderManager\ShaderManager.h"
-#include "DirectX11\TextureManager\TextureManager.h"
-#include "DirectX11\TextureManager\ITexture\ITexture.h"
+#include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
+#include "DirectX11\ShaderManager\Dx11ShaderManager.h"
+#include "DirectX11\TextureManager\Dx11TextureManager.h"
+#include "DirectX11\TextureManager\ITexture\Dx11ITexture.h"
 
 
 //----------------------------------------------------------------------
@@ -67,7 +67,15 @@ void Object3DBase::Finalize()
 {
 }
 
+void Object3DBase::UpdateStartUp()
+{
+}
+
 void Object3DBase::Update()
+{
+}
+
+void Object3DBase::DrawStartUp()
 {
 }
 

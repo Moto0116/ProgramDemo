@@ -40,19 +40,9 @@ public:
 	virtual void Finalize();
 
 	/**
-	 * オブジェクトの更新
-	 */
-	virtual void Update();
-
-	/**
 	 * オブジェクトの描画
 	 */
 	virtual void Draw();
-
-	/**
-	 * Z値をテクスチャに描画
-	 */
-	virtual void DepthDraw();
 
 	/**
 	 * マップへの描画
