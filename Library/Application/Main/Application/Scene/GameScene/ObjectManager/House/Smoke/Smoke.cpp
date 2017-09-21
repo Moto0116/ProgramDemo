@@ -201,6 +201,9 @@ bool Smoke::CreateTask()
 	m_pDrawTask->SetObject(this);
 	m_pUpdateTask->SetObject(this);
 
+	m_pDrawTask->SetName("Smoke");
+	m_pUpdateTask->SetName("Smoke");
+
 	m_pDrawTask->SetPriority(TRANSPARENT_OBJECT);
 
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);

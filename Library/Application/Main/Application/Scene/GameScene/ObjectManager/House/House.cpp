@@ -187,6 +187,13 @@ void House::ReflectMapDraw()
 //----------------------------------------------------------------------
 bool House::CreateTask()
 {
+	m_pUpdateTask->SetName("House");
+	m_pDrawTask->SetName("House");
+	m_pDepthDrawTask->SetName("House");
+	m_pMapDrawTask->SetName("House");
+	m_pCubeMapDrawTask->SetName("House");
+	m_pReflectMapDrawTask->SetName("House");
+
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);

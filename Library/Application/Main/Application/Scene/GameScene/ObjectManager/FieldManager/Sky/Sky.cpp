@@ -110,6 +110,12 @@ void Sky::CubeMapDraw()
 //----------------------------------------------------------------------
 bool Sky::CreateTask()
 {
+	m_pDrawTask->SetName("Mountain");
+	m_pUpdateTask->SetName("Mountain");
+	m_pDepthDrawTask->SetName("Mountain");
+	m_pMapDrawTask->SetName("Mountain");
+	m_pCubeMapDrawTask->SetName("Mountain");
+
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);

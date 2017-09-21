@@ -84,6 +84,11 @@ bool Water::Initialize()
 	m_pDraw3DTask->SetObject(this);
 	m_pUpdateTask->SetObject(this);
 
+	m_pDraw3DTask->SetName("Water");
+	m_pUpdateTask->SetName("Water");
+	m_pCubeDrawStartUp->SetName("Water");
+	m_pReflectDrawStartUp->SetName("Water");
+
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDraw3DTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddStartUpTask(m_pCubeDrawStartUp);

@@ -59,6 +59,7 @@ bool MainCamera::Initialize()
 {
 	m_pUpdateTask = new Lib::UpdateTask();
 	m_pUpdateTask->SetObject(this);
+	m_pUpdateTask->SetName("MainCamera");
 
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 

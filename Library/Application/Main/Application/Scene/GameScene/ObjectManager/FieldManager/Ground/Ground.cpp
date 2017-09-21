@@ -97,6 +97,11 @@ void Ground::MapDraw()
 
 bool Ground::CreateTask()
 {
+	m_pDrawTask->SetName("Ground");
+	m_pUpdateTask->SetName("Ground");
+	m_pDepthDrawTask->SetName("Ground");
+	m_pMapDrawTask->SetName("Ground");
+
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);

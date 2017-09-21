@@ -11,6 +11,7 @@
 //----------------------------------------------------------------------
 #include "SceneManager\SceneBase\SceneBase.h"
 
+#include "Debugger\Debugger.h"
 #include "ObjectManager\ObjectManager.h"
 #include "DirectX11\Font\Dx11Font.h"
 
@@ -52,11 +53,14 @@ private:
 	static const D3DXVECTOR2	m_DefaultFontSize;	//!< フォントサイズ.
 	static const D3DXCOLOR		m_DefaultFontColor;	//!< フォントカラー.
 
-	ObjectManager*	m_pObjectManager;	//!< シーン内オブジェクト管理クラス.
-	Lib::Dx11::Font*	m_pFont;			//!< フォント描画オブジェクト.
-	int					m_UpdateTime;		//!< 更新処理にかかった時間.
-	int					m_DrawTime;			//!< 描画処理にかかった時間.
+	ObjectManager*				m_pObjectManager;	//!< シーン内オブジェクト管理クラス.
 
+#ifdef _DEBUG
+	Lib::Debugger::DebugTimer*	m_pDebugTimer;		//!< デバッグ用タイマクラス.
+	Lib::Dx11::Font*			m_pFont;			//!< フォント描画オブジェクト.
+	LONGLONG					m_UpdateTime;		//!< 更新処理にかかった時間.
+	LONGLONG					m_DrawTime;			//!< 描画処理にかかった時間.
+#endif // _DEBUG
 
 };
 

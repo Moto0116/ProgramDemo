@@ -49,6 +49,10 @@ bool MiniMap::Initialize()
 {
 	m_pMiniMapDrawStartUp = new MiniMapDrawStartUp(this);
 
+	m_pDrawTask->SetName("MiniMap");
+	m_pUpdateTask->SetName("MiniMap");
+	m_pMiniMapDrawStartUp->SetName("MiniMap");
+
 	SINGLETON_INSTANCE(Lib::Draw2DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddStartUpTask(m_pMiniMapDrawStartUp);

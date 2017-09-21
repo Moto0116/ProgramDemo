@@ -150,6 +150,11 @@ bool MainLight::CreateTask()
 	m_pUpdateTask->SetObject(this);
 	m_pDrawStartUpTask->SetObject(this);
 
+	m_pDrawTask->SetName("MainLight");
+	m_pUpdateTask->SetName("MainLight");
+	m_pDrawStartUpTask->SetName("MainLight");
+	m_pDepthDrawStartUp->SetName("MainLight");
+
 	// タスクオブジェクトを管理クラスに追加.
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);

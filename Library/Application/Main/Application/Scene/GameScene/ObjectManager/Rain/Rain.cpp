@@ -219,6 +219,9 @@ bool Rain::CreateTask()
 	m_pDrawTask->SetObject(this);
 	m_pUpdateTask->SetObject(this);
 
+	m_pDrawTask->SetName("Rain");
+	m_pUpdateTask->SetName("Rain");
+
 	m_pDrawTask->SetPriority(1);
 
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);

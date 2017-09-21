@@ -36,9 +36,7 @@ const D3DXCOLOR	GameScene::m_DefaultFontColor = 0xffffffff;
 // Constructor	Destructor
 //----------------------------------------------------------------------
 GameScene::GameScene(int _sceneId) :
-	SceneBase(_sceneId),
-	m_UpdateTime(0),
-	m_DrawTime(0)
+	SceneBase(_sceneId)
 {
 }
 
@@ -105,6 +103,9 @@ bool GameScene::Initialize()
 		return false;
 	}
 
+#ifdef _DEBUG
+	m_pDebugTimer = new Lib::Debugger::DebugTimer();
+
 	m_pFont = new Lib::Dx11::Font();
 	if (!m_pFont->Initialize(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)))
 	{
@@ -118,6 +119,8 @@ bool GameScene::Initialize()
 		return false;
 	}
 
+#endif // _DEBUG
+
 	m_State = UPDATE_STATE;
 
 	return true;
@@ -125,12 +128,17 @@ bool GameScene::Initialize()
 
 void GameScene::Finalize()
 {
+#ifdef _DEBUG
 	if (m_pFont != nullptr)
 	{
 		m_pFont->ReleaseVertexBuffer();
 		m_pFont->Finalize();
 		SafeDelete(m_pFont);
 	}
+
+	SafeDelete(m_pDebugTimer);
+
+#endif // _DEBUG
 
 	if (m_pObjectManager != nullptr)
 	{
@@ -190,16 +198,14 @@ void GameScene::Update()
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->KeyCheck(DIK_T);
 	SINGLETON_INSTANCE(Lib::InputDeviceManager)->MouseUpdate();
 
-
 #ifdef _DEBUG
-
-	Lib::Debugger::StartTimer();
+	m_pDebugTimer->StartTimer();
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
-	Lib::Debugger::EndTimer();
-	m_UpdateTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した更新時間を取得.
+	m_pDebugTimer->EndTimer();
+	m_UpdateTime = m_pDebugTimer->GetMilliSecond();	// 計測した更新時間を取得.
 
 
-	Lib::Debugger::StartTimer();
+	m_pDebugTimer->StartTimer();
 	SINGLETON_INSTANCE(MapDrawTaskManager)->Run();
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->Run();
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->Run();
@@ -218,12 +224,13 @@ void GameScene::Update()
 	m_pFont->Draw(&D3DXVECTOR2(1000, 50), UpdateStr);
 	m_pFont->Draw(&D3DXVECTOR2(1000, 80), DrawStr);
 
+
+	///@todo プレゼントに時間がかかるのはたまっていたコマンドが一斉に送信されているからだと思う
 	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->EndScene();
-	Lib::Debugger::EndTimer();
-	m_DrawTime = static_cast<int>(Lib::Debugger::GetTime());	// 計測した描画時間を取得.
+	m_pDebugTimer->EndTimer();
+	m_DrawTime = m_pDebugTimer->GetMilliSecond();	// 計測した描画時間を取得.
 
 #else // _DEBUG
-
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
 
 	SINGLETON_INSTANCE(MapDrawTaskManager)->Run();

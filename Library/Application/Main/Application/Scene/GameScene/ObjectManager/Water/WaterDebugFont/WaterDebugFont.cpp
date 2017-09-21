@@ -30,6 +30,9 @@ WaterDebugFont::~WaterDebugFont()
 //----------------------------------------------------------------------
 bool WaterDebugFont::Initialize()
 {
+	m_pDrawTask->SetName("WaterDebugFont");
+	m_pUpdateTask->SetName("WaterDebugFont");
+
 	SINGLETON_INSTANCE(Lib::Draw2DTaskManager)->AddTask(m_pDrawTask);
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 
