@@ -202,7 +202,7 @@ void GameScene::Update()
 	m_pDebugTimer->StartTimer();
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();
 	m_pDebugTimer->EndTimer();
-	m_UpdateTime = m_pDebugTimer->GetMilliSecond();	// 計測した更新時間を取得.
+	m_UpdateTime = m_pDebugTimer->GetMicroSecond();	// 計測した更新時間を取得.
 
 
 	m_pDebugTimer->StartTimer();
@@ -214,21 +214,26 @@ void GameScene::Update()
 	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->BeginScene(Lib::Dx11::GraphicsDevice::BACKBUFFER_TARGET);
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->Run();
 	SINGLETON_INSTANCE(Lib::Draw2DTaskManager)->Run();
+	m_pDebugTimer->EndTimer();
+	m_DrawTime = m_pDebugTimer->GetMicroSecond();	// 計測した描画時間を取得.
+
 
 	// 計測時間の描画.
 	char UpdateStr[32];
 	char DrawStr[32];
-	sprintf_s(UpdateStr, 32, "Update : %dms", m_UpdateTime);
-	sprintf_s(DrawStr, 32, "Draw   : %dms", m_DrawTime);
+	char PresentStr[32];
+	sprintf_s(UpdateStr, 32, "Update  : %dus", m_UpdateTime);
+	sprintf_s(DrawStr, 32, "Draw    : %dus", m_DrawTime);
+	sprintf_s(PresentStr, 32, "Present : %dus", m_PresentTime);
 
 	m_pFont->Draw(&D3DXVECTOR2(1000, 50), UpdateStr);
 	m_pFont->Draw(&D3DXVECTOR2(1000, 80), DrawStr);
+	m_pFont->Draw(&D3DXVECTOR2(1000, 110), PresentStr);
 
-
-	///@todo プレゼントに時間がかかるのはたまっていたコマンドが一斉に送信されているからだと思う
+	m_pDebugTimer->StartTimer();
 	SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)->EndScene();
 	m_pDebugTimer->EndTimer();
-	m_DrawTime = m_pDebugTimer->GetMilliSecond();	// 計測した描画時間を取得.
+	m_PresentTime = m_pDebugTimer->GetMicroSecond();	// 計測した描画時間を取得.
 
 #else // _DEBUG
 	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->Run();

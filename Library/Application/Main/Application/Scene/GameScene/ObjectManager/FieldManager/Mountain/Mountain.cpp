@@ -120,13 +120,11 @@ void Mountain::CubeMapDraw()
 bool Mountain::CreateTask()
 {
 	m_pDrawTask->SetName("Mountain");
-	m_pUpdateTask->SetName("Mountain");
 	m_pDepthDrawTask->SetName("Mountain");
 	m_pMapDrawTask->SetName("Mountain");
 	m_pCubeMapDrawTask->SetName("Mountain");
 
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
 	SINGLETON_INSTANCE(CubeMapDrawTaskManager)->AddTask(m_pCubeMapDrawTask);
@@ -252,7 +250,6 @@ void Mountain::ReleaseTask()
 {
 	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->RemoveTask(m_pDrawTask);
 }
 

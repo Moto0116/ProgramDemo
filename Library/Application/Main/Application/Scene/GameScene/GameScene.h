@@ -60,6 +60,7 @@ private:
 	Lib::Dx11::Font*			m_pFont;			//!< フォント描画オブジェクト.
 	LONGLONG					m_UpdateTime;		//!< 更新処理にかかった時間.
 	LONGLONG					m_DrawTime;			//!< 描画処理にかかった時間.
+	LONGLONG					m_PresentTime;		//!< プレゼント処理にかかった時間.
 #endif // _DEBUG
 
 };

@@ -98,12 +98,10 @@ void Ground::MapDraw()
 bool Ground::CreateTask()
 {
 	m_pDrawTask->SetName("Ground");
-	m_pUpdateTask->SetName("Ground");
 	m_pDepthDrawTask->SetName("Ground");
 	m_pMapDrawTask->SetName("Ground");
 
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->AddTask(m_pDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->AddTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->AddTask(m_pDepthDrawTask);
 	SINGLETON_INSTANCE(MapDrawTaskManager)->AddTask(m_pMapDrawTask);
 
@@ -196,7 +194,6 @@ void Ground::ReleaseTask()
 {
 	SINGLETON_INSTANCE(MapDrawTaskManager)->RemoveTask(m_pMapDrawTask);
 	SINGLETON_INSTANCE(DepthDrawTaskManager)->RemoveTask(m_pDepthDrawTask);
-	SINGLETON_INSTANCE(Lib::UpdateTaskManager)->RemoveTask(m_pUpdateTask);
 	SINGLETON_INSTANCE(Lib::Draw3DTaskManager)->RemoveTask(m_pDrawTask);
 }
 
