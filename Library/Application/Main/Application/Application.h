@@ -14,7 +14,6 @@
 
 
 class GameScene;
-class TitleScene;
 
 
 /**
@@ -112,7 +111,6 @@ private:
 	Lib::Window*		m_pMainWindow;		//!< メインウィンドウ.
 	Lib::SceneManager*	m_pSceneManager;	//!< シーン管理オブジェクト.
 	GameScene*			m_pGameScene;		//!< シーンオブジェクト.
-
 };
 
 
