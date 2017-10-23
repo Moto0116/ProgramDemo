@@ -80,6 +80,9 @@
     <Filter Include="Main\Object3DBase">
       <UniqueIdentifier>{5f00f2c6-ce7a-4c05-a1a3-c1543a3d1730}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont">
+      <UniqueIdentifier>{ed18890d-a325-427c-a00a-e51d2bda8e86}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main\Main.cpp">
@@ -145,7 +148,9 @@
     <ClCompile Include="Main\Object2DBase\Object2DBase.cpp">
       <Filter>Main\Object2DBase</Filter>
     </ClCompile>
-    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.cpp">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\Application\Application.h">
@@ -211,7 +216,9 @@
     <ClInclude Include="Main\Application\MyDefine.h">
       <Filter>Main\Application</Filter>
     </ClInclude>
-    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.h">
+      <Filter>Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\Effect\Compute.fx">

@@ -1,6 +1,6 @@
 ﻿/**
- * @file   Object3DBase.cpp
- * @brief  Object3DBaseクラスの実装
+ * @file   Object2DBase.cpp
+ * @brief  Object2DBaseクラスの実装
  * @author morimoto
  */
 #ifndef OBJECT2DBASE_H
