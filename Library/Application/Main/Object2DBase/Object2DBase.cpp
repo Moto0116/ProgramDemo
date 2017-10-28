@@ -73,7 +73,7 @@ void Object2DBase::Draw()
 //----------------------------------------------------------------------
 bool Object2DBase::CreateVertex2D()
 {
-	m_pVertex = new Lib::Dx11::Vertex2D();
+	m_pVertex = new Lib::Dx11::SingleVertex2D();
 	if(!m_pVertex->Initialize(SINGLETON_INSTANCE(Lib::Dx11::GraphicsDevice)))
 	{
 		OutputErrorLog("2D描画オブジェクトの初期化に失敗しました");

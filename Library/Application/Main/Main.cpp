@@ -14,11 +14,13 @@
 #include "Debugger\Debugger.h"
 #include "SmartPointer\SmartPointer.h"
 
+#include "TypeTraits\TypeTraits.h"
+
 #include <functional>
 
+#include <type_traits>
 
-#define TEST3
-
+#define TEST4
 
 #ifdef TEST
 
@@ -307,12 +309,12 @@ void Test()
 	LONGLONG Time1 = 0;
 	LONGLONG Time2 = 0;
 
-	char* p[20000];
+	int* p[20000];
 
 	Timer.StartTimer();
 	for (int i = 0; i < 20000; i++)
 	{
-		p[i] = new char;
+		p[i] = new int;
 		delete p[i];
 	}
 	Timer.EndTimer();
@@ -321,7 +323,7 @@ void Test()
 	Timer.StartTimer();
 	for (int i = 0; i < 20000; i++)
 	{
-		p[i] = tlsf.Allocate<char>();
+		p[i] = tlsf.Allocate<int>();
 		tlsf.DeAllocate(p[i]);
 	}
 	Timer.EndTimer();
@@ -371,3 +373,18 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr,
 }
 
 #endif
+#ifdef TEST4
+
+int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr, INT _iCmdShow)
+{
+	// イテレータがあるかないかのチェック.
+	StaticMyAssert(Lib::TypeTraits::HasIterator<std::vector<int>>::Value == false, "Error : iterator is not Found");
+	//StaticMyAssert(Lib::TypeTraits::HasIterator<int>::Value == false, "Error : iterator is not Found");
+
+	// ポインタ型かのチェック.
+	StaticMyAssert(Lib::TypeTraits::IsPointer<int*>::Value == false, "Error : Type Not Pointer");
+	//StaticMyAssert(Lib::TypeTraits::IsPointer<int>::Value == false, "Error : Type Not Pointer");
+
+}
+
+#endif 

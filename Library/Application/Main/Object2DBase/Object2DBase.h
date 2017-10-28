@@ -10,7 +10,7 @@
 // Include
 //----------------------------------------------------------------------
 #include "ObjectManagerBase\ObjectBase\ObjectBase.h"
-#include "DirectX11\Vertex2D\Dx11Vertex2D.h"
+#include "DirectX11\Vertex2D\SingleVertex2D\Dx11SingleVertex2D.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
@@ -78,10 +78,10 @@ protected:
 	Lib::Draw2DTask*	m_pDrawTask;	//!< 描画タスクオブジェクト.
 	Lib::UpdateTask*	m_pUpdateTask;	//!< 更新タスクオブジェクト.
 
-	Lib::Dx11::Vertex2D*	m_pVertex;		//!< 2D描画オブジェクト.
-	D3DXVECTOR2				m_Pos;			//!< 描画座標.
-	D3DXVECTOR2				m_Size;			//!< 描画サイズ.
-	int						m_TextureIndex;	//!< テクスチャのインデックス.
+	Lib::Dx11::SingleVertex2D*	m_pVertex;		//!< 2D描画オブジェクト.
+	D3DXVECTOR2					m_Pos;			//!< 描画座標.
+	D3DXVECTOR2					m_Size;			//!< 描画サイズ.
+	int							m_TextureIndex;	//!< テクスチャのインデックス.
 	
 };
 

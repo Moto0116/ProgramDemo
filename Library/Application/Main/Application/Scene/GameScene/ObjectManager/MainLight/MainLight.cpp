@@ -15,8 +15,8 @@
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "DirectX11\GraphicsDevice\Dx11GraphicsDevice.h"
 #include "DirectX11\TextureManager\Dx11TextureManager.h"
+#include "DirectX11\TextureManager\ITexture\Dx11ITexture.h"
 #include "DirectX11\ShaderManager\Dx11ShaderManager.h"
-#include "DirectX11\Vertex2D\Dx11Vertex2D.h"
 #include "Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h"
 #include "..\MainCamera\MainCamera.h"
 

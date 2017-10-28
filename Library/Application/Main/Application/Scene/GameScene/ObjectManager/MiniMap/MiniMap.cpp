@@ -74,8 +74,6 @@ bool MiniMap::Initialize()
 		return false;
 	}
 
-	m_pVertex->SetInverse(false);
-
 	return true;
 }
 
