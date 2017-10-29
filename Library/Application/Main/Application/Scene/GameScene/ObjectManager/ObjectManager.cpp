@@ -16,6 +16,7 @@
 #include "MiniMap\MiniMap.h"
 #include "Rain\Rain.h"
 #include "Water\Water.h"
+#include "test\test.h"
 
 
 //----------------------------------------------------------------------
@@ -43,6 +44,7 @@ ObjectManager::ObjectManager()
 	m_pObjects.push_back(new Water());
 	m_pObjects.push_back(new Rain(pCamera));
 	m_pObjects.push_back(new MainLight(pCamera));
+	m_pObjects.push_back(new test());
 }
 
 ObjectManager::~ObjectManager()

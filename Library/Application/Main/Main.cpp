@@ -20,7 +20,7 @@
 
 #include <type_traits>
 
-#define TEST4
+#define TEST5
 
 #ifdef TEST
 
@@ -387,4 +387,20 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr,
 
 }
 
+#endif 
+#ifdef TEST5
+int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr, INT _iCmdShow)
+{
+	Application App;
+
+	if (!App.Initialize())
+	{
+		return -1;
+	}
+
+	App.Run();
+	App.Finalize();
+
+	return 0;
+}
 #endif 

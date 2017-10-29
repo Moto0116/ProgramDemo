@@ -151,6 +151,7 @@
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.cpp">
       <Filter>Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont</Filter>
     </ClCompile>
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\test\test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\Application\Application.h">
@@ -219,6 +220,7 @@
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.h">
       <Filter>Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont</Filter>
     </ClInclude>
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\test\test.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\Effect\Compute.fx">

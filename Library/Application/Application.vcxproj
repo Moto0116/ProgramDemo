@@ -96,6 +96,7 @@
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.cpp" />
     <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.cpp" />
+    <ClCompile Include="Main\Application\Scene\GameScene\ObjectManager\test\test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main\Application\MyDefine.h" />
@@ -120,6 +121,7 @@
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\FieldManager\Sky\Sky.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\Task\ReflectMapDrawTask\ReflectMapDrawTask.h" />
     <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\Water\WaterDebugFont\WaterDebugFont.h" />
+    <ClInclude Include="Main\Application\Scene\GameScene\ObjectManager\test\test.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Resource\Effect\Compute.fx">

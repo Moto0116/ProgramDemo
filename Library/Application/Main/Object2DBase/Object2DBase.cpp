@@ -62,9 +62,8 @@ void Object2DBase::DrawStartUp()
 
 void Object2DBase::Draw()
 {
-	m_pVertex->ShaderSetup();
 	m_pVertex->WriteConstantBuffer(&m_Pos);
-	m_pVertex->Draw();
+	m_pVertex->DefaultDraw();
 }
 
 
