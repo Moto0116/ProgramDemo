@@ -12,7 +12,7 @@
 #include <D3DX11.h>
 #include <D3DX10.h>
 
-#include "ObjectManagerBase\ObjectBase\ObjectBase.h"
+#include "ObjectBase\ObjectBase.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "Main\Application\Scene\GameScene\Task\DepthDrawTask\DepthDrawTask.h"

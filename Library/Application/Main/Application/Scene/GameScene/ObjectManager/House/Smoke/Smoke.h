@@ -13,7 +13,7 @@
 #include <D3DX10.h>
 #include <random>
 
-#include "ObjectManagerBase\ObjectBase\ObjectBase.h"
+#include "ObjectBase\ObjectBase.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 

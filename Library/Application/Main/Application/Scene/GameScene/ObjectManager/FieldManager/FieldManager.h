@@ -9,13 +9,15 @@
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
-#include "ObjectManagerBase\ObjectManagerBase.h"
+#include "ObjectBase\ObjectBase.h"
+
+#include <vector>
 
 
 /**
  * フィールド管理クラス
  */
-class FieldManager : public Lib::ObjectManagerBase
+class FieldManager : public Lib::ObjectBase
 {
 public:
 	/**
@@ -27,6 +29,18 @@ public:
 	 * デストラクタ
 	 */
 	virtual ~FieldManager();
+
+	/**
+	 * 初期化処理
+	 * @return 初期化に成功したか
+	 */
+	virtual bool Initialize();
+
+	/*** 終了処理 */
+	virtual void Finalize();
+
+private:
+	std::vector<Lib::ObjectBase*> m_pObjects;
 
 };
 

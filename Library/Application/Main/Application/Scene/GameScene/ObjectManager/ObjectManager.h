@@ -11,14 +11,13 @@
 //----------------------------------------------------------------------
 #include <vector>
 
-#include "ObjectManagerBase\ObjectManagerBase.h"
-#include "ObjectManagerBase\ObjectBase\ObjectBase.h"
+#include "ObjectBase\ObjectBase.h"
 
 
 /**
  * オブジェクト管理クラス
  */
-class ObjectManager : public Lib::ObjectManagerBase
+class ObjectManager
 {
 public:
 	/**
@@ -42,9 +41,8 @@ public:
 	 */
 	virtual void Finalize();
 
-
 private:
-	std::vector<Lib::ObjectManagerBase*> m_pObjectManagers;	//!< オブジェクト管理クラス.
+	std::vector<Lib::ObjectBase*> m_pObjects;
 
 };
 

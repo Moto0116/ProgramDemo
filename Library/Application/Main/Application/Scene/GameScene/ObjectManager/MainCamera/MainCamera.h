@@ -14,7 +14,7 @@
 
 #include "DirectX11\Camera\Dx11Camera.h"
 #include "InputDeviceManager\InputDeviceManager.h"
-#include "ObjectManagerBase\ObjectBase\ObjectBase.h"
+#include "ObjectBase\ObjectBase.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 
 

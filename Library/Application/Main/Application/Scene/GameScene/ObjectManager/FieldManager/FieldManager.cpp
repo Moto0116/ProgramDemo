@@ -32,3 +32,29 @@ FieldManager::~FieldManager()
 	}
 }
 
+
+//----------------------------------------------------------------------
+// Public Functions
+//----------------------------------------------------------------------
+bool FieldManager::Initialize()
+{
+	for (auto itr = m_pObjects.begin(); itr != m_pObjects.end(); itr++)
+	{
+		if (!(*itr)->Initialize())
+		{
+			Finalize();
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void FieldManager::Finalize()
+{
+	for (auto itr = m_pObjects.begin(); itr != m_pObjects.end(); itr++)
+	{
+		(*itr)->Finalize();
+	}
+}
+

@@ -9,18 +9,18 @@
 //----------------------------------------------------------------------
 #include <Windows.h>
 #include "Application\Application.h"
-
 #include "MemoryAllocator\TlsfAllocator\TlsfAllocator.h"
 #include "Debugger\Debugger.h"
 #include "SmartPointer\SmartPointer.h"
-
 #include "TypeTraits\TypeTraits.h"
-
 #include <functional>
-
 #include <type_traits>
 
-#define TEST5
+#include "Factory\Factory.h"
+#include "Hash\Hash.h"
+
+
+#define TEST6
 
 #ifdef TEST
 
@@ -309,12 +309,12 @@ void Test()
 	LONGLONG Time1 = 0;
 	LONGLONG Time2 = 0;
 
-	int* p[20000];
+	DATA* p[20000];
 
 	Timer.StartTimer();
 	for (int i = 0; i < 20000; i++)
 	{
-		p[i] = new int;
+		p[i] = new DATA;
 		delete p[i];
 	}
 	Timer.EndTimer();
@@ -323,7 +323,7 @@ void Test()
 	Timer.StartTimer();
 	for (int i = 0; i < 20000; i++)
 	{
-		p[i] = tlsf.Allocate<int>();
+		p[i] = tlsf.Allocate<DATA>();
 		tlsf.DeAllocate(p[i]);
 	}
 	Timer.EndTimer();
@@ -404,3 +404,90 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr,
 	return 0;
 }
 #endif 
+#ifdef TEST6 
+
+
+#include <stdio.h>
+#include <stdint.h>
+
+class Base
+{
+public:
+	Base(){}
+	~Base(){}
+	virtual int GetID(){ return 0; }
+};
+
+
+int A_ID = 1;
+
+class A : public Base
+{
+public:
+	A(){}
+	~A(){}
+	int GetID(){ return A_ID; }
+};
+
+Base* CreateA()
+{
+	return new A();
+}
+
+
+int B_ID = 2;
+
+class B : public Base
+{
+public:
+	B(){}
+	~B(){}
+	int GetID(){ return B_ID; }
+};
+
+Base* CreateB()
+{
+	return new B();
+}
+
+
+
+int C_ID = 3;
+
+class C : public Base
+{
+public:
+	C(){}
+	~C(){}
+	int GetID(){ return C_ID; }
+};
+
+Base* CreateC()
+{
+	return new C();
+}
+
+
+bool IsRegisterA = Lib::Factory<Base, int>::GetInstance()->Register(&CreateA, A_ID);
+bool IsRegisterB = Lib::Factory<Base, int>::GetInstance()->Register(&CreateB, B_ID);
+bool IsRegisterC = Lib::Factory<Base, int>::GetInstance()->Register(&CreateC, C_ID);
+
+void main()
+{
+	Base* pBaseA = Lib::Factory<Base, int>::GetInstance()->Create(A_ID);
+	Base* pBaseB = Lib::Factory<Base, int>::GetInstance()->Create(B_ID);
+	Base* pBaseC = Lib::Factory<Base, int>::GetInstance()->Create(C_ID);
+
+	printf("%d\n", pBaseA->GetID());
+	printf("%d\n", pBaseB->GetID());
+	printf("%d\n", pBaseC->GetID());
+
+	delete pBaseC;
+	delete pBaseB;
+	delete pBaseA;
+
+	while (1);
+}
+
+
+#endif

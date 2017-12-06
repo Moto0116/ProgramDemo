@@ -9,7 +9,7 @@
 //----------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------
-#include "ObjectManagerBase\ObjectBase\ObjectBase.h"
+#include "ObjectBase\ObjectBase.h"
 #include "DirectX11\Vertex2D\SingleVertex2D\Dx11SingleVertex2D.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"

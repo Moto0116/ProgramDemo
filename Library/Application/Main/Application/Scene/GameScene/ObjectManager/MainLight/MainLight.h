@@ -13,7 +13,7 @@
 #include "TaskManager\TaskBase\TaskBase.h"
 #include "TaskManager\TaskBase\UpdateTask\UpdateTask.h"
 #include "TaskManager\TaskBase\DrawTask\DrawTask.h"
-#include "ObjectManagerBase\ObjectBase\ObjectBase.h"
+#include "ObjectBase\ObjectBase.h"
 
 
 namespace Lib

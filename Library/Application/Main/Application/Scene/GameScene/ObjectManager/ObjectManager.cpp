@@ -16,7 +16,6 @@
 #include "MiniMap\MiniMap.h"
 #include "Rain\Rain.h"
 #include "Water\Water.h"
-#include "test\test.h"
 
 
 //----------------------------------------------------------------------
@@ -24,7 +23,7 @@
 //----------------------------------------------------------------------
 ObjectManager::ObjectManager()
 {
-	m_pObjectManagers.push_back(new FieldManager());
+	m_pObjects.push_back(new FieldManager());
 
 	MainCamera* pCamera = new MainCamera();
 	m_pObjects.push_back(pCamera);
@@ -44,17 +43,11 @@ ObjectManager::ObjectManager()
 	m_pObjects.push_back(new Water());
 	m_pObjects.push_back(new Rain(pCamera));
 	m_pObjects.push_back(new MainLight(pCamera));
-	m_pObjects.push_back(new test());
 }
 
 ObjectManager::~ObjectManager()
 {
 	for (auto itr = m_pObjects.begin(); itr != m_pObjects.end(); itr++)
-	{
-		delete (*itr);
-	}
-
-	for (auto itr = m_pObjectManagers.begin(); itr != m_pObjectManagers.end(); itr++)
 	{
 		delete (*itr);
 	}
@@ -66,15 +59,6 @@ ObjectManager::~ObjectManager()
 //----------------------------------------------------------------------
 bool ObjectManager::Initialize()
 {
-	for (auto itr = m_pObjectManagers.begin(); itr != m_pObjectManagers.end(); itr++)
-	{
-		if (!(*itr)->Initialize())
-		{
-			Finalize();
-			return false;
-		}
-	}
-
 	for (auto itr = m_pObjects.begin(); itr != m_pObjects.end(); itr++)
 	{
 		if (!(*itr)->Initialize())
@@ -90,11 +74,6 @@ bool ObjectManager::Initialize()
 void ObjectManager::Finalize()
 {
 	for (auto itr = m_pObjects.begin(); itr != m_pObjects.end(); itr++)
-	{
-		(*itr)->Finalize();
-	}
-
-	for (auto itr = m_pObjectManagers.begin(); itr != m_pObjectManagers.end(); itr++)
 	{
 		(*itr)->Finalize();
 	}
