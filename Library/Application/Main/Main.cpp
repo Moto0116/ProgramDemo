@@ -20,7 +20,7 @@
 #include "Hash\Hash.h"
 
 
-#define TEST6
+#define TEST5
 
 #ifdef TEST
 

@@ -47,6 +47,8 @@ bool WaterDebugFont::Initialize()
 		return false;
 	}
 
+	m_pFont->SetAlignment(false);
+
 	return true;
 }
 

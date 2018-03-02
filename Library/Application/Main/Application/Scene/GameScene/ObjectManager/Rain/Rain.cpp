@@ -437,6 +437,8 @@ bool Rain::CreateFontObject()
 		return false;
 	}
 
+	m_pFont->SetAlignment(false);
+
 	return true;
 }
 

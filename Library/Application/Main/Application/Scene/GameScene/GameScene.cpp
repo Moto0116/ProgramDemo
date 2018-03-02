@@ -119,6 +119,8 @@ bool GameScene::Initialize()
 		return false;
 	}
 
+	m_pFont->SetAlignment(false);
+
 #endif // _DEBUG
 
 	m_State = UPDATE_STATE;
