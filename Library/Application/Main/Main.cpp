@@ -107,7 +107,7 @@ template <typename Ret, typename ...Types>
 class FunctionBase<Ret __cdecl(Types...)>
 {
 public:
-	using ReturnValue = Ret; 
+	using ReturnValue = Ret;
 	using Type = ReturnValue __cdecl (Types...);
 
 	void Set(Type _pFunc) { m_pFunc = _pFunc; }
@@ -387,7 +387,7 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr,
 
 }
 
-#endif 
+#endif
 #ifdef TEST5
 int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr, INT _iCmdShow)
 {
@@ -403,8 +403,8 @@ int WINAPI WinMain(HINSTANCE _hInstance, HINSTANCE _hPrevInstance, LPSTR _szStr,
 
 	return 0;
 }
-#endif 
-#ifdef TEST6 
+#endif
+#ifdef TEST6
 
 
 #include <stdio.h>
